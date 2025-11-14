@@ -7,6 +7,7 @@ import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { ApiError } from '@/lib/errors';
 import { logger } from '@/lib/logger';
+import { getUserContext, assertAdmin } from '@/lib/rbac';
 
 // Validation schemas
 export const createUserSchema = z.object({

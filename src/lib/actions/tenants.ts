@@ -6,6 +6,7 @@ import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { ApiError } from '@/lib/errors';
 import { logger } from '@/lib/logger';
+import { getUserContext, assertAdmin } from '@/lib/rbac';
 
 // Validation schema
 export const tenantSchema = z.object({
@@ -43,7 +44,8 @@ export async function getTenants(params?: {
     throw new ApiError('Unauthorized', 401);
   }
 
-  // TODO: Add RBAC check for admin-only access
+  const userCtx = getUserContext(session);
+  assertAdmin(userCtx, 'Only administrators can view all tenants');
 
   const {
     search = '',
@@ -103,7 +105,8 @@ export async function getTenant(id: number) {
 
   // Users can only view their own tenant unless they're admin
   if (session.user.tenantId !== id) {
-    // TODO: Add RBAC check for admin access
+    const userCtx = getUserContext(session);
+    assertAdmin(userCtx, 'Only administrators can view tenant details');
   }
 
   try {
@@ -147,7 +150,8 @@ export async function createTenant(data: TenantFormData) {
     throw new ApiError('Unauthorized', 401);
   }
 
-  // TODO: Add RBAC check for admin-only access
+  const userCtx = getUserContext(session);
+  assertAdmin(userCtx, 'Only administrators can view all tenants');
 
   try {
     const validated = tenantSchema.parse(data);
