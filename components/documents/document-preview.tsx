@@ -6,7 +6,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Download, Eye, FileText, Loader2, ExternalLink } from 'lucide-react';
-import { getDownloadUrl } from '@/src/lib/actions/document-upload';
+import { getDownloadUrl } from '@/lib/actions/document-upload';
 import { toast } from 'sonner';
 
 interface DocumentPreviewProps {

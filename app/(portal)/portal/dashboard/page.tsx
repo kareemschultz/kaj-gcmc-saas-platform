@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { getPortalDashboardData } from '@/src/lib/actions/portal';
+import { getPortalDashboardData } from '@/lib/actions/portal';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';

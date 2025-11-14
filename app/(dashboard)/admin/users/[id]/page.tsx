@@ -1,5 +1,5 @@
-import { getUser } from '@/src/lib/actions/users';
-import { getRoles } from '@/src/lib/actions/roles';
+import { getUser } from '@/lib/actions/users';
+import { getRoles } from '@/lib/actions/roles';
 import { UserForm } from '@/components/users/user-form';
 import { PasswordResetForm } from '@/components/users/password-reset-form';
 import { auth } from '@/auth';

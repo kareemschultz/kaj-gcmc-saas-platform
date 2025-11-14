@@ -1,6 +1,6 @@
 // Filing detail page
 
-import { getFiling, getFilingTypes, getClientsForFilingSelect, getClientDocuments } from '@/src/lib/actions/filings';
+import { getFiling, getFilingTypes, getClientsForFilingSelect, getClientDocuments } from '@/lib/actions/filings';
 import { FilingForm } from '@/components/filings/filing-form';
 import { FilingDocumentsManager } from '@/components/filings/filing-documents-manager';
 import { Button } from '@/components/ui/button';

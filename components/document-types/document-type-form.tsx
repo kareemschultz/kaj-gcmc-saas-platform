@@ -7,7 +7,7 @@ import {
   updateDocumentType,
   deleteDocumentType,
   type DocumentTypeFormData,
-} from '@/src/lib/actions/document-types';
+} from '@/lib/actions/document-types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

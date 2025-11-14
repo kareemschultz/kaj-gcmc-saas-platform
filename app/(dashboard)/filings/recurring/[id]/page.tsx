@@ -1,7 +1,7 @@
 import { RecurringFilingForm } from '@/components/recurring-filings/recurring-filing-form';
-import { getRecurringFiling, deleteRecurringFiling } from '@/src/lib/actions/recurring-filings';
-import { getFilingTypes, getClientsForFilingSelect } from '@/src/lib/actions/filings';
-import { prisma } from '@/src/lib/prisma';
+import { getRecurringFiling, deleteRecurringFiling } from '@/lib/actions/recurring-filings';
+import { getFilingTypes, getClientsForFilingSelect } from '@/lib/actions/filings';
+import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import { Button } from '@/components/ui/button';

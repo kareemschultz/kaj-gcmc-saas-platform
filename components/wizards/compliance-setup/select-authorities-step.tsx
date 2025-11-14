@@ -4,7 +4,7 @@ import { useWizard } from '@/components/wizard/wizard-context';
 import { WizardNavigation } from '@/components/wizard/wizard-navigation';
 import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
-import { ComplianceSetupWizardData } from '@/src/lib/actions/wizards';
+import { ComplianceSetupWizardData } from '@/lib/actions/wizards';
 
 const AUTHORITIES = [
   { code: 'GRA', name: 'Guyana Revenue Authority', description: 'Tax compliance and filings' },

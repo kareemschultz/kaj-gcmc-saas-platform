@@ -7,7 +7,7 @@ import {
   fetchSectorCompliance,
   fetchRiskCorrelation,
   fetchWorkloadMetrics,
-} from '@/src/lib/actions/analytics';
+} from '@/lib/actions/analytics';
 import { ComplianceTrendChart } from '@/components/analytics/compliance-trend-chart';
 import { FilingTrendChart } from '@/components/analytics/filing-trend-chart';
 import { SectorComplianceChart } from '@/components/analytics/sector-compliance-chart';

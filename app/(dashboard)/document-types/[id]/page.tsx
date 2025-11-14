@@ -1,4 +1,4 @@
-import { getDocumentType } from '@/src/lib/actions/document-types';
+import { getDocumentType } from '@/lib/actions/document-types';
 import { DocumentTypeForm } from '@/components/document-types/document-type-form';
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';

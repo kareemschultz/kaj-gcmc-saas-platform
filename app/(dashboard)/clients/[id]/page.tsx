@@ -1,6 +1,6 @@
 // Client detail page
 
-import { getClient } from '@/src/lib/actions/clients';
+import { getClient } from '@/lib/actions/clients';
 import { ClientForm } from '@/components/clients/client-form';
 import { ClientBusinessList } from '@/components/client-businesses/client-business-list';
 import { Button } from '@/components/ui/button';

@@ -5,7 +5,7 @@ import { WizardNavigation } from '@/components/wizard/wizard-navigation';
 import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { ServiceRequestWizardData } from '@/src/lib/actions/wizards';
+import { ServiceRequestWizardData } from '@/lib/actions/wizards';
 
 export function AssignAndScheduleStep() {
   const { state, updateData } = useWizard<ServiceRequestWizardData>();

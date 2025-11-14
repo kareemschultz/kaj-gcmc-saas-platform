@@ -49,18 +49,30 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             return null;
           }
 
+          // Validate user has tenant associations
+          if (!user.tenantUsers || user.tenantUsers.length === 0) {
+            console.error('User has no tenant associations', { userId: user.id });
+            return null;
+          }
+
           // Return user with first tenant (user will select tenant after login if multiple)
           const primaryTenantUser = user.tenantUsers[0];
+
+          // Validate primary tenant user has required data
+          if (!primaryTenantUser.tenantId || !primaryTenantUser.tenant) {
+            console.error('Invalid tenant association', { userId: user.id });
+            return null;
+          }
 
           return {
             id: user.id.toString(),
             email: user.email,
             name: user.name,
             image: user.avatarUrl,
-            tenantId: primaryTenantUser?.tenantId,
-            tenantCode: primaryTenantUser?.tenant?.code,
-            tenantName: primaryTenantUser?.tenant?.name,
-            role: primaryTenantUser?.role?.name,
+            tenantId: primaryTenantUser.tenantId,
+            tenantCode: primaryTenantUser.tenant.code,
+            tenantName: primaryTenantUser.tenant.name,
+            role: primaryTenantUser.role?.name || 'user',
           };
         } catch (error) {
           console.error('Auth error:', error);
@@ -91,13 +103,28 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     async session({ session, token }) {
       if (token && session.user) {
-        session.user.id = parseInt(token.id as string);
-        session.tenant = {
-          tenantId: token.tenantId as number,
-          tenantCode: token.tenantCode as string,
-          tenantName: token.tenantName as string,
-        };
-        session.role = token.role as string;
+        // Validate and parse user ID
+        if (!token.id || typeof token.id !== 'string') {
+          throw new Error('Invalid token: missing user ID');
+        }
+
+        const userId = parseInt(token.id, 10);
+        if (isNaN(userId) || userId <= 0) {
+          throw new Error('Invalid user ID in token');
+        }
+
+        session.user.id = userId;
+
+        // Only set tenant if we have valid tenant data
+        if (token.tenantId && token.tenantCode && token.tenantName) {
+          session.tenant = {
+            tenantId: token.tenantId as number,
+            tenantCode: token.tenantCode as string,
+            tenantName: token.tenantName as string,
+          };
+        }
+
+        session.role = token.role as string || 'user';
       }
 
       return session;

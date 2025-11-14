@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getComplianceRuleSets } from '@/src/lib/actions/compliance-rules';
+import { getComplianceRuleSets } from '@/lib/actions/compliance-rules';
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 

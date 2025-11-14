@@ -1,6 +1,6 @@
 // Document detail page with upload and version management
 
-import { getDocument, getDocumentTypes, getClientsForSelect } from '@/src/lib/actions/documents';
+import { getDocument, getDocumentTypes, getClientsForSelect } from '@/lib/actions/documents';
 import { DocumentForm } from '@/components/documents/document-form';
 import { DocumentVersionsList } from '@/components/documents/document-versions-list';
 import { DocumentUploader } from '@/components/documents/document-uploader';

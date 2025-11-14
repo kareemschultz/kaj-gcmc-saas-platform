@@ -7,7 +7,7 @@ import {
   updateServiceStep,
   deleteServiceStep,
   type ServiceStepFormData,
-} from '@/src/lib/actions/service-requests';
+} from '@/lib/actions/service-requests';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

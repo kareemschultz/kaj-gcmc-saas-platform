@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { getPortalFilings } from '@/src/lib/actions/portal';
+import { getPortalFilings } from '@/lib/actions/portal';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { FileCheck, Calendar } from 'lucide-react';

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getFilings } from '@/src/lib/actions/filings';
+import { getFilings } from '@/lib/actions/filings';
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import { format } from 'date-fns';

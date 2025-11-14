@@ -5,7 +5,7 @@ import { WizardNavigation } from '@/components/wizard/wizard-navigation';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { NewClientWizardData } from '@/src/lib/actions/wizards';
+import { NewClientWizardData } from '@/lib/actions/wizards';
 import { CheckCircle2, Building2, FileCheck, Briefcase } from 'lucide-react';
 
 interface ReviewAndConfirmStepProps {

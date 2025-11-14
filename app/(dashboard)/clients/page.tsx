@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getClients } from '@/src/lib/actions/clients';
+import { getClients } from '@/lib/actions/clients';
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 

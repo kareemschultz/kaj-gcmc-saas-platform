@@ -7,7 +7,7 @@ import {
   updateComplianceRule,
   deleteComplianceRule,
   type ComplianceRuleFormData,
-} from '@/src/lib/actions/compliance-rules';
+} from '@/lib/actions/compliance-rules';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

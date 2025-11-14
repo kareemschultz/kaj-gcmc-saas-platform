@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, useCallback, ReactNode } from 'react';
-import { WizardConfig, WizardState, WizardContextValue } from '@/src/types/wizard';
+import { WizardConfig, WizardState, WizardContextValue } from '@/types/wizard';
 
 const WizardContext = createContext<WizardContextValue | null>(null);
 

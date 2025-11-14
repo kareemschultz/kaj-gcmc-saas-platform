@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { auth } from '@/auth';
-import { getConversations, getUnreadMessageCount } from '@/src/lib/actions/conversations';
+import { getConversations, getUnreadMessageCount } from '@/lib/actions/conversations';
 import { ConversationList } from '@/components/messages/conversation-list';
 import { MessageSquare, Search, Filter } from 'lucide-react';
 

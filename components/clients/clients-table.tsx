@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal, Eye, Edit, Trash } from 'lucide-react';
-import { deleteClient } from '@/src/lib/actions/clients';
+import { deleteClient } from '@/lib/actions/clients';
 import { toast } from '@/hooks/use-toast';
 import type { Client } from '@prisma/client';
 

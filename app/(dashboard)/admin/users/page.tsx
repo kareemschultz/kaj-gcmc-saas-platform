@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { getUsers } from '@/src/lib/actions/users';
-import { getRoles } from '@/src/lib/actions/roles';
+import { getUsers } from '@/lib/actions/users';
+import { getRoles } from '@/lib/actions/roles';
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 

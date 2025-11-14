@@ -4,7 +4,7 @@ import { useWizard } from '@/components/wizard/wizard-context';
 import { WizardNavigation } from '@/components/wizard/wizard-navigation';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ComplianceSetupWizardData } from '@/src/lib/actions/wizards';
+import { ComplianceSetupWizardData } from '@/lib/actions/wizards';
 import { Building2, FileCheck, CheckCircle2, ListTodo } from 'lucide-react';
 
 interface ComplianceReviewStepProps {

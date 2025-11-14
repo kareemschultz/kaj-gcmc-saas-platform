@@ -3,9 +3,9 @@
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { auth } from '@/auth';
-import { prisma } from '@/src/lib/prisma';
-import { ApiError } from '@/src/lib/errors';
-import { logger } from '@/src/lib/logger';
+import { prisma } from '@/lib/prisma';
+import { ApiError } from '@/lib/errors';
+import { logger } from '@/lib/logger';
 
 // Validation schemas
 export const complianceRuleSetSchema = z.object({

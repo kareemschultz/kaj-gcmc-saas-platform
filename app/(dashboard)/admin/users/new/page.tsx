@@ -1,5 +1,5 @@
 import { UserForm } from '@/components/users/user-form';
-import { getRoles } from '@/src/lib/actions/roles';
+import { getRoles } from '@/lib/actions/roles';
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';

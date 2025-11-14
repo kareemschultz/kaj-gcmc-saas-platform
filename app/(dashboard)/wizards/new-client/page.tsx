@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { NewClientWizard } from '@/components/wizards/new-client-wizard';
-import { getBundlesForAuthorities, getServicesForWizard } from '@/src/lib/actions/wizards';
+import { getBundlesForAuthorities, getServicesForWizard } from '@/lib/actions/wizards';
 
 export const metadata: Metadata = {
   title: 'New Client Onboarding Wizard | KGC Compliance Cloud',

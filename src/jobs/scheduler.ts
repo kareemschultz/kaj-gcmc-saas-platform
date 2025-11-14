@@ -10,8 +10,8 @@ import {
   expiryNotificationQueue,
   filingReminderQueue,
   JOB_NAMES,
-} from '@/src/lib/queues';
-import { logger } from '@/src/lib/logger';
+} from '@/lib/queues';
+import { logger } from '@/lib/logger';
 import { createComplianceRefreshWorker } from './compliance-refresh';
 import { createExpiryNotificationsWorker } from './expiry-notifications';
 import { createFilingRemindersWorker } from './filing-reminders';

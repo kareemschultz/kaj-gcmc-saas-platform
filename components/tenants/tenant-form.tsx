@@ -7,7 +7,7 @@ import {
   updateTenant,
   deleteTenant,
   type TenantFormData,
-} from '@/src/lib/actions/tenants';
+} from '@/lib/actions/tenants';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

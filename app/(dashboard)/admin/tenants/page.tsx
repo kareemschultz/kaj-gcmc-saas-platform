@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getTenants } from '@/src/lib/actions/tenants';
+import { getTenants } from '@/lib/actions/tenants';
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 

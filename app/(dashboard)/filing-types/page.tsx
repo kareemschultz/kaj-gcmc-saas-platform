@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getFilingTypes } from '@/src/lib/actions/filing-types';
+import { getFilingTypes } from '@/lib/actions/filing-types';
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 

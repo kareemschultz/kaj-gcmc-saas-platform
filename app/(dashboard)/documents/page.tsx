@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getDocuments } from '@/src/lib/actions/documents';
+import { getDocuments } from '@/lib/actions/documents';
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import { format } from 'date-fns';

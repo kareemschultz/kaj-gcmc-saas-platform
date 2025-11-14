@@ -1,5 +1,5 @@
 import { notFound, redirect } from 'next/navigation';
-import { getTask, deleteTask } from '@/src/lib/actions/tasks';
+import { getTask, deleteTask } from '@/lib/actions/tasks';
 import { auth } from '@/auth';
 import { TaskForm } from '@/components/tasks/task-form';
 import Link from 'next/link';

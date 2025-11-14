@@ -4,7 +4,7 @@ import { useWizard } from '@/components/wizard/wizard-context';
 import { WizardNavigation } from '@/components/wizard/wizard-navigation';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ServiceRequestWizardData } from '@/src/lib/actions/wizards';
+import { ServiceRequestWizardData } from '@/lib/actions/wizards';
 import { Building2, Briefcase, ListChecks, CheckCircle2 } from 'lucide-react';
 
 interface ServiceRequestReviewStepProps {
