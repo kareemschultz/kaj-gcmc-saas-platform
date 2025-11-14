@@ -12,15 +12,16 @@ export const metadata: Metadata = {
 };
 
 interface PageProps {
-  searchParams: {
+  searchParams: Promise<{
     authority?: string;
     page?: string;
-  };
+  }>;
 }
 
 export default async function OverdueFilingsPage({ searchParams }: PageProps) {
-  const authority = searchParams.authority;
-  const page = Number(searchParams.page) || 1;
+  const params = await searchParams;
+  const authority = params.authority;
+  const page = Number(params.page) || 1;
 
   const { filings, pagination } = await getOverdueFilings({
     authority,

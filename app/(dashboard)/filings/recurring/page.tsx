@@ -9,23 +9,24 @@ import { ToggleActiveButton } from './toggle-active-button';
 export default async function RecurringFilingsPage({
   searchParams,
 }: {
-  searchParams: { page?: string; search?: string; clientId?: string; filingTypeId?: string; active?: string };
+  searchParams: Promise<{ page?: string; search?: string; clientId?: string; filingTypeId?: string; active?: string }>;
 }) {
   const session = await auth();
   if (!session) {
     redirect('/auth/login');
   }
 
-  const page = parseInt(searchParams.page || '1');
-  const active = searchParams.active === 'true' ? true : searchParams.active === 'false' ? false : undefined;
+  const params = await searchParams;
+  const page = parseInt(params.page || '1');
+  const active = params.active === 'true' ? true : params.active === 'false' ? false : undefined;
 
   const [result, filingTypes, clients] = await Promise.all([
     getRecurringFilings({
       page,
       pageSize: 10,
-      search: searchParams.search,
-      clientId: searchParams.clientId ? parseInt(searchParams.clientId) : undefined,
-      filingTypeId: searchParams.filingTypeId ? parseInt(searchParams.filingTypeId) : undefined,
+      search: params.search,
+      clientId: params.clientId ? parseInt(params.clientId) : undefined,
+      filingTypeId: params.filingTypeId ? parseInt(params.filingTypeId) : undefined,
       active,
     }),
     getFilingTypes(),
@@ -60,7 +61,7 @@ export default async function RecurringFilingsPage({
             <input
               type="text"
               name="search"
-              defaultValue={searchParams.search}
+              defaultValue={params.search}
               placeholder="Search filings..."
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
@@ -69,7 +70,7 @@ export default async function RecurringFilingsPage({
             <label className="block text-sm font-medium text-gray-700 mb-2">Client</label>
             <select
               name="clientId"
-              defaultValue={searchParams.clientId}
+              defaultValue={params.clientId}
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
             >
               <option value="">All Clients</option>
@@ -84,7 +85,7 @@ export default async function RecurringFilingsPage({
             <label className="block text-sm font-medium text-gray-700 mb-2">Filing Type</label>
             <select
               name="filingTypeId"
-              defaultValue={searchParams.filingTypeId}
+              defaultValue={params.filingTypeId}
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
             >
               <option value="">All Filing Types</option>
@@ -99,7 +100,7 @@ export default async function RecurringFilingsPage({
             <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
             <select
               name="active"
-              defaultValue={searchParams.active}
+              defaultValue={params.active}
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
             >
               <option value="">All</option>
@@ -214,7 +215,7 @@ export default async function RecurringFilingsPage({
             </div>
             <div className="flex gap-2">
               <Link
-                href={`/filings/recurring?page=${page - 1}${searchParams.search ? `&search=${searchParams.search}` : ''}${searchParams.clientId ? `&clientId=${searchParams.clientId}` : ''}${searchParams.filingTypeId ? `&filingTypeId=${searchParams.filingTypeId}` : ''}${searchParams.active ? `&active=${searchParams.active}` : ''}`}
+                href={`/filings/recurring?page=${page - 1}${params.search ? `&search=${params.search}` : ''}${params.clientId ? `&clientId=${params.clientId}` : ''}${params.filingTypeId ? `&filingTypeId=${params.filingTypeId}` : ''}${params.active ? `&active=${params.active}` : ''}`}
                 className={`px-3 py-1 text-sm border rounded-md ${
                   page === 1 ? 'opacity-50 pointer-events-none' : 'hover:bg-gray-50'
                 } bg-white text-gray-700`}
@@ -224,7 +225,7 @@ export default async function RecurringFilingsPage({
               {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p) => (
                 <Link
                   key={p}
-                  href={`/filings/recurring?page=${p}${searchParams.search ? `&search=${searchParams.search}` : ''}${searchParams.clientId ? `&clientId=${searchParams.clientId}` : ''}${searchParams.filingTypeId ? `&filingTypeId=${searchParams.filingTypeId}` : ''}${searchParams.active ? `&active=${searchParams.active}` : ''}`}
+                  href={`/filings/recurring?page=${p}${params.search ? `&search=${params.search}` : ''}${params.clientId ? `&clientId=${params.clientId}` : ''}${params.filingTypeId ? `&filingTypeId=${params.filingTypeId}` : ''}${params.active ? `&active=${params.active}` : ''}`}
                   className={`px-3 py-1 text-sm border rounded-md ${
                     p === page ? 'bg-teal-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
                   }`}
@@ -233,7 +234,7 @@ export default async function RecurringFilingsPage({
                 </Link>
               ))}
               <Link
-                href={`/filings/recurring?page=${page + 1}${searchParams.search ? `&search=${searchParams.search}` : ''}${searchParams.clientId ? `&clientId=${searchParams.clientId}` : ''}${searchParams.filingTypeId ? `&filingTypeId=${searchParams.filingTypeId}` : ''}${searchParams.active ? `&active=${searchParams.active}` : ''}`}
+                href={`/filings/recurring?page=${page + 1}${params.search ? `&search=${params.search}` : ''}${params.clientId ? `&clientId=${params.clientId}` : ''}${params.filingTypeId ? `&filingTypeId=${params.filingTypeId}` : ''}${params.active ? `&active=${params.active}` : ''}`}
                 className={`px-3 py-1 text-sm border rounded-md ${
                   page === totalPages ? 'opacity-50 pointer-events-none' : 'hover:bg-gray-50'
                 } bg-white text-gray-700`}

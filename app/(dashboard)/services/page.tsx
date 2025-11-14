@@ -6,20 +6,21 @@ import { redirect } from 'next/navigation';
 export default async function ServicesPage({
   searchParams,
 }: {
-  searchParams: { page?: string; search?: string; category?: string; active?: string };
+  searchParams: Promise<{ page?: string; search?: string; category?: string; active?: string }>;
 }) {
   const session = await auth();
   if (!session) {
     redirect('/auth/login');
   }
 
-  const page = parseInt(searchParams.page || '1');
+  const params = await searchParams;
+  const page = parseInt(params.page || '1');
   const { services, total, totalPages } = await getServices({
     page,
     pageSize: 20,
-    search: searchParams.search,
-    category: searchParams.category,
-    active: searchParams.active ? searchParams.active === 'true' : undefined,
+    search: params.search,
+    category: params.category,
+    active: params.active ? params.active === 'true' : undefined,
   });
 
   return (
@@ -48,14 +49,14 @@ export default async function ServicesPage({
             <input
               type="text"
               placeholder="Search services..."
-              defaultValue={searchParams.search}
+              defaultValue={params.search}
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
             <select
-              defaultValue={searchParams.category}
+              defaultValue={params.category}
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
             >
               <option value="">All Categories</option>
@@ -72,7 +73,7 @@ export default async function ServicesPage({
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
             <select
-              defaultValue={searchParams.active}
+              defaultValue={params.active}
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
             >
               <option value="">All Services</option>
@@ -164,7 +165,7 @@ export default async function ServicesPage({
             </div>
             <div className="flex gap-2">
               <Link
-                href={`/services?page=${page - 1}${searchParams.search ? `&search=${searchParams.search}` : ''}${searchParams.category ? `&category=${searchParams.category}` : ''}${searchParams.active ? `&active=${searchParams.active}` : ''}`}
+                href={`/services?page=${page - 1}${params.search ? `&search=${params.search}` : ''}${params.category ? `&category=${params.category}` : ''}${params.active ? `&active=${params.active}` : ''}`}
                 className={`px-3 py-1 text-sm border rounded-md ${page === 1 ? 'opacity-50 pointer-events-none' : 'hover:bg-gray-50'} bg-white text-gray-700`}
               >
                 Previous
@@ -172,7 +173,7 @@ export default async function ServicesPage({
               {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p) => (
                 <Link
                   key={p}
-                  href={`/services?page=${p}${searchParams.search ? `&search=${searchParams.search}` : ''}${searchParams.category ? `&category=${searchParams.category}` : ''}${searchParams.active ? `&active=${searchParams.active}` : ''}`}
+                  href={`/services?page=${p}${params.search ? `&search=${params.search}` : ''}${params.category ? `&category=${params.category}` : ''}${params.active ? `&active=${params.active}` : ''}`}
                   className={`px-3 py-1 text-sm border rounded-md ${
                     p === page ? 'bg-teal-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
                   }`}
@@ -181,7 +182,7 @@ export default async function ServicesPage({
                 </Link>
               ))}
               <Link
-                href={`/services?page=${page + 1}${searchParams.search ? `&search=${searchParams.search}` : ''}${searchParams.category ? `&category=${searchParams.category}` : ''}${searchParams.active ? `&active=${searchParams.active}` : ''}`}
+                href={`/services?page=${page + 1}${params.search ? `&search=${params.search}` : ''}${params.category ? `&category=${params.category}` : ''}${params.active ? `&active=${params.active}` : ''}`}
                 className={`px-3 py-1 text-sm border rounded-md ${page === totalPages ? 'opacity-50 pointer-events-none' : 'hover:bg-gray-50'} bg-white text-gray-700`}
               >
                 Next

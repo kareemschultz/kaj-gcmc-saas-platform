@@ -9,9 +9,9 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, User, Briefcase } from 'lucide-react';
 
 interface MessageDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function MessageDetailPage({ params }: MessageDetailPageProps) {
@@ -20,7 +20,8 @@ export default async function MessageDetailPage({ params }: MessageDetailPagePro
     redirect('/auth/login');
   }
 
-  const conversationId = parseInt(params.id);
+  const { id } = await params;
+  const conversationId = parseInt(id);
 
   if (isNaN(conversationId)) {
     notFound();

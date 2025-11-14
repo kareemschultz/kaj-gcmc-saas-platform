@@ -6,7 +6,7 @@ import { auth } from '@/auth';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth();
@@ -14,7 +14,8 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const bundleId = parseInt(params.id, 10);
+    const { id } = await params;
+    const bundleId = parseInt(id, 10);
     if (isNaN(bundleId)) {
       return NextResponse.json({ error: 'Invalid bundle ID' }, { status: 400 });
     }

@@ -8,27 +8,28 @@ import { MessageSquare, Search, Filter } from 'lucide-react';
 export default async function MessagesPage({
   searchParams,
 }: {
-  searchParams: {
+  searchParams: Promise<{
     page?: string;
     search?: string;
     clientId?: string;
     unreadOnly?: string;
-  };
+  }>;
 }) {
   const session = await auth();
   if (!session) {
     redirect('/auth/login');
   }
 
-  const page = parseInt(searchParams.page || '1');
-  const unreadOnly = searchParams.unreadOnly === 'true';
-  const clientId = searchParams.clientId ? parseInt(searchParams.clientId) : undefined;
+  const params = await searchParams;
+  const page = parseInt(params.page || '1');
+  const unreadOnly = params.unreadOnly === 'true';
+  const clientId = params.clientId ? parseInt(params.clientId) : undefined;
 
   const [conversationsData, unreadCount] = await Promise.all([
     getConversations({
       page,
       pageSize: 20,
-      search: searchParams.search,
+      search: params.search,
       clientId,
       unreadOnly,
     }),
@@ -73,7 +74,7 @@ export default async function MessagesPage({
               type="text"
               id="search"
               name="search"
-              defaultValue={searchParams.search}
+              defaultValue={params.search}
               placeholder="Search conversations..."
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
@@ -109,11 +110,11 @@ export default async function MessagesPage({
               <MessageSquare className="mx-auto h-12 w-12 text-gray-400" />
               <h3 className="mt-4 text-lg font-medium text-gray-900">No conversations</h3>
               <p className="mt-2 text-sm text-gray-500">
-                {searchParams.search || unreadOnly
+                {params.search || unreadOnly
                   ? 'No conversations match your filters.'
                   : 'Get started by creating your first conversation.'}
               </p>
-              {!searchParams.search && !unreadOnly && (
+              {!params.search && !unreadOnly && (
                 <Link
                   href="/messages/new"
                   className="mt-4 inline-flex items-center gap-2 rounded-md bg-teal-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-teal-700"
@@ -141,7 +142,7 @@ export default async function MessagesPage({
                   <div className="flex gap-2">
                     {page > 1 && (
                       <Link
-                        href={`/messages?page=${page - 1}${searchParams.search ? `&search=${searchParams.search}` : ''}${unreadOnly ? '&unreadOnly=true' : ''}`}
+                        href={`/messages?page=${page - 1}${params.search ? `&search=${params.search}` : ''}${unreadOnly ? '&unreadOnly=true' : ''}`}
                         className="rounded-md border bg-white px-3 py-1 text-sm text-gray-700 hover:bg-gray-50"
                       >
                         Previous
@@ -149,7 +150,7 @@ export default async function MessagesPage({
                     )}
                     {page < totalPages && (
                       <Link
-                        href={`/messages?page=${page + 1}${searchParams.search ? `&search=${searchParams.search}` : ''}${unreadOnly ? '&unreadOnly=true' : ''}`}
+                        href={`/messages?page=${page + 1}${params.search ? `&search=${params.search}` : ''}${unreadOnly ? '&unreadOnly=true' : ''}`}
                         className="rounded-md border bg-white px-3 py-1 text-sm text-gray-700 hover:bg-gray-50"
                       >
                         Next

@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getClientById } from '@/lib/actions/clients';
+import { getClient } from '@/lib/actions/clients';
 import { getBundlesForAuthorities } from '@/lib/actions/wizards';
 import { ComplianceSetupWizard } from '@/components/wizards/compliance-setup-wizard';
 
@@ -9,16 +9,17 @@ export const metadata: Metadata = {
 };
 
 interface PageProps {
-  params: {
+  params: Promise<{
     clientId: string;
-  };
+  }>;
 }
 
 export default async function ComplianceSetupWizardPage({ params }: PageProps) {
-  const clientId = parseInt(params.clientId);
+  const { clientId: clientIdParam } = await params;
+  const clientId = parseInt(clientIdParam);
 
   const [client, bundles] = await Promise.all([
-    getClientById(clientId),
+    getClient(clientId),
     getBundlesForAuthorities(['GRA', 'NIS', 'DCRA', 'Immigration', 'Deeds', 'GO-Invest']),
   ]);
 

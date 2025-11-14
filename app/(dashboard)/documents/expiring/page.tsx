@@ -12,17 +12,18 @@ export const metadata: Metadata = {
 };
 
 interface PageProps {
-  searchParams: {
+  searchParams: Promise<{
     authority?: string;
     daysAhead?: string;
     page?: string;
-  };
+  }>;
 }
 
 export default async function ExpiringDocumentsPage({ searchParams }: PageProps) {
-  const authority = searchParams.authority;
-  const daysAhead = Number(searchParams.daysAhead) || 30;
-  const page = Number(searchParams.page) || 1;
+  const params = await searchParams;
+  const authority = params.authority;
+  const daysAhead = Number(params.daysAhead) || 30;
+  const page = Number(params.page) || 1;
 
   const { documents, pagination } = await getExpiringDocuments({
     authority,

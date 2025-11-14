@@ -13,13 +13,14 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 interface DocumentDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function DocumentDetailPage({ params }: DocumentDetailPageProps) {
-  const documentId = parseInt(params.id);
+  const { id } = await params;
+  const documentId = parseInt(id);
 
   if (isNaN(documentId)) {
     notFound();

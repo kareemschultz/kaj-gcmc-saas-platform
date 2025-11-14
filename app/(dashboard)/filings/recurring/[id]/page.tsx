@@ -12,14 +12,15 @@ import { DeleteButton } from './delete-button';
 export default async function EditRecurringFilingPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   const session = await auth();
   if (!session?.user?.tenantId) {
     redirect('/auth/login');
   }
 
-  const id = parseInt(params.id);
+  const { id: idParam } = await params;
+  const id = parseInt(idParam);
 
   const [recurringFiling, filingTypes, clients, clientBusinesses] = await Promise.all([
     getRecurringFiling(id),

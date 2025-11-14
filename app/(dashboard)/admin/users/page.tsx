@@ -7,21 +7,22 @@ import { redirect } from 'next/navigation';
 export default async function UsersPage({
   searchParams,
 }: {
-  searchParams: { page?: string; search?: string; roleId?: string };
+  searchParams: Promise<{ page?: string; search?: string; roleId?: string }>;
 }) {
   const session = await auth();
   if (!session) {
     redirect('/auth/login');
   }
 
-  const page = parseInt(searchParams.page || '1');
-  const roleId = searchParams.roleId ? parseInt(searchParams.roleId) : undefined;
+  const params = await searchParams;
+  const page = parseInt(params.page || '1');
+  const roleId = params.roleId ? parseInt(params.roleId) : undefined;
 
   const [{ users, total, totalPages }, roles] = await Promise.all([
     getUsers({
       page,
       pageSize: 20,
-      search: searchParams.search,
+      search: params.search,
       roleId,
     }),
     getRoles(),
@@ -53,14 +54,14 @@ export default async function UsersPage({
             <input
               type="text"
               placeholder="Search by name or email..."
-              defaultValue={searchParams.search}
+              defaultValue={params.search}
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Role</label>
             <select
-              defaultValue={searchParams.roleId}
+              defaultValue={params.roleId}
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
             >
               <option value="">All Roles</option>
@@ -152,7 +153,7 @@ export default async function UsersPage({
             </div>
             <div className="flex gap-2">
               <Link
-                href={`/admin/users?page=${page - 1}${searchParams.search ? `&search=${searchParams.search}` : ''}${searchParams.roleId ? `&roleId=${searchParams.roleId}` : ''}`}
+                href={`/admin/users?page=${page - 1}${params.search ? `&search=${params.search}` : ''}${params.roleId ? `&roleId=${params.roleId}` : ''}`}
                 className={`px-3 py-1 text-sm border rounded-md ${page === 1 ? 'opacity-50 pointer-events-none' : 'hover:bg-gray-50'} bg-white text-gray-700`}
               >
                 Previous
@@ -160,7 +161,7 @@ export default async function UsersPage({
               {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p) => (
                 <Link
                   key={p}
-                  href={`/admin/users?page=${p}${searchParams.search ? `&search=${searchParams.search}` : ''}${searchParams.roleId ? `&roleId=${searchParams.roleId}` : ''}`}
+                  href={`/admin/users?page=${p}${params.search ? `&search=${params.search}` : ''}${params.roleId ? `&roleId=${params.roleId}` : ''}`}
                   className={`px-3 py-1 text-sm border rounded-md ${
                     p === page ? 'bg-teal-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
                   }`}
@@ -169,7 +170,7 @@ export default async function UsersPage({
                 </Link>
               ))}
               <Link
-                href={`/admin/users?page=${page + 1}${searchParams.search ? `&search=${searchParams.search}` : ''}${searchParams.roleId ? `&roleId=${searchParams.roleId}` : ''}`}
+                href={`/admin/users?page=${page + 1}${params.search ? `&search=${params.search}` : ''}${params.roleId ? `&roleId=${params.roleId}` : ''}`}
                 className={`px-3 py-1 text-sm border rounded-md ${page === totalPages ? 'opacity-50 pointer-events-none' : 'hover:bg-gray-50'} bg-white text-gray-700`}
               >
                 Next

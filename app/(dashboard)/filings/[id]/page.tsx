@@ -9,13 +9,14 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 interface FilingDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function FilingDetailPage({ params }: FilingDetailPageProps) {
-  const filingId = parseInt(params.id);
+  const { id } = await params;
+  const filingId = parseInt(id);
   
   if (isNaN(filingId)) {
     notFound();

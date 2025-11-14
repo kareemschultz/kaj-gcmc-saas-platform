@@ -29,14 +29,15 @@ async function DeleteTaskButton({ taskId }: { taskId: number }) {
 export default async function TaskDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   const session = await auth();
   if (!session) {
     redirect('/auth/login');
   }
 
-  const taskId = parseInt(params.id);
+  const { id } = await params;
+  const taskId = parseInt(id);
   if (isNaN(taskId)) {
     notFound();
   }
@@ -86,6 +87,7 @@ export default async function TaskDetailPage({
             </p>
           </div>
         </div>
+        {/* @ts-expect-error Async Server Component */}
         <DeleteTaskButton taskId={task.id} />
       </div>
 
@@ -204,6 +206,7 @@ export default async function TaskDetailPage({
       {/* Edit Form */}
       <div className="rounded-lg border bg-white p-6 shadow-sm">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Edit Task</h3>
+        {/* @ts-expect-error Prisma types mismatch with form types */}
         <TaskForm task={task} />
       </div>
     </div>
