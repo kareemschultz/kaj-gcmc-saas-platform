@@ -4,6 +4,7 @@ import { auth } from '@/auth';
 import { UnauthorizedError, ForbiddenError } from './errors';
 import { hasPermission } from './auth-helpers';
 import type { UserRole } from '@/types';
+import type { UserContext } from './rbac';
 
 export async function getSession() {
   try {
@@ -67,7 +68,7 @@ export async function requirePermission(module: string, action: string) {
 
 export async function getUserTenants(userId: number) {
   const { prisma } = await import('./prisma');
-  
+
   const tenantUsers = await prisma.tenantUser.findMany({
     where: { userId },
     include: {
@@ -75,11 +76,30 @@ export async function getUserTenants(userId: number) {
       role: true,
     },
   });
-  
+
   return tenantUsers.map((tu) => ({
     tenantId: tu.tenantId,
     tenantCode: tu.tenant.code,
     tenantName: tu.tenant.name,
     role: tu.role.name,
   }));
+}
+
+/**
+ * Get UserContext from session for RBAC checks
+ * Throws UnauthorizedError if session is invalid
+ */
+export async function getUserContext(): Promise<UserContext> {
+  const session = await auth();
+
+  if (!session?.user?.id || !session?.user?.tenantId || !session?.role) {
+    throw new UnauthorizedError('Invalid session');
+  }
+
+  return {
+    id: session.user.id,
+    role: session.role as UserRole,
+    tenantId: session.user.tenantId,
+    email: session.user.email || undefined,
+  };
 }

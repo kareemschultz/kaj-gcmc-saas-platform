@@ -8,6 +8,7 @@ import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { ApiError } from '@/lib/errors';
 import { logger } from '@/lib/logger';
+import { assertCanView, assertCanCreate, assertCanEdit, assertCanDelete, getUserContext } from '@/lib/rbac';
 
 // Validation schemas
 export const clientSchema = z.object({
@@ -38,6 +39,9 @@ export async function getClients(params?: {
   if (!session?.user?.tenantId) {
     throw new ApiError('Unauthorized', 401);
   }
+
+  const userContext = await getUserContext();
+  assertCanView(userContext, 'clients');
 
   const {
     search = '',
@@ -102,6 +106,9 @@ export async function getClient(id: number) {
     throw new ApiError('Unauthorized', 401);
   }
 
+  const userContext = await getUserContext();
+  assertCanView(userContext, 'clients');
+
   const client = await prisma.client.findFirst({
     where: {
       id,
@@ -132,6 +139,9 @@ export async function createClient(data: ClientFormData) {
   if (!session?.user?.tenantId) {
     throw new ApiError('Unauthorized', 401);
   }
+
+  const userContext = await getUserContext();
+  assertCanCreate(userContext, 'clients');
 
   const validated = clientSchema.parse(data);
 
@@ -168,6 +178,9 @@ export async function updateClient(id: number, data: ClientFormData) {
   if (!session?.user?.tenantId) {
     throw new ApiError('Unauthorized', 401);
   }
+
+  const userContext = await getUserContext();
+  assertCanEdit(userContext, 'clients');
 
   const validated = clientSchema.parse(data);
 
@@ -214,6 +227,9 @@ export async function deleteClient(id: number) {
   if (!session?.user?.tenantId) {
     throw new ApiError('Unauthorized', 401);
   }
+
+  const userContext = await getUserContext();
+  assertCanDelete(userContext, 'clients');
 
   // Verify client belongs to tenant
   const existing = await prisma.client.findFirst({
