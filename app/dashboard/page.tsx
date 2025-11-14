@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { getDashboardStats } from '@/lib/actions/dashboard';
+import { getDashboardStats } from '@/src/lib/actions/dashboard';
 import { StatCard } from '@/components/dashboard/stat-card';
 import { ComplianceSummaryCard } from '@/components/dashboard/compliance-summary';
 import { UpcomingDeadlinesCard } from '@/components/dashboard/upcoming-deadlines';

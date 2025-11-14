@@ -14,7 +14,7 @@ import {
   updateClientBusiness,
   clientBusinessSchema,
   type ClientBusinessFormData,
-} from '@/lib/actions/client-businesses';
+} from '@/src/lib/actions/client-businesses';
 import { toast } from '@/hooks/use-toast';
 import type { ClientBusiness } from '@prisma/client';
 

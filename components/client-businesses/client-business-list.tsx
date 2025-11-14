@@ -7,7 +7,7 @@ import { Plus, Pencil, Trash2, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardAction } from '@/components/ui/card';
 import { ClientBusinessForm } from './client-business-form';
-import { deleteClientBusiness } from '@/lib/actions/client-businesses';
+import { deleteClientBusiness } from '@/src/lib/actions/client-businesses';
 import { toast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import type { ClientBusiness } from '@prisma/client';

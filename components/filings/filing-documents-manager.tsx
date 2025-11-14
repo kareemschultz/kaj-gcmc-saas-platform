@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { attachDocumentsToFiling } from '@/lib/actions/filings';
+import { attachDocumentsToFiling } from '@/src/lib/actions/filings';
 import { toast } from '@/hooks/use-toast';
 import { FileText, LinkIcon } from 'lucide-react';
 

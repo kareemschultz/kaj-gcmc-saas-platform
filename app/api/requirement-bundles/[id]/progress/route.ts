@@ -1,7 +1,7 @@
 // API route for requirement bundle progress
 
 import { NextRequest, NextResponse } from 'next/server';
-import { checkBundleProgress } from '@/lib/actions/requirement-bundles';
+import { checkBundleProgress } from '@/src/lib/actions/requirement-bundles';
 import { auth } from '@/auth';
 
 export async function GET(
