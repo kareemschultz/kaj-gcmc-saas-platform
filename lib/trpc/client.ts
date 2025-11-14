@@ -39,7 +39,7 @@ export const trpcClient = createTRPCClient<AppRouter>({
       // Add credentials for cookie-based auth
       fetch(url, options) {
         return fetch(url, {
-          ...options,
+          ...(options as RequestInit),
           credentials: 'include',
         });
       },

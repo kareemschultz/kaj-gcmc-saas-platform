@@ -80,7 +80,7 @@ export function TRPCProvider({ children }: { children: React.ReactNode }) {
           // Add credentials for cookie-based auth
           fetch(url, options) {
             return fetch(url, {
-              ...options,
+              ...(options as RequestInit),
               credentials: 'include',
             });
           },

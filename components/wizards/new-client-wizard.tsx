@@ -84,7 +84,7 @@ export function NewClientWizard({ bundles, services }: NewClientWizardProps) {
   return (
     <WizardProvider
       config={wizardConfig}
-      initialData={initialData}
+      initialData={initialData as any}
       onComplete={handleComplete}
     >
       <WizardContent bundles={bundles} services={services} isSubmitting={isSubmitting} />

@@ -85,6 +85,13 @@ export function requirePermission(module: string, action: string) {
  */
 export function requireRole(...roles: UserRole[]) {
   return middleware<{ ctx: ProtectedContext }>(({ ctx, next }) => {
+    if (!ctx.user) {
+      throw new TRPCError({
+        code: 'UNAUTHORIZED',
+        message: 'Authentication required',
+      });
+    }
+
     const userRole = ctx.user.role as UserRole;
 
     if (!roles.includes(userRole)) {
@@ -182,8 +189,8 @@ export function requireTenantIsolation<TInput>(
 ) {
   return middleware<{ ctx: ProtectedContext; input: TInput }>(
     async ({ ctx, input, next }) => {
-      const resourceTenantId = await getTenantId(input);
-      const userTenantId = ctx.user.tenantId;
+      const resourceTenantId = await getTenantId(input as TInput);
+      const userTenantId = ctx.user?.tenantId;
 
       if (resourceTenantId !== userTenantId) {
         throw new TRPCError({

@@ -78,7 +78,7 @@ export async function getFilingTypes(params?: {
       totalPages: Math.ceil(total / pageSize),
     };
   } catch (error) {
-    logger.error('Error fetching filing types:', error);
+    logger.error('Error fetching filing types:', error as Error);
     throw new ApiError('Failed to fetch filing types', 500);
   }
 }
@@ -110,7 +110,7 @@ export async function getFilingType(id: number) {
     return filingType;
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    logger.error('Error fetching filing type:', error);
+    logger.error('Error fetching filing type:', error as Error);
     throw new ApiError('Failed to fetch filing type', 500);
   }
 }
@@ -162,10 +162,10 @@ export async function createFilingType(data: FilingTypeFormData) {
     return filingType;
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new ApiError('Validation failed', 400, error.errors);
+      throw new ApiError('Validation failed', 400);
     }
     if (error instanceof ApiError) throw error;
-    logger.error('Error creating filing type:', error);
+    logger.error('Error creating filing type:', error as Error);
     throw new ApiError('Failed to create filing type', 500);
   }
 }
@@ -232,10 +232,10 @@ export async function updateFilingType(id: number, data: FilingTypeFormData) {
     return filingType;
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new ApiError('Validation failed', 400, error.errors);
+      throw new ApiError('Validation failed', 400);
     }
     if (error instanceof ApiError) throw error;
-    logger.error('Error updating filing type:', error);
+    logger.error('Error updating filing type:', error as Error);
     throw new ApiError('Failed to update filing type', 500);
   }
 }
@@ -296,7 +296,7 @@ export async function deleteFilingType(id: number) {
     return { success: true };
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    logger.error('Error deleting filing type:', error);
+    logger.error('Error deleting filing type:', error as Error);
     throw new ApiError('Failed to delete filing type', 500);
   }
 }

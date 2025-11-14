@@ -90,24 +90,10 @@ export const emailQueue = new Queue(QUEUE_NAMES.EMAIL, {
 // Event listeners for monitoring
 const setupQueueEvents = (queue: Queue, queueName: string) => {
   queue.on('error', (error: Error) => {
-    logger.error(`Queue ${queueName} error`, error);
+    logger.error(`Queue ${queueName} error`, error as Error);
   });
-
-  queue.on('waiting', (jobId: string) => {
-    logger.debug(`Job ${jobId} waiting in ${queueName}`);
-  });
-
-  queue.on('active', (jobId: string) => {
-    logger.debug(`Job ${jobId} active in ${queueName}`);
-  });
-
-  queue.on('completed', (jobId: string) => {
-    logger.info(`Job ${jobId} completed in ${queueName}`);
-  });
-
-  queue.on('failed', (jobId: string, error: Error) => {
-    logger.error(`Job ${jobId} failed in ${queueName}`, error);
-  });
+  // Note: Additional queue events like 'waiting', 'active', 'completed', 'failed'
+  // are available via QueueEvents class if needed
 };
 
 // Setup event listeners for all queues

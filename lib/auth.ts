@@ -4,7 +4,7 @@ import { auth } from '@/auth';
 import { UnauthorizedError, ForbiddenError } from './errors';
 import { hasPermission } from './auth-helpers';
 import type { UserRole } from '@/types';
-import type { UserContext } from './rbac';
+import type { UserPermissionContext } from './rbac';
 
 export async function getSession() {
   try {
@@ -89,7 +89,7 @@ export async function getUserTenants(userId: number) {
  * Get UserContext from session for RBAC checks
  * Throws UnauthorizedError if session is invalid
  */
-export async function getUserContext(): Promise<UserContext> {
+export async function getUserContext(): Promise<UserPermissionContext> {
   const session = await auth();
 
   if (!session?.user?.id || !session?.user?.tenantId || !session?.role) {
@@ -97,9 +97,8 @@ export async function getUserContext(): Promise<UserContext> {
   }
 
   return {
-    id: session.user.id,
+    userId: session.user.id,
     role: session.role as UserRole,
     tenantId: session.user.tenantId,
-    email: session.user.email || undefined,
   };
 }

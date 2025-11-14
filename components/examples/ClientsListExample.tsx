@@ -134,10 +134,10 @@ export function ClientsListExample() {
                 <td className="px-6 py-4 text-right text-sm">
                   <button
                     onClick={() => handleDelete(client.id)}
-                    disabled={deleteClient.isLoading}
+                    disabled={deleteClient.isPending}
                     className="text-red-600 hover:text-red-900 disabled:opacity-50"
                   >
-                    {deleteClient.isLoading ? 'Deleting...' : 'Delete'}
+                    {deleteClient.isPending ? 'Deleting...' : 'Delete'}
                   </button>
                 </td>
               </tr>

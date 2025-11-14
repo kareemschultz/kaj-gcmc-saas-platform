@@ -101,7 +101,7 @@ export async function getRecurringFilings(params?: {
       totalPages: Math.ceil(total / pageSize),
     };
   } catch (error) {
-    logger.error('Error fetching recurring filings:', error);
+    logger.error('Error fetching recurring filings:', error as Error);
     throw new ApiError('Failed to fetch recurring filings', 500);
   }
 }
@@ -133,7 +133,7 @@ export async function getRecurringFiling(id: number) {
     return recurringFiling;
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    logger.error('Error fetching recurring filing:', error);
+    logger.error('Error fetching recurring filing:', error as Error);
     throw new ApiError('Failed to fetch recurring filing', 500);
   }
 }
@@ -200,10 +200,10 @@ export async function createRecurringFiling(data: RecurringFilingFormData) {
     return recurringFiling;
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new ApiError('Validation failed', 400, error.errors);
+      throw new ApiError('Validation failed', 400);
     }
     if (error instanceof ApiError) throw error;
-    logger.error('Error creating recurring filing:', error);
+    logger.error('Error creating recurring filing:', error as Error);
     throw new ApiError('Failed to create recurring filing', 500);
   }
 }
@@ -258,7 +258,7 @@ export async function updateRecurringFiling(id: number, data: Partial<RecurringF
     return recurringFiling;
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    logger.error('Error updating recurring filing:', error);
+    logger.error('Error updating recurring filing:', error as Error);
     throw new ApiError('Failed to update recurring filing', 500);
   }
 }
@@ -306,7 +306,7 @@ export async function deleteRecurringFiling(id: number) {
     return { success: true };
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    logger.error('Error deleting recurring filing:', error);
+    logger.error('Error deleting recurring filing:', error as Error);
     throw new ApiError('Failed to delete recurring filing', 500);
   }
 }
@@ -345,7 +345,7 @@ export async function toggleRecurringFilingActive(id: number) {
     return recurringFiling;
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    logger.error('Error toggling recurring filing:', error);
+    logger.error('Error toggling recurring filing:', error as Error);
     throw new ApiError('Failed to toggle recurring filing', 500);
   }
 }

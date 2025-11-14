@@ -91,7 +91,7 @@ export async function getTenants(params?: {
       totalPages: Math.ceil(total / pageSize),
     };
   } catch (error) {
-    logger.error('Error fetching tenants:', error);
+    logger.error('Error fetching tenants:', error as Error);
     throw new ApiError('Failed to fetch tenants', 500);
   }
 }
@@ -138,7 +138,7 @@ export async function getTenant(id: number) {
     return tenant;
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    logger.error('Error fetching tenant:', error);
+    logger.error('Error fetching tenant:', error as Error);
     throw new ApiError('Failed to fetch tenant', 500);
   }
 }
@@ -175,10 +175,10 @@ export async function createTenant(data: TenantFormData) {
     return tenant;
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new ApiError('Validation failed', 400, error.errors);
+      throw new ApiError('Validation failed', 400);
     }
     if (error instanceof ApiError) throw error;
-    logger.error('Error creating tenant:', error);
+    logger.error('Error creating tenant:', error as Error);
     throw new ApiError('Failed to create tenant', 500);
   }
 }
@@ -229,10 +229,10 @@ export async function updateTenant(id: number, data: TenantFormData) {
     return tenant;
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new ApiError('Validation failed', 400, error.errors);
+      throw new ApiError('Validation failed', 400);
     }
     if (error instanceof ApiError) throw error;
-    logger.error('Error updating tenant:', error);
+    logger.error('Error updating tenant:', error as Error);
     throw new ApiError('Failed to update tenant', 500);
   }
 }
@@ -290,7 +290,7 @@ export async function deleteTenant(id: number) {
     return { success: true };
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    logger.error('Error deleting tenant:', error);
+    logger.error('Error deleting tenant:', error as Error);
     throw new ApiError('Failed to delete tenant', 500);
   }
 }

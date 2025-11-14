@@ -114,7 +114,7 @@ export function TenantForm({ tenant }: TenantFormProps) {
       settings: {
         ...formData.settings,
         branding: {
-          ...formData.settings.branding,
+          ...formData.settings?.branding,
           [field]: value || undefined,
         },
       },
@@ -127,7 +127,7 @@ export function TenantForm({ tenant }: TenantFormProps) {
       settings: {
         ...formData.settings,
         defaults: {
-          ...formData.settings.defaults,
+          ...formData.settings?.defaults,
           [field]: value,
         },
       },
@@ -188,7 +188,7 @@ export function TenantForm({ tenant }: TenantFormProps) {
           <Input
             id="email"
             type="email"
-            value={formData.contactInfo.email || ''}
+            value={formData.contactInfo?.email || ''}
             onChange={(e) => updateContactInfo('email', e.target.value || undefined)}
             placeholder="contact@example.com"
             disabled={isPending}
@@ -200,7 +200,7 @@ export function TenantForm({ tenant }: TenantFormProps) {
           <Input
             id="phone"
             type="tel"
-            value={formData.contactInfo.phone || ''}
+            value={formData.contactInfo?.phone || ''}
             onChange={(e) => updateContactInfo('phone', e.target.value || undefined)}
             placeholder="+592 XXX XXXX"
             disabled={isPending}
@@ -211,7 +211,7 @@ export function TenantForm({ tenant }: TenantFormProps) {
           <Label htmlFor="address">Address</Label>
           <Textarea
             id="address"
-            value={formData.contactInfo.address || ''}
+            value={formData.contactInfo?.address || ''}
             onChange={(e) => updateContactInfo('address', e.target.value || undefined)}
             placeholder="Enter physical address"
             rows={3}
@@ -229,7 +229,7 @@ export function TenantForm({ tenant }: TenantFormProps) {
           <Input
             id="logoUrl"
             type="url"
-            value={formData.settings.branding.logoUrl || ''}
+            value={formData.settings?.branding?.logoUrl || ''}
             onChange={(e) => updateBranding('logoUrl', e.target.value || undefined)}
             placeholder="https://example.com/logo.png"
             disabled={isPending}
@@ -243,14 +243,14 @@ export function TenantForm({ tenant }: TenantFormProps) {
               <Input
                 id="primaryColor"
                 type="color"
-                value={formData.settings.branding.primaryColor || '#0d9488'}
+                value={formData.settings?.branding?.primaryColor || '#0d9488'}
                 onChange={(e) => updateBranding('primaryColor', e.target.value || undefined)}
                 disabled={isPending}
                 className="w-20 h-10"
               />
               <Input
                 type="text"
-                value={formData.settings.branding.primaryColor || ''}
+                value={formData.settings?.branding?.primaryColor || ''}
                 onChange={(e) => updateBranding('primaryColor', e.target.value || undefined)}
                 placeholder="#0d9488"
                 disabled={isPending}
@@ -265,14 +265,14 @@ export function TenantForm({ tenant }: TenantFormProps) {
               <Input
                 id="secondaryColor"
                 type="color"
-                value={formData.settings.branding.secondaryColor || '#14b8a6'}
+                value={formData.settings?.branding?.secondaryColor || '#14b8a6'}
                 onChange={(e) => updateBranding('secondaryColor', e.target.value || undefined)}
                 disabled={isPending}
                 className="w-20 h-10"
               />
               <Input
                 type="text"
-                value={formData.settings.branding.secondaryColor || ''}
+                value={formData.settings?.branding?.secondaryColor || ''}
                 onChange={(e) => updateBranding('secondaryColor', e.target.value || undefined)}
                 placeholder="#14b8a6"
                 disabled={isPending}
@@ -291,7 +291,7 @@ export function TenantForm({ tenant }: TenantFormProps) {
           <Label htmlFor="currency">Currency</Label>
           <Input
             id="currency"
-            value={formData.settings.defaults.currency}
+            value={formData.settings?.defaults?.currency}
             onChange={(e) => updateDefaults('currency', e.target.value)}
             placeholder="GYD"
             disabled={isPending}
@@ -302,7 +302,7 @@ export function TenantForm({ tenant }: TenantFormProps) {
           <Label htmlFor="timezone">Timezone</Label>
           <Input
             id="timezone"
-            value={formData.settings.defaults.timezone}
+            value={formData.settings?.defaults?.timezone}
             onChange={(e) => updateDefaults('timezone', e.target.value)}
             placeholder="America/Guyana"
             disabled={isPending}
@@ -312,7 +312,7 @@ export function TenantForm({ tenant }: TenantFormProps) {
         <div>
           <Label htmlFor="dateFormat">Date Format</Label>
           <Select
-            value={formData.settings.defaults.dateFormat}
+            value={formData.settings?.defaults?.dateFormat}
             onValueChange={(value) => updateDefaults('dateFormat', value)}
             disabled={isPending}
           >

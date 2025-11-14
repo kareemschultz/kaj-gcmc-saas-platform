@@ -76,7 +76,7 @@ export async function getServices(params?: {
       totalPages: Math.ceil(total / pageSize),
     };
   } catch (error) {
-    logger.error('Error fetching services:', error);
+    logger.error('Error fetching services:', error as Error);
     throw new ApiError('Failed to fetch services', 500);
   }
 }
@@ -111,7 +111,7 @@ export async function getService(id: number) {
     return service;
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    logger.error('Error fetching service:', error);
+    logger.error('Error fetching service:', error as Error);
     throw new ApiError('Failed to fetch service', 500);
   }
 }
@@ -151,9 +151,9 @@ export async function createService(data: ServiceFormData) {
     return service;
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new ApiError('Validation failed', 400, error.errors);
+      throw new ApiError('Validation failed', 400);
     }
-    logger.error('Error creating service:', error);
+    logger.error('Error creating service:', error as Error);
     throw new ApiError('Failed to create service', 500);
   }
 }
@@ -205,10 +205,10 @@ export async function updateService(id: number, data: ServiceFormData) {
     return service;
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new ApiError('Validation failed', 400, error.errors);
+      throw new ApiError('Validation failed', 400);
     }
     if (error instanceof ApiError) throw error;
-    logger.error('Error updating service:', error);
+    logger.error('Error updating service:', error as Error);
     throw new ApiError('Failed to update service', 500);
   }
 }
@@ -269,7 +269,7 @@ export async function deleteService(id: number) {
     return { success: true };
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    logger.error('Error deleting service:', error);
+    logger.error('Error deleting service:', error as Error);
     throw new ApiError('Failed to delete service', 500);
   }
 }
@@ -294,7 +294,7 @@ export async function getServiceCategories() {
 
     return services.map(s => s.category).sort();
   } catch (error) {
-    logger.error('Error fetching service categories:', error);
+    logger.error('Error fetching service categories:', error as Error);
     throw new ApiError('Failed to fetch service categories', 500);
   }
 }

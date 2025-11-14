@@ -31,7 +31,7 @@ export function ClientForm({ client }: ClientFormProps) {
     formState: { errors },
   } = useForm<ClientFormData>({
     resolver: zodResolver(clientSchema),
-    defaultValues: client || {
+    defaultValues: (client as any) || {
       type: 'individual',
     },
   });

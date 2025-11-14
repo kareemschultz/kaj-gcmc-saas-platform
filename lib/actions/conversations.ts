@@ -115,7 +115,7 @@ export async function getConversations(params?: {
       totalPages: Math.ceil(total / pageSize),
     };
   } catch (error) {
-    logger.error('Error fetching conversations:', error);
+    logger.error('Error fetching conversations:', error as Error);
     throw new ApiError('Failed to fetch conversations', 500);
   }
 }
@@ -177,7 +177,7 @@ export async function getConversation(id: number) {
     return conversation;
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    logger.error('Error fetching conversation:', error);
+    logger.error('Error fetching conversation:', error as Error);
     throw new ApiError('Failed to fetch conversation', 500);
   }
 }
@@ -233,10 +233,10 @@ export async function createConversation(data: ConversationFormData) {
     return conversation;
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new ApiError('Validation failed', 400, error.errors);
+      throw new ApiError('Validation failed', 400);
     }
     if (error instanceof ApiError) throw error;
-    logger.error('Error creating conversation:', error);
+    logger.error('Error creating conversation:', error as Error);
     throw new ApiError('Failed to create conversation', 500);
   }
 }
@@ -272,7 +272,7 @@ export async function updateConversation(id: number, data: Partial<ConversationF
     return conversation;
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    logger.error('Error updating conversation:', error);
+    logger.error('Error updating conversation:', error as Error);
     throw new ApiError('Failed to update conversation', 500);
   }
 }
@@ -306,7 +306,7 @@ export async function deleteConversation(id: number) {
     return { success: true };
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    logger.error('Error deleting conversation:', error);
+    logger.error('Error deleting conversation:', error as Error);
     throw new ApiError('Failed to delete conversation', 500);
   }
 }
@@ -358,10 +358,10 @@ export async function createMessage(data: MessageFormData) {
     return message;
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new ApiError('Validation failed', 400, error.errors);
+      throw new ApiError('Validation failed', 400);
     }
     if (error instanceof ApiError) throw error;
-    logger.error('Error creating message:', error);
+    logger.error('Error creating message:', error as Error);
     throw new ApiError('Failed to create message', 500);
   }
 }
@@ -402,7 +402,7 @@ export async function markMessageAsRead(id: number) {
     return { success: true };
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    logger.error('Error marking message as read:', error);
+    logger.error('Error marking message as read:', error as Error);
     throw new ApiError('Failed to mark message as read', 500);
   }
 }
@@ -427,7 +427,7 @@ export async function getUnreadMessageCount() {
 
     return count;
   } catch (error) {
-    logger.error('Error fetching unread message count:', error);
+    logger.error('Error fetching unread message count:', error as Error);
     throw new ApiError('Failed to fetch unread message count', 500);
   }
 }

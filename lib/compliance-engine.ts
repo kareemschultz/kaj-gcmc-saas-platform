@@ -258,7 +258,7 @@ export async function calculateClientCompliance(
       recommendations,
     };
   } catch (error) {
-    logger.error('Error calculating compliance:', error);
+    logger.error('Error calculating compliance:', error as Error);
     throw error;
   }
 }
@@ -293,7 +293,7 @@ export async function refreshTenantCompliance(tenantId: number): Promise<number>
           expiringCount: result.breakdown.expiringDocuments + result.breakdown.expiredDocuments,
           overdueFilingsCount: result.breakdown.overdueFilings,
           lastCalculatedAt: new Date(),
-          breakdown: result.breakdown,
+          breakdown: result.breakdown as any,
         },
         create: {
           tenantId,
@@ -304,7 +304,7 @@ export async function refreshTenantCompliance(tenantId: number): Promise<number>
           expiringCount: result.breakdown.expiringDocuments + result.breakdown.expiredDocuments,
           overdueFilingsCount: result.breakdown.overdueFilings,
           lastCalculatedAt: new Date(),
-          breakdown: result.breakdown,
+          breakdown: result.breakdown as any,
         },
       });
 
@@ -318,7 +318,7 @@ export async function refreshTenantCompliance(tenantId: number): Promise<number>
 
     return updated;
   } catch (error) {
-    logger.error('Error refreshing tenant compliance:', error);
+    logger.error('Error refreshing tenant compliance:', error as Error);
     throw error;
   }
 }

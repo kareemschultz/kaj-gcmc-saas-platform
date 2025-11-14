@@ -41,7 +41,7 @@ export function RecurringFilingForm({
     watch,
     formState: { errors },
   } = useForm<RecurringFilingFormData>({
-    resolver: zodResolver(recurringFilingSchema),
+    resolver: zodResolver(recurringFilingSchema) as any,
     defaultValues: recurringFiling
       ? {
           clientId: recurringFiling.clientId,

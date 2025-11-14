@@ -1,6 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { z } from 'zod';
 import * as bcrypt from 'bcryptjs';
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
@@ -15,6 +16,9 @@ import {
   type UpdateUserFormData,
   type ChangePasswordFormData,
 } from '@/lib/schemas/users';
+
+// Re-export types for components
+export type { CreateUserFormData, UpdateUserFormData, ChangePasswordFormData };
 
 // Get all users for current tenant
 export async function getUsers(params?: {
@@ -77,7 +81,7 @@ export async function getUsers(params?: {
       totalPages: Math.ceil(total / pageSize),
     };
   } catch (error) {
-    logger.error('Error fetching users:', error);
+    logger.error('Error fetching users:', error as Error);
     throw new ApiError('Failed to fetch users', 500);
   }
 }
@@ -120,7 +124,7 @@ export async function getUser(id: number) {
     return user;
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    logger.error('Error fetching user:', error);
+    logger.error('Error fetching user:', error as Error);
     throw new ApiError('Failed to fetch user', 500);
   }
 }
@@ -194,10 +198,10 @@ export async function createUser(data: CreateUserFormData) {
     return user;
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new ApiError('Validation failed', 400, error.errors);
+      throw new ApiError('Validation failed', 400);
     }
     if (error instanceof ApiError) throw error;
-    logger.error('Error creating user:', error);
+    logger.error('Error creating user:', error as Error);
     throw new ApiError('Failed to create user', 500);
   }
 }
@@ -293,10 +297,10 @@ export async function updateUser(id: number, data: UpdateUserFormData) {
     return user;
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new ApiError('Validation failed', 400, error.errors);
+      throw new ApiError('Validation failed', 400);
     }
     if (error instanceof ApiError) throw error;
-    logger.error('Error updating user:', error);
+    logger.error('Error updating user:', error as Error);
     throw new ApiError('Failed to update user', 500);
   }
 }
@@ -370,7 +374,7 @@ export async function deleteUser(id: number) {
     return { success: true };
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    logger.error('Error deleting user:', error);
+    logger.error('Error deleting user:', error as Error);
     throw new ApiError('Failed to delete user', 500);
   }
 }
@@ -423,10 +427,10 @@ export async function changePassword(userId: number, data: ChangePasswordFormDat
     return { success: true };
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new ApiError('Validation failed', 400, error.errors);
+      throw new ApiError('Validation failed', 400);
     }
     if (error instanceof ApiError) throw error;
-    logger.error('Error changing password:', error);
+    logger.error('Error changing password:', error as Error);
     throw new ApiError('Failed to change password', 500);
   }
 }

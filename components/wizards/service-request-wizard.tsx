@@ -86,7 +86,7 @@ export function ServiceRequestWizard({ clients, services }: ServiceRequestWizard
   return (
     <WizardProvider
       config={wizardConfig}
-      initialData={initialData}
+      initialData={initialData as any}
       onComplete={handleComplete}
     >
       <WizardContent clients={clients} services={services} isSubmitting={isSubmitting} />
