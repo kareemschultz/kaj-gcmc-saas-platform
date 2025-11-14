@@ -13,9 +13,13 @@
     "docker:build": "docker-compose build",
     "docker:down": "docker-compose down",
     "docker:logs": "docker-compose logs -f app",
+    "docker:logs:worker": "docker-compose logs -f worker",
     "docker:up": "docker-compose up -d",
     "lint": "eslint .",
-    "start": "next start"
+    "setup:minio": "tsx scripts/setup-minio.ts",
+    "start": "next start",
+    "worker": "tsx src/jobs/worker.ts",
+    "worker:dev": "tsx watch src/jobs/worker.ts"
   },
   "dependencies": {
     "@auth/core": "latest",

@@ -2,6 +2,8 @@
 
 import { PrismaClient } from '@prisma/client';
 import { hash } from 'bcryptjs';
+import { seedDocumentTypes } from './seeds/document-types';
+import { seedGuyanaRequirementBundles } from './seeds/guyana-bundles';
 
 const prisma = new PrismaClient();
 
@@ -209,67 +211,8 @@ async function main() {
     },
   });
 
-  // Create Document Types for KAJ
-  console.log('Creating document types...');
-  const documentTypes = [
-    // Identification
-    { name: 'National ID Card', category: 'Identification', authority: 'Guyana Government' },
-    { name: 'Passport', category: 'Identification', authority: 'Immigration' },
-    { name: 'Birth Certificate', category: 'Identification', authority: 'General Register Office' },
-    
-    // Tax Documents
-    { name: 'TIN Certificate', category: 'Tax', authority: 'GRA' },
-    { name: 'GRA Tender Compliance Certificate', category: 'Tax', authority: 'GRA' },
-    { name: 'GRA Land Compliance Certificate', category: 'Tax', authority: 'GRA' },
-    { name: 'Tax Assessment Notice', category: 'Tax', authority: 'GRA' },
-    
-    // Insurance
-    { name: 'NIS Card', category: 'Insurance', authority: 'NIS' },
-    { name: 'NIS Compliance Certificate - Employer', category: 'Insurance', authority: 'NIS' },
-    { name: 'NIS Compliance Certificate - Self-Employed', category: 'Insurance', authority: 'NIS' },
-    
-    // Business Registration
-    { name: 'Business Registration Certificate', category: 'Business Registration', authority: 'DCRA' },
-    { name: 'Certificate of Incorporation', category: 'Business Registration', authority: 'DCRA' },
-    { name: 'Articles of Incorporation', category: 'Business Registration', authority: 'DCRA' },
-    { name: 'Notice of Directors', category: 'Business Registration', authority: 'DCRA' },
-    
-    // Immigration
-    { name: 'Work Permit', category: 'Immigration', authority: 'Immigration' },
-    { name: 'Residence Permit', category: 'Immigration', authority: 'Immigration' },
-    { name: 'Business Visa', category: 'Immigration', authority: 'Immigration' },
-    { name: 'Landing Permit', category: 'Immigration', authority: 'Immigration' },
-    
-    // Financial
-    { name: 'Bank Statement', category: 'Financial', authority: null },
-    { name: 'Proof of Address', category: 'Financial', authority: null },
-    
-    // Legal
-    { name: 'Affidavit', category: 'Legal', authority: null },
-    { name: 'Power of Attorney', category: 'Legal', authority: null },
-  ];
-
-  for (const docType of documentTypes) {
-    await prisma.documentType.upsert({
-      where: {
-        tenantId_name_category: {
-          tenantId: kajTenant.id,
-          name: docType.name,
-          category: docType.category,
-        },
-      },
-      update: {},
-      create: {
-        tenantId: kajTenant.id,
-        name: docType.name,
-        category: docType.category,
-        authority: docType.authority,
-        tags: [],
-      },
-    });
-  }
-
-  console.log(`Created ${documentTypes.length} document types for KAJ`);
+  // Create Enhanced Document Types for KAJ
+  await seedDocumentTypes(prisma, kajTenant.id);
 
   // Create Filing Types for KAJ
   console.log('Creating filing types...');
@@ -447,6 +390,9 @@ async function main() {
   }
 
   console.log(`Created ${services.length} services for KAJ`);
+
+  // Create Guyana Requirement Bundles for KAJ
+  await seedGuyanaRequirementBundles(prisma, kajTenant.id);
 
   // Create subscription plan
   console.log('Creating subscription plan...');

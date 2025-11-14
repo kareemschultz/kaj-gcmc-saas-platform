@@ -57,15 +57,15 @@ services:
     environment:
       # Database
       DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/kgc_compliance_cloud?schema=public"
-      
+
       # NextAuth
       NEXTAUTH_URL: "http://localhost:3000"
       NEXTAUTH_SECRET: "GENERATE_A_SECURE_RANDOM_VALUE"
-      
+
       # Redis
       REDIS_URL: "redis://redis:6379"
       KV_URL: "redis://redis:6379"
-      
+
       # MinIO (using Docker service name)
       MINIO_ENDPOINT: "minio"
       MINIO_PORT: "9000"
@@ -73,27 +73,27 @@ services:
       MINIO_SECRET_KEY: "minioadmin"
       MINIO_USE_SSL: "false"
       MINIO_BUCKET_NAME: "documents"
-      
+
       # OCR (disabled)
       OCR_PROVIDER: "none"
-      
+
       # OpenAI (placeholder)
       OPENAI_API_KEY: "your-openai-key"
-      
+
       # SMTP (Gmail)
       SMTP_HOST: "smtp.gmail.com"
       SMTP_PORT: "587"
       SMTP_USER: "your-email@gmail.com"
       SMTP_PASSWORD: "your-gmail-app-password"
       SMTP_FROM: "Compliance Cloud <no-reply@yourdomain.com>"
-      
+
       # WhatsApp (disabled)
       WHATSAPP_API_KEY: "none"
       WHATSAPP_PHONE_NUMBER: "none"
-      
+
       # Sentry (disabled)
       SENTRY_DSN: "none"
-      
+
       NODE_ENV: "production"
     ports:
       - "3000:3000"
@@ -108,6 +108,44 @@ services:
       - .:/app
       - /app/node_modules
       - /app/.next
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kgc-worker
+    command: npm run worker
+    environment:
+      # Database
+      DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/kgc_compliance_cloud?schema=public"
+
+      # Redis
+      REDIS_URL: "redis://redis:6379"
+
+      # MinIO
+      MINIO_ENDPOINT: "minio"
+      MINIO_PORT: "9000"
+      MINIO_ACCESS_KEY: "minioadmin"
+      MINIO_SECRET_KEY: "minioadmin"
+      MINIO_USE_SSL: "false"
+
+      # SMTP
+      SMTP_HOST: "smtp.gmail.com"
+      SMTP_PORT: "587"
+      SMTP_USER: "your-email@gmail.com"
+      SMTP_PASSWORD: "your-gmail-app-password"
+      SMTP_FROM: "Compliance Cloud <no-reply@yourdomain.com>"
+
+      NODE_ENV: "production"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/node_modules
+    restart: unless-stopped
 
 volumes:
   postgres_data:
