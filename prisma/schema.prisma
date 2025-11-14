@@ -1,0 +1,571 @@
+// Prisma schema for KGC Compliance Cloud – multi-tenant, row-level isolation
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Tenant {
+  id               Int               @id @default(autoincrement())
+  name             String
+  code             String            @unique
+  contactInfo      Json?
+  settings         Json?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  tenantUsers      TenantUser[]
+  clients          Client[]
+  documentTypes    DocumentType[]
+  filingTypes      FilingType[]
+  services         Service[]
+  recurringFilings RecurringFiling[]
+  notifications    Notification[]
+  auditLogs        AuditLog[]
+  subscriptions    Subscription[]
+  complianceRuleSets ComplianceRuleSet[]
+  conversations    Conversation[]
+  tasks            Task[]
+  clientTasks      ClientTask[]
+  serviceRequestTemplates ServiceRequestTemplate[]
+  serviceRequests  ServiceRequest[]
+  filings          Filing[]
+  documents        Document[]
+  complianceScores ComplianceScore[]
+
+  @@map("tenants")
+}
+
+model User {
+  id          Int           @id @default(autoincrement())
+  email       String        @unique
+  password    String?
+  name        String
+  phone       String?
+  avatarUrl   String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  tenantUsers TenantUser[]
+  messages    Message[]     @relation("MessageAuthor")
+  tasks       Task[]        @relation("TaskAssignee")
+  notifications Notification[] @relation("NotificationRecipient")
+  auditLogs   AuditLog[]    @relation("AuditActor")
+
+  @@map("users")
+}
+
+model TenantUser {
+  id       Int     @id @default(autoincrement())
+  tenantId Int
+  userId   Int
+  roleId   Int
+
+  tenant   Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role     Role    @relation(fields: [roleId], references: [id])
+
+  @@unique([tenantId, userId])
+  @@map("tenant_users")
+}
+
+model Role {
+  id          Int           @id @default(autoincrement())
+  name        String        @unique
+  description String?
+  permissions Permission[]
+  tenantUsers TenantUser[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id      Int    @id @default(autoincrement())
+  roleId  Int
+  module  String
+  action  String
+  allowed Boolean @default(true)
+
+  role    Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, module, action])
+  @@map("permissions")
+}
+
+model Client {
+  id               Int              @id @default(autoincrement())
+  tenantId         Int
+  name             String
+  type             String           // individual/company/partnership
+  email            String?
+  phone            String?
+  address          String?
+  tin              String?
+  nisNumber        String?
+  sector           String?
+  riskLevel        String?          // low/medium/high
+  notes            String?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  tenant           Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  businesses       ClientBusiness[]
+  documents        Document[]
+  filings          Filing[]
+  serviceRequests  ServiceRequest[]
+  complianceScores ComplianceScore[]
+  tasks            Task[]
+  clientTasks      ClientTask[]
+  conversations    Conversation[]
+  auditLogs        AuditLog[]
+  recurringFilings RecurringFiling[]
+
+  @@map("clients")
+}
+
+model ClientBusiness {
+  id                 Int              @id @default(autoincrement())
+  tenantId           Int
+  clientId           Int
+  name               String
+  registrationNumber String?
+  registrationType   String?
+  incorporationDate  DateTime?
+  country            String?
+  sector             String?
+  status             String?
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+
+  tenant             Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  client             Client           @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  documents          Document[]
+  filings            Filing[]
+  serviceRequests    ServiceRequest[]
+  recurringFilings   RecurringFiling[]
+
+  @@map("client_businesses")
+}
+
+model DocumentType {
+  id          Int        @id @default(autoincrement())
+  tenantId    Int
+  name        String
+  category    String
+  description String?
+  tags        String[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  tenant      Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  documents   Document[]
+
+  @@map("document_types")
+}
+
+model Document {
+  id               Int              @id @default(autoincrement())
+  tenantId         Int
+  clientId         Int
+  clientBusinessId Int?
+  documentTypeId   Int
+  title            String
+  description      String?
+  status           String           // valid, expired, pending_review, rejected
+  authority        String?
+  tags             String[]
+  latestVersionId  Int?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  tenant           Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  client           Client           @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  clientBusiness   ClientBusiness?  @relation(fields: [clientBusinessId], references: [id])
+  documentType     DocumentType     @relation(fields: [documentTypeId], references: [id])
+  versions         DocumentVersion[]
+  latestVersion    DocumentVersion? @relation("LatestDocumentVersion", fields: [latestVersionId], references: [id], onDelete: SetNull)
+  filingDocuments  FilingDocument[]
+
+  @@map("documents")
+}
+
+model DocumentVersion {
+  id               Int       @id @default(autoincrement())
+  documentId       Int
+  fileUrl          String
+  storageProvider  String
+  fileSize         Int?
+  mimeType         String?
+  issueDate        DateTime?
+  expiryDate       DateTime?
+  issuingAuthority String?
+  ocrText          String?
+  aiSummary        String?
+  metadata         Json?
+  uploadedById     Int?
+  uploadedAt       DateTime  @default(now())
+  isLatest         Boolean   @default(false)
+
+  document         Document  @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  latestOfDocument Document? @relation("LatestDocumentVersion")
+
+  @@map("document_versions")
+}
+
+model FilingType {
+  id               Int        @id @default(autoincrement())
+  tenantId         Int
+  name             String
+  code             String
+  authority        String
+  frequency        String      // monthly/quarterly/annual/one_off
+  defaultDueDay    Int?
+  defaultDueMonth  Int?
+  description      String?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  tenant           Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  filings          Filing[]
+  recurringFilings RecurringFiling[]
+
+  @@unique([tenantId, code])
+  @@map("filing_types")
+}
+
+model Filing {
+  id               Int       @id @default(autoincrement())
+  tenantId         Int
+  clientId         Int
+  clientBusinessId Int?
+  filingTypeId     Int
+  periodStart      DateTime?
+  periodEnd        DateTime?
+  periodLabel      String?
+  status           String     // draft, prepared, submitted, approved, rejected, overdue, archived
+  referenceNumber  String?
+  taxAmount        Float?
+  penalties        Float?
+  interest         Float?
+  total            Float?
+  submissionDate   DateTime?
+  approvalDate     DateTime?
+  internalNotes    String?
+  aiSummary        String?
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  tenant           Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  client           Client     @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  clientBusiness   ClientBusiness? @relation(fields: [clientBusinessId], references: [id])
+  filingType       FilingType @relation(fields: [filingTypeId], references: [id])
+  documents        FilingDocument[]
+  serviceSteps     ServiceStep[]
+  tasks            Task[]
+
+  @@map("filings")
+}
+
+model FilingDocument {
+  id         Int      @id @default(autoincrement())
+  filingId   Int
+  documentId Int
+
+  filing     Filing   @relation(fields: [filingId], references: [id], onDelete: Cascade)
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@unique([filingId, documentId])
+  @@map("filing_documents")
+}
+
+model Service {
+  id              Int                   @id @default(autoincrement())
+  tenantId        Int
+  name            String
+  category        String
+  description     String?
+  basePrice       Float?
+  estimatedDays   Int?
+  active          Boolean               @default(true)
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+
+  tenant          Tenant                @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  serviceRequests ServiceRequest[]
+  templates       ServiceRequestTemplate[]
+
+  @@map("services")
+}
+
+model ServiceRequestTemplate {
+  id              Int       @id @default(autoincrement())
+  tenantId        Int
+  serviceId       Int
+  name            String
+  description     String?
+  stepsDefinition Json
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  tenant          Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  service         Service   @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  serviceRequests ServiceRequest[]
+
+  @@map("service_request_templates")
+}
+
+model ServiceRequest {
+  id               Int           @id @default(autoincrement())
+  tenantId         Int
+  clientId         Int
+  clientBusinessId Int?
+  serviceId        Int
+  templateId       Int?
+  status           String        // new, in_progress, awaiting_client, awaiting_authority, completed, cancelled
+  priority         String?
+  currentStepOrder Int?
+  metadata         Json?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  tenant           Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  client           Client        @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  clientBusiness   ClientBusiness? @relation(fields: [clientBusinessId], references: [id])
+  service          Service       @relation(fields: [serviceId], references: [id])
+  template         ServiceRequestTemplate? @relation(fields: [templateId], references: [id])
+  steps            ServiceStep[]
+  tasks            Task[]
+  clientTasks      ClientTask[]
+  conversations    Conversation[]
+
+  @@map("service_requests")
+}
+
+model ServiceStep {
+  id                 Int        @id @default(autoincrement())
+  serviceRequestId   Int
+  filingId           Int?
+  title              String
+  description        String?
+  order              Int
+  status             String      // not_started, in_progress, done, blocked
+  dueDate            DateTime?
+  requiredDocTypeIds Int[]
+  dependsOnStepId    Int?
+
+  serviceRequest     ServiceRequest @relation(fields: [serviceRequestId], references: [id], onDelete: Cascade)
+  filing             Filing?        @relation(fields: [filingId], references: [id])
+
+  @@map("service_steps")
+}
+
+model RecurringFiling {
+  id               Int       @id @default(autoincrement())
+  tenantId         Int
+  clientId         Int
+  clientBusinessId Int?
+  filingTypeId     Int
+  schedule         String    // cron-like or human-readable schedule
+  active           Boolean   @default(true)
+  lastRunAt        DateTime?
+  nextRunAt        DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  tenant           Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  client           Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  clientBusiness   ClientBusiness? @relation(fields: [clientBusinessId], references: [id])
+  filingType       FilingType @relation(fields: [filingTypeId], references: [id])
+
+  @@map("recurring_filings")
+}
+
+model Task {
+  id               Int        @id @default(autoincrement())
+  tenantId         Int
+  clientId         Int?
+  serviceRequestId Int?
+  filingId         Int?
+  title            String
+  description      String?
+  status           String      // open, in_progress, blocked, completed
+  priority         String?
+  dueDate          DateTime?
+  assignedToId     Int?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  tenant           Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  client           Client?     @relation(fields: [clientId], references: [id])
+  serviceRequest   ServiceRequest? @relation(fields: [serviceRequestId], references: [id])
+  filing           Filing?     @relation(fields: [filingId], references: [id])
+  assignedTo       User?       @relation("TaskAssignee", fields: [assignedToId], references: [id])
+
+  @@map("tasks")
+}
+
+model ClientTask {
+  id               Int        @id @default(autoincrement())
+  tenantId         Int
+  clientId         Int
+  serviceRequestId Int?
+  title            String
+  description      String?
+  status           String      // pending, in_progress, completed, cancelled
+  dueDate          DateTime?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  tenant           Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  client           Client      @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  serviceRequest   ServiceRequest? @relation(fields: [serviceRequestId], references: [id])
+
+  @@map("client_tasks")
+}
+
+model Conversation {
+  id               Int        @id @default(autoincrement())
+  tenantId         Int
+  clientId         Int?
+  serviceRequestId Int?
+  subject          String?
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  tenant           Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  client           Client?    @relation(fields: [clientId], references: [id])
+  serviceRequest   ServiceRequest? @relation(fields: [serviceRequestId], references: [id])
+  messages         Message[]
+
+  @@map("conversations")
+}
+
+model Message {
+  id             Int        @id @default(autoincrement())
+  conversationId Int
+  authorId       Int
+  body           String
+  createdAt      DateTime   @default(now())
+  readAt         DateTime?
+
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  author         User         @relation("MessageAuthor", fields: [authorId], references: [id])
+
+  @@map("messages")
+}
+
+model ComplianceRuleSet {
+  id          Int              @id @default(autoincrement())
+  tenantId    Int
+  name        String
+  appliesTo   Json?
+  active      Boolean          @default(true)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  tenant      Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  rules       ComplianceRule[]
+
+  @@map("compliance_rule_sets")
+}
+
+model ComplianceRule {
+  id          Int      @id @default(autoincrement())
+  ruleSetId   Int
+  ruleType    String   // document_required, filing_required, etc.
+  condition   Json?
+  targetId    Int?
+  weight      Float
+  description String?
+
+  ruleSet     ComplianceRuleSet @relation(fields: [ruleSetId], references: [id], onDelete: Cascade)
+
+  @@map("compliance_rules")
+}
+
+model ComplianceScore {
+  id                  Int      @id @default(autoincrement())
+  tenantId            Int
+  clientId            Int
+  scoreValue          Float
+  level               String
+  missingCount        Int
+  expiringCount       Int
+  overdueFilingsCount Int
+  lastCalculatedAt    DateTime
+  breakdown           Json?
+
+  tenant              Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  client              Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, clientId])
+  @@map("compliance_scores")
+}
+
+model Notification {
+  id               Int      @id @default(autoincrement())
+  tenantId         Int
+  recipientUserId  Int
+  type             String   // email, in_app, sms
+  channelStatus    String   // pending, sent, failed
+  message          String
+  metadata         Json?
+  createdAt        DateTime @default(now())
+
+  tenant           Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  recipient        User     @relation("NotificationRecipient", fields: [recipientUserId], references: [id])
+
+  @@map("notifications")
+}
+
+model AuditLog {
+  id          Int      @id @default(autoincrement())
+  tenantId    Int
+  actorUserId Int?
+  clientId    Int?
+  entityType  String
+  entityId    Int
+  action      String
+  changes     Json?
+  createdAt   DateTime @default(now())
+  ipAddress   String?
+  userAgent   String?
+
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  actor       User?    @relation("AuditActor", fields: [actorUserId], references: [id])
+  client      Client?  @relation(fields: [clientId], references: [id])
+
+  @@map("audit_logs")
+}
+
+model Plan {
+  id           Int           @id @default(autoincrement())
+  name         String
+  description  String?
+  monthlyPrice Float?
+  yearlyPrice  Float?
+  limits       Json?
+
+  subscriptions Subscription[]
+
+  @@map("plans")
+}
+
+model Subscription {
+  id          Int      @id @default(autoincrement())
+  tenantId    Int
+  planId      Int
+  status      String
+  startDate   DateTime
+  endDate     DateTime?
+  renewalDate DateTime?
+
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  plan        Plan     @relation(fields: [planId], references: [id])
+
+  @@map("subscriptions")
+}
