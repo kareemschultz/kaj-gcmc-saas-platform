@@ -116,11 +116,16 @@ See [PRODUCTION_READINESS.md](docs/PRODUCTION_READINESS.md) for full details.
 ## Tech Stack
 
 - **Frontend/Backend**: Next.js 15 (App Router)
+- **API Layer**: **tRPC v11** for end-to-end type safety
+- **Data Fetching**: **React Query (TanStack Query)** for caching & state
 - **Database**: PostgreSQL with Prisma ORM
-- **Authentication**: NextAuth v5
+- **Authentication**: NextAuth v5 with JWT strategy
+- **Authorization**: **Role-Based Access Control (RBAC)** with middleware
+- **Validation**: Zod schemas for runtime validation
 - **Job Queue**: BullMQ + Redis
 - **File Storage**: MinIO (S3-compatible)
 - **UI**: Tailwind CSS + shadcn/ui
+- **Testing**: **Vitest** with tRPC test utilities
 - **Containerization**: Docker + Docker Compose
 
 ## Quick Start with Docker (Recommended)
