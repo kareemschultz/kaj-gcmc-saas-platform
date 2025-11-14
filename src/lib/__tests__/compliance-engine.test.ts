@@ -5,21 +5,19 @@
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-// Mock Prisma
-const mockPrisma = {
-  client: {
-    findFirst: vi.fn(),
-  },
-  complianceRuleSet: {
-    findMany: vi.fn(),
-  },
-  complianceScore: {
-    upsert: vi.fn(),
-  },
-};
-
+// Mock setup - hoisted
 vi.mock('@/lib/prisma', () => ({
-  prisma: mockPrisma,
+  prisma: {
+    client: {
+      findFirst: vi.fn(),
+    },
+    complianceRuleSet: {
+      findMany: vi.fn(),
+    },
+    complianceScore: {
+      upsert: vi.fn(),
+    },
+  },
 }));
 
 vi.mock('@/lib/logger', () => ({
@@ -31,6 +29,10 @@ vi.mock('@/lib/logger', () => ({
 }));
 
 import { calculateClientCompliance, recalculateClientCompliance } from '../compliance-engine';
+import { prisma } from '@/lib/prisma';
+
+// Get typed mock after imports
+const mockPrisma = prisma as any;
 
 describe('Compliance Engine', () => {
   beforeEach(() => {
