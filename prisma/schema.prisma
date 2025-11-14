@@ -37,6 +37,7 @@ model Tenant {
   filings          Filing[]
   documents        Document[]
   complianceScores ComplianceScore[]
+  requirementBundles RequirementBundle[]
 
   @@map("tenants")
 }
@@ -159,12 +160,16 @@ model DocumentType {
   category    String
   description String?
   tags        String[]
+  authority   String?
+  metadata    Json?
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 
   tenant      Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   documents   Document[]
+  requirementBundleItems RequirementBundleItem[]
 
+  @@unique([tenantId, name, category])
   @@map("document_types")
 }
 
@@ -233,6 +238,7 @@ model FilingType {
   tenant           Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   filings          Filing[]
   recurringFilings RecurringFiling[]
+  requirementBundleItems RequirementBundleItem[]
 
   @@unique([tenantId, code])
   @@map("filing_types")
@@ -569,4 +575,38 @@ model Subscription {
   plan        Plan     @relation(fields: [planId], references: [id])
 
   @@map("subscriptions")
+}
+
+model RequirementBundle {
+  id               Int      @id @default(autoincrement())
+  tenantId         Int
+  name             String
+  authority        String   // GRA, NIS, DCRA, Immigration, Deeds, GO-Invest
+  category         String   // tax, registration, permit, etc.
+  description      String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  tenant           Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  items            RequirementBundleItem[]
+
+  @@map("requirement_bundles")
+}
+
+model RequirementBundleItem {
+  id               Int      @id @default(autoincrement())
+  bundleId         Int
+  documentTypeId   Int?
+  filingTypeId     Int?
+  required         Boolean  @default(true)
+  description      String?
+  order            Int      @default(0)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  bundle           RequirementBundle @relation(fields: [bundleId], references: [id], onDelete: Cascade)
+  documentType     DocumentType?     @relation(fields: [documentTypeId], references: [id])
+  filingType       FilingType?       @relation(fields: [filingTypeId], references: [id])
+
+  @@map("requirement_bundle_items")
 }
