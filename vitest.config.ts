@@ -23,9 +23,9 @@ export default defineConfig({
   },
   resolve: {
     alias: [
-      { find: '@/config', replacement: path.resolve(__dirname, './src/config') },
-      { find: '@/lib', replacement: path.resolve(__dirname, './src/lib') },
-      { find: '@/types', replacement: path.resolve(__dirname, './src/types') },
+      { find: '@/config', replacement: path.resolve(__dirname, './config') },
+      { find: '@/lib', replacement: path.resolve(__dirname, './lib') },
+      { find: '@/types', replacement: path.resolve(__dirname, './types') },
       { find: '@/components', replacement: path.resolve(__dirname, './components') },
       { find: '@/app', replacement: path.resolve(__dirname, './app') },
       { find: '@', replacement: path.resolve(__dirname, './') },

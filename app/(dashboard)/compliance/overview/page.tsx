@@ -19,17 +19,18 @@ export const metadata: Metadata = {
 };
 
 interface PageProps {
-  searchParams: {
+  searchParams: Promise<{
     level?: 'green' | 'amber' | 'red';
     authority?: string;
     page?: string;
-  };
+  }>;
 }
 
 export default async function ComplianceOverviewPage({ searchParams }: PageProps) {
-  const level = searchParams.level;
-  const authority = searchParams.authority;
-  const page = Number(searchParams.page) || 1;
+  const params = await searchParams;
+  const level = params.level;
+  const authority = params.authority;
+  const page = Number(params.page) || 1;
 
   const { scores, pagination } = await getComplianceOverview({
     level,

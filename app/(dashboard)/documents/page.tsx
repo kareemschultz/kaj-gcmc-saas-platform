@@ -7,19 +7,20 @@ import { format } from 'date-fns';
 export default async function DocumentsPage({
   searchParams,
 }: {
-  searchParams: { page?: string; search?: string; status?: string; authority?: string };
+  searchParams: Promise<{ page?: string; search?: string; status?: string; authority?: string }>;
 }) {
   const session = await auth();
   if (!session) {
     redirect('/auth/login');
   }
 
-  const page = parseInt(searchParams.page || '1');
-  const { documents, total, totalPages } = await getDocuments({
+  const params = await searchParams;
+  const page = parseInt(params.page || '1');
+  const { documents, pagination: { total, totalPages } } = await getDocuments({
     page,
     pageSize: 10,
-    search: searchParams.search,
-    status: searchParams.status,
+    search: params.search,
+    status: params.status,
   });
 
   return (
@@ -168,7 +169,7 @@ export default async function DocumentsPage({
           </div>
           <div className="flex gap-2">
             <Link
-              href={`/documents?page=${page - 1}${searchParams.search ? `&search=${searchParams.search}` : ''}`}
+              href={`/documents?page=${page - 1}${params.search ? `&search=${params.search}` : ''}`}
               className={`px-3 py-1 text-sm border rounded-md ${page === 1 ? 'opacity-50 pointer-events-none' : 'hover:bg-gray-50'} bg-white text-gray-700`}
             >
               Previous
@@ -176,7 +177,7 @@ export default async function DocumentsPage({
             {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p) => (
               <Link
                 key={p}
-                href={`/documents?page=${p}${searchParams.search ? `&search=${searchParams.search}` : ''}`}
+                href={`/documents?page=${p}${params.search ? `&search=${params.search}` : ''}`}
                 className={`px-3 py-1 text-sm border rounded-md ${
                   p === page ? 'bg-teal-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
                 }`}
@@ -185,7 +186,7 @@ export default async function DocumentsPage({
               </Link>
             ))}
             <Link
-              href={`/documents?page=${page + 1}${searchParams.search ? `&search=${searchParams.search}` : ''}`}
+              href={`/documents?page=${page + 1}${params.search ? `&search=${params.search}` : ''}`}
               className={`px-3 py-1 text-sm border rounded-md ${page === totalPages ? 'opacity-50 pointer-events-none' : 'hover:bg-gray-50'} bg-white text-gray-700`}
             >
               Next

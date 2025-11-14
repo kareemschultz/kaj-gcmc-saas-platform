@@ -6,29 +6,30 @@ import { redirect } from 'next/navigation';
 export default async function ServiceRequestsPage({
   searchParams,
 }: {
-  searchParams: {
+  searchParams: Promise<{
     page?: string;
     search?: string;
     clientId?: string;
     serviceId?: string;
     status?: string;
     priority?: string;
-  };
+  }>;
 }) {
   const session = await auth();
   if (!session) {
     redirect('/auth/login');
   }
 
-  const page = parseInt(searchParams.page || '1');
+  const params = await searchParams;
+  const page = parseInt(params.page || '1');
   const { serviceRequests, total, totalPages } = await getServiceRequests({
     page,
     pageSize: 20,
-    search: searchParams.search,
-    clientId: searchParams.clientId ? parseInt(searchParams.clientId) : undefined,
-    serviceId: searchParams.serviceId ? parseInt(searchParams.serviceId) : undefined,
-    status: searchParams.status,
-    priority: searchParams.priority,
+    search: params.search,
+    clientId: params.clientId ? parseInt(params.clientId) : undefined,
+    serviceId: params.serviceId ? parseInt(params.serviceId) : undefined,
+    status: params.status,
+    priority: params.priority,
   });
 
   const statusColors: Record<string, string> = {
@@ -73,14 +74,14 @@ export default async function ServiceRequestsPage({
             <input
               type="text"
               placeholder="Search by client..."
-              defaultValue={searchParams.search}
+              defaultValue={params.search}
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
             <select
-              defaultValue={searchParams.status}
+              defaultValue={params.status}
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
             >
               <option value="">All Statuses</option>
@@ -95,7 +96,7 @@ export default async function ServiceRequestsPage({
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Priority</label>
             <select
-              defaultValue={searchParams.priority}
+              defaultValue={params.priority}
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
             >
               <option value="">All Priorities</option>
@@ -210,7 +211,7 @@ export default async function ServiceRequestsPage({
             </div>
             <div className="flex gap-2">
               <Link
-                href={`/services/requests?page=${page - 1}${searchParams.search ? `&search=${searchParams.search}` : ''}${searchParams.status ? `&status=${searchParams.status}` : ''}${searchParams.priority ? `&priority=${searchParams.priority}` : ''}`}
+                href={`/services/requests?page=${page - 1}${params.search ? `&search=${params.search}` : ''}${params.status ? `&status=${params.status}` : ''}${params.priority ? `&priority=${params.priority}` : ''}`}
                 className={`px-3 py-1 text-sm border rounded-md ${page === 1 ? 'opacity-50 pointer-events-none' : 'hover:bg-gray-50'} bg-white text-gray-700`}
               >
                 Previous
@@ -218,7 +219,7 @@ export default async function ServiceRequestsPage({
               {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p) => (
                 <Link
                   key={p}
-                  href={`/services/requests?page=${p}${searchParams.search ? `&search=${searchParams.search}` : ''}${searchParams.status ? `&status=${searchParams.status}` : ''}${searchParams.priority ? `&priority=${searchParams.priority}` : ''}`}
+                  href={`/services/requests?page=${p}${params.search ? `&search=${params.search}` : ''}${params.status ? `&status=${params.status}` : ''}${params.priority ? `&priority=${params.priority}` : ''}`}
                   className={`px-3 py-1 text-sm border rounded-md ${
                     p === page ? 'bg-teal-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
                   }`}
@@ -227,7 +228,7 @@ export default async function ServiceRequestsPage({
                 </Link>
               ))}
               <Link
-                href={`/services/requests?page=${page + 1}${searchParams.search ? `&search=${searchParams.search}` : ''}${searchParams.status ? `&status=${searchParams.status}` : ''}${searchParams.priority ? `&priority=${searchParams.priority}` : ''}`}
+                href={`/services/requests?page=${page + 1}${params.search ? `&search=${params.search}` : ''}${params.status ? `&status=${params.status}` : ''}${params.priority ? `&priority=${params.priority}` : ''}`}
                 className={`px-3 py-1 text-sm border rounded-md ${page === totalPages ? 'opacity-50 pointer-events-none' : 'hover:bg-gray-50'} bg-white text-gray-700`}
               >
                 Next

@@ -99,7 +99,7 @@ export async function getService(id: number) {
           orderBy: { name: 'asc' },
         },
         _count: {
-          select: { serviceRequests: true },
+          select: { serviceRequests: true, templates: true },
         },
       },
     });

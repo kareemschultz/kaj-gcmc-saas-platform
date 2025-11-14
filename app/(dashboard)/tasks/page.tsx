@@ -9,30 +9,31 @@ import { TaskTable } from '@/components/tasks/task-table';
 export default async function TasksPage({
   searchParams,
 }: {
-  searchParams: {
+  searchParams: Promise<{
     page?: string;
     search?: string;
     status?: string;
     priority?: string;
     assignedToId?: string;
     view?: string;
-  };
+  }>;
 }) {
   const session = await auth();
   if (!session) {
     redirect('/auth/login');
   }
 
-  const page = parseInt(searchParams.page || '1');
-  const view = searchParams.view || 'kanban';
+  const params = await searchParams;
+  const page = parseInt(params.page || '1');
+  const view = params.view || 'kanban';
 
   const { tasks, total, totalPages } = await getTasks({
     page,
     pageSize: view === 'kanban' ? 100 : 20,
-    search: searchParams.search,
-    status: searchParams.status,
-    priority: searchParams.priority,
-    assignedToId: searchParams.assignedToId ? parseInt(searchParams.assignedToId) : undefined,
+    search: params.search,
+    status: params.status,
+    priority: params.priority,
+    assignedToId: params.assignedToId ? parseInt(params.assignedToId) : undefined,
   });
 
   // Get users for filter dropdown
@@ -64,7 +65,7 @@ export default async function TasksPage({
             <div className="text-sm font-medium text-gray-700">View Mode</div>
             <div className="flex gap-2">
               <Link
-                href={`/tasks?view=kanban${searchParams.search ? `&search=${searchParams.search}` : ''}${searchParams.status ? `&status=${searchParams.status}` : ''}${searchParams.priority ? `&priority=${searchParams.priority}` : ''}${searchParams.assignedToId ? `&assignedToId=${searchParams.assignedToId}` : ''}`}
+                href={`/tasks?view=kanban${params.search ? `&search=${params.search}` : ''}${params.status ? `&status=${params.status}` : ''}${params.priority ? `&priority=${params.priority}` : ''}${params.assignedToId ? `&assignedToId=${params.assignedToId}` : ''}`}
                 className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
                   view === 'kanban'
                     ? 'bg-teal-600 text-white'
@@ -74,7 +75,7 @@ export default async function TasksPage({
                 Kanban
               </Link>
               <Link
-                href={`/tasks?view=table${searchParams.search ? `&search=${searchParams.search}` : ''}${searchParams.status ? `&status=${searchParams.status}` : ''}${searchParams.priority ? `&priority=${searchParams.priority}` : ''}${searchParams.assignedToId ? `&assignedToId=${searchParams.assignedToId}` : ''}`}
+                href={`/tasks?view=table${params.search ? `&search=${params.search}` : ''}${params.status ? `&status=${params.status}` : ''}${params.priority ? `&priority=${params.priority}` : ''}${params.assignedToId ? `&assignedToId=${params.assignedToId}` : ''}`}
                 className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
                   view === 'table'
                     ? 'bg-teal-600 text-white'
@@ -94,13 +95,13 @@ export default async function TasksPage({
               </label>
               <form action="/tasks" method="get">
                 <input type="hidden" name="view" value={view} />
-                {searchParams.status && <input type="hidden" name="status" value={searchParams.status} />}
-                {searchParams.priority && <input type="hidden" name="priority" value={searchParams.priority} />}
-                {searchParams.assignedToId && <input type="hidden" name="assignedToId" value={searchParams.assignedToId} />}
+                {params.status && <input type="hidden" name="status" value={params.status} />}
+                {params.priority && <input type="hidden" name="priority" value={params.priority} />}
+                {params.assignedToId && <input type="hidden" name="assignedToId" value={params.assignedToId} />}
                 <input
                   type="text"
                   name="search"
-                  defaultValue={searchParams.search || ''}
+                  defaultValue={params.search || ''}
                   placeholder="Search tasks..."
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
                 />
@@ -113,12 +114,12 @@ export default async function TasksPage({
               </label>
               <form action="/tasks" method="get">
                 <input type="hidden" name="view" value={view} />
-                {searchParams.search && <input type="hidden" name="search" value={searchParams.search} />}
-                {searchParams.priority && <input type="hidden" name="priority" value={searchParams.priority} />}
-                {searchParams.assignedToId && <input type="hidden" name="assignedToId" value={searchParams.assignedToId} />}
+                {params.search && <input type="hidden" name="search" value={params.search} />}
+                {params.priority && <input type="hidden" name="priority" value={params.priority} />}
+                {params.assignedToId && <input type="hidden" name="assignedToId" value={params.assignedToId} />}
                 <select
                   name="status"
-                  defaultValue={searchParams.status || ''}
+                  defaultValue={params.status || ''}
                   onChange={(e) => e.currentTarget.form?.submit()}
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
                 >
@@ -137,12 +138,12 @@ export default async function TasksPage({
               </label>
               <form action="/tasks" method="get">
                 <input type="hidden" name="view" value={view} />
-                {searchParams.search && <input type="hidden" name="search" value={searchParams.search} />}
-                {searchParams.status && <input type="hidden" name="status" value={searchParams.status} />}
-                {searchParams.assignedToId && <input type="hidden" name="assignedToId" value={searchParams.assignedToId} />}
+                {params.search && <input type="hidden" name="search" value={params.search} />}
+                {params.status && <input type="hidden" name="status" value={params.status} />}
+                {params.assignedToId && <input type="hidden" name="assignedToId" value={params.assignedToId} />}
                 <select
                   name="priority"
-                  defaultValue={searchParams.priority || ''}
+                  defaultValue={params.priority || ''}
                   onChange={(e) => e.currentTarget.form?.submit()}
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
                 >
@@ -161,12 +162,12 @@ export default async function TasksPage({
               </label>
               <form action="/tasks" method="get">
                 <input type="hidden" name="view" value={view} />
-                {searchParams.search && <input type="hidden" name="search" value={searchParams.search} />}
-                {searchParams.status && <input type="hidden" name="status" value={searchParams.status} />}
-                {searchParams.priority && <input type="hidden" name="priority" value={searchParams.priority} />}
+                {params.search && <input type="hidden" name="search" value={params.search} />}
+                {params.status && <input type="hidden" name="status" value={params.status} />}
+                {params.priority && <input type="hidden" name="priority" value={params.priority} />}
                 <select
                   name="assignedToId"
-                  defaultValue={searchParams.assignedToId || ''}
+                  defaultValue={params.assignedToId || ''}
                   onChange={(e) => e.currentTarget.form?.submit()}
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
                 >
@@ -182,42 +183,42 @@ export default async function TasksPage({
           </div>
 
           {/* Active Filters */}
-          {(searchParams.search || searchParams.status || searchParams.priority || searchParams.assignedToId) && (
+          {(params.search || params.status || params.priority || params.assignedToId) && (
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-sm text-gray-600">Active filters:</span>
-              {searchParams.search && (
+              {params.search && (
                 <Link
-                  href={`/tasks?view=${view}${searchParams.status ? `&status=${searchParams.status}` : ''}${searchParams.priority ? `&priority=${searchParams.priority}` : ''}${searchParams.assignedToId ? `&assignedToId=${searchParams.assignedToId}` : ''}`}
+                  href={`/tasks?view=${view}${params.status ? `&status=${params.status}` : ''}${params.priority ? `&priority=${params.priority}` : ''}${params.assignedToId ? `&assignedToId=${params.assignedToId}` : ''}`}
                   className="inline-flex items-center gap-1 rounded-full bg-teal-100 px-3 py-1 text-sm text-teal-800"
                 >
-                  Search: {searchParams.search}
+                  Search: {params.search}
                   <span className="text-teal-600">×</span>
                 </Link>
               )}
-              {searchParams.status && (
+              {params.status && (
                 <Link
-                  href={`/tasks?view=${view}${searchParams.search ? `&search=${searchParams.search}` : ''}${searchParams.priority ? `&priority=${searchParams.priority}` : ''}${searchParams.assignedToId ? `&assignedToId=${searchParams.assignedToId}` : ''}`}
+                  href={`/tasks?view=${view}${params.search ? `&search=${params.search}` : ''}${params.priority ? `&priority=${params.priority}` : ''}${params.assignedToId ? `&assignedToId=${params.assignedToId}` : ''}`}
                   className="inline-flex items-center gap-1 rounded-full bg-teal-100 px-3 py-1 text-sm text-teal-800"
                 >
-                  Status: {searchParams.status}
+                  Status: {params.status}
                   <span className="text-teal-600">×</span>
                 </Link>
               )}
-              {searchParams.priority && (
+              {params.priority && (
                 <Link
-                  href={`/tasks?view=${view}${searchParams.search ? `&search=${searchParams.search}` : ''}${searchParams.status ? `&status=${searchParams.status}` : ''}${searchParams.assignedToId ? `&assignedToId=${searchParams.assignedToId}` : ''}`}
+                  href={`/tasks?view=${view}${params.search ? `&search=${params.search}` : ''}${params.status ? `&status=${params.status}` : ''}${params.assignedToId ? `&assignedToId=${params.assignedToId}` : ''}`}
                   className="inline-flex items-center gap-1 rounded-full bg-teal-100 px-3 py-1 text-sm text-teal-800"
                 >
-                  Priority: {searchParams.priority}
+                  Priority: {params.priority}
                   <span className="text-teal-600">×</span>
                 </Link>
               )}
-              {searchParams.assignedToId && (
+              {params.assignedToId && (
                 <Link
-                  href={`/tasks?view=${view}${searchParams.search ? `&search=${searchParams.search}` : ''}${searchParams.status ? `&status=${searchParams.status}` : ''}${searchParams.priority ? `&priority=${searchParams.priority}` : ''}`}
+                  href={`/tasks?view=${view}${params.search ? `&search=${params.search}` : ''}${params.status ? `&status=${params.status}` : ''}${params.priority ? `&priority=${params.priority}` : ''}`}
                   className="inline-flex items-center gap-1 rounded-full bg-teal-100 px-3 py-1 text-sm text-teal-800"
                 >
-                  User: {users.find(u => u.id === parseInt(searchParams.assignedToId!))?.name}
+                  User: {users.find(u => u.id === parseInt(params.assignedToId!))?.name}
                   <span className="text-teal-600">×</span>
                 </Link>
               )}
@@ -249,7 +250,7 @@ export default async function TasksPage({
               </div>
               <div className="flex gap-2">
                 <Link
-                  href={`/tasks?view=${view}&page=${page - 1}${searchParams.search ? `&search=${searchParams.search}` : ''}${searchParams.status ? `&status=${searchParams.status}` : ''}${searchParams.priority ? `&priority=${searchParams.priority}` : ''}${searchParams.assignedToId ? `&assignedToId=${searchParams.assignedToId}` : ''}`}
+                  href={`/tasks?view=${view}&page=${page - 1}${params.search ? `&search=${params.search}` : ''}${params.status ? `&status=${params.status}` : ''}${params.priority ? `&priority=${params.priority}` : ''}${params.assignedToId ? `&assignedToId=${params.assignedToId}` : ''}`}
                   className={`px-3 py-1 text-sm border rounded-md ${
                     page === 1 ? 'opacity-50 pointer-events-none' : 'hover:bg-gray-50'
                   } bg-white text-gray-700`}
@@ -259,7 +260,7 @@ export default async function TasksPage({
                 {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p) => (
                   <Link
                     key={p}
-                    href={`/tasks?view=${view}&page=${p}${searchParams.search ? `&search=${searchParams.search}` : ''}${searchParams.status ? `&status=${searchParams.status}` : ''}${searchParams.priority ? `&priority=${searchParams.priority}` : ''}${searchParams.assignedToId ? `&assignedToId=${searchParams.assignedToId}` : ''}`}
+                    href={`/tasks?view=${view}&page=${p}${params.search ? `&search=${params.search}` : ''}${params.status ? `&status=${params.status}` : ''}${params.priority ? `&priority=${params.priority}` : ''}${params.assignedToId ? `&assignedToId=${params.assignedToId}` : ''}`}
                     className={`px-3 py-1 text-sm border rounded-md ${
                       p === page ? 'bg-teal-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
                     }`}
@@ -268,7 +269,7 @@ export default async function TasksPage({
                   </Link>
                 ))}
                 <Link
-                  href={`/tasks?view=${view}&page=${page + 1}${searchParams.search ? `&search=${searchParams.search}` : ''}${searchParams.status ? `&status=${searchParams.status}` : ''}${searchParams.priority ? `&priority=${searchParams.priority}` : ''}${searchParams.assignedToId ? `&assignedToId=${searchParams.assignedToId}` : ''}`}
+                  href={`/tasks?view=${view}&page=${page + 1}${params.search ? `&search=${params.search}` : ''}${params.status ? `&status=${params.status}` : ''}${params.priority ? `&priority=${params.priority}` : ''}${params.assignedToId ? `&assignedToId=${params.assignedToId}` : ''}`}
                   className={`px-3 py-1 text-sm border rounded-md ${
                     page === totalPages ? 'opacity-50 pointer-events-none' : 'hover:bg-gray-50'
                   } bg-white text-gray-700`}

@@ -8,12 +8,13 @@ export const metadata: Metadata = {
   title: 'Authentication Error | KGC Compliance Cloud',
 };
 
-export default function AuthErrorPage({
+export default async function AuthErrorPage({
   searchParams,
 }: {
-  searchParams: { error?: string };
+  searchParams: Promise<{ error?: string }>;
 }) {
-  const error = searchParams.error;
+  const params = await searchParams;
+  const error = params.error;
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">

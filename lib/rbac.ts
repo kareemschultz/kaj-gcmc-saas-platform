@@ -209,3 +209,47 @@ export function getUserContext(session: any): UserPermissionContext {
     role: session.role as UserRole,
   };
 }
+
+/**
+ * Convenience helper: Assert user can view a module
+ */
+export function assertCanView(
+  user: UserPermissionContext,
+  module: string,
+  customMessage?: string
+): void {
+  assertPermission(user, module, 'view', customMessage);
+}
+
+/**
+ * Convenience helper: Assert user can create in a module
+ */
+export function assertCanCreate(
+  user: UserPermissionContext,
+  module: string,
+  customMessage?: string
+): void {
+  assertPermission(user, module, 'create', customMessage);
+}
+
+/**
+ * Convenience helper: Assert user can edit in a module
+ */
+export function assertCanEdit(
+  user: UserPermissionContext,
+  module: string,
+  customMessage?: string
+): void {
+  assertPermission(user, module, 'edit', customMessage);
+}
+
+/**
+ * Convenience helper: Assert user can delete in a module
+ */
+export function assertCanDelete(
+  user: UserPermissionContext,
+  module: string,
+  customMessage?: string
+): void {
+  assertPermission(user, module, 'delete', customMessage);
+}

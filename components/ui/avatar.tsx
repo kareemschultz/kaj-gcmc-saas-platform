@@ -45,3 +45,18 @@ export function Avatar({ src, alt, fallback, className, ...props }: AvatarProps)
     </div>
   );
 }
+
+// Export AvatarFallback for compatibility with portal-header usage
+export function AvatarFallback({ children, className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cn(
+        "flex h-full w-full items-center justify-center bg-teal-600 text-sm font-medium text-white",
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+}

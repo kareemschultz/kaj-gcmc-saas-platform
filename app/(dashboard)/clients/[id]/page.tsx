@@ -9,13 +9,14 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 interface ClientDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function ClientDetailPage({ params }: ClientDetailPageProps) {
-  const clientId = parseInt(params.id);
+  const { id } = await params;
+  const clientId = parseInt(id);
 
   if (isNaN(clientId)) {
     notFound();

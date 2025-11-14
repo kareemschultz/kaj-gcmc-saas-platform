@@ -6,18 +6,19 @@ import { redirect } from 'next/navigation';
 export default async function TenantsPage({
   searchParams,
 }: {
-  searchParams: { page?: string; search?: string };
+  searchParams: Promise<{ page?: string; search?: string }>;
 }) {
   const session = await auth();
   if (!session) {
     redirect('/auth/login');
   }
 
-  const page = parseInt(searchParams.page || '1');
+  const params = await searchParams;
+  const page = parseInt(params.page || '1');
   const { tenants, total, totalPages } = await getTenants({
     page,
     pageSize: 20,
-    search: searchParams.search,
+    search: params.search,
   });
 
   return (
@@ -46,7 +47,7 @@ export default async function TenantsPage({
             <input
               type="text"
               placeholder="Search tenants..."
-              defaultValue={searchParams.search}
+              defaultValue={params.search}
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
           </div>
@@ -80,11 +81,13 @@ export default async function TenantsPage({
                   <tr key={tenant.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
                       <div className="text-sm font-medium text-gray-900">{tenant.name}</div>
-                      {tenant.settings?.branding?.primaryColor && (
+                      {tenant.settings && typeof tenant.settings === 'object' && 'branding' in tenant.settings &&
+                       typeof tenant.settings.branding === 'object' && tenant.settings.branding !== null &&
+                       'primaryColor' in tenant.settings.branding && tenant.settings.branding.primaryColor && (
                         <div className="flex items-center gap-2 mt-1">
                           <div
                             className="w-4 h-4 rounded border border-gray-300"
-                            style={{ backgroundColor: tenant.settings.branding.primaryColor }}
+                            style={{ backgroundColor: String(tenant.settings.branding.primaryColor) }}
                           />
                           <span className="text-xs text-gray-500">Branded</span>
                         </div>
@@ -97,10 +100,12 @@ export default async function TenantsPage({
                     </td>
                     <td className="px-6 py-4">
                       <div className="text-sm text-gray-900">
-                        {tenant.contactInfo?.email || '-'}
+                        {tenant.contactInfo && typeof tenant.contactInfo === 'object' && 'email' in tenant.contactInfo
+                          ? String(tenant.contactInfo.email || '-')
+                          : '-'}
                       </div>
-                      {tenant.contactInfo?.phone && (
-                        <div className="text-xs text-gray-500">{tenant.contactInfo.phone}</div>
+                      {tenant.contactInfo && typeof tenant.contactInfo === 'object' && 'phone' in tenant.contactInfo && tenant.contactInfo.phone && (
+                        <div className="text-xs text-gray-500">{String(tenant.contactInfo.phone)}</div>
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
@@ -134,7 +139,7 @@ export default async function TenantsPage({
             </div>
             <div className="flex gap-2">
               <Link
-                href={`/admin/tenants?page=${page - 1}${searchParams.search ? `&search=${searchParams.search}` : ''}`}
+                href={`/admin/tenants?page=${page - 1}${params.search ? `&search=${params.search}` : ''}`}
                 className={`px-3 py-1 text-sm border rounded-md ${page === 1 ? 'opacity-50 pointer-events-none' : 'hover:bg-gray-50'} bg-white text-gray-700`}
               >
                 Previous
@@ -142,7 +147,7 @@ export default async function TenantsPage({
               {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p) => (
                 <Link
                   key={p}
-                  href={`/admin/tenants?page=${p}${searchParams.search ? `&search=${searchParams.search}` : ''}`}
+                  href={`/admin/tenants?page=${p}${params.search ? `&search=${params.search}` : ''}`}
                   className={`px-3 py-1 text-sm border rounded-md ${
                     p === page ? 'bg-teal-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
                   }`}
@@ -151,7 +156,7 @@ export default async function TenantsPage({
                 </Link>
               ))}
               <Link
-                href={`/admin/tenants?page=${page + 1}${searchParams.search ? `&search=${searchParams.search}` : ''}`}
+                href={`/admin/tenants?page=${page + 1}${params.search ? `&search=${params.search}` : ''}`}
                 className={`px-3 py-1 text-sm border rounded-md ${page === totalPages ? 'opacity-50 pointer-events-none' : 'hover:bg-gray-50'} bg-white text-gray-700`}
               >
                 Next
