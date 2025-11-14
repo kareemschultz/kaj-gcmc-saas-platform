@@ -14,7 +14,7 @@ import {
   updateRecurringFiling,
   recurringFilingSchema,
   type RecurringFilingFormData,
-} from '@/src/lib/actions/recurring-filings';
+} from '@/lib/actions/recurring-filings';
 import { toast } from '@/hooks/use-toast';
 
 interface RecurringFilingFormProps {

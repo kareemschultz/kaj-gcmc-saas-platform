@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { NewClientWizardData } from '@/src/lib/actions/wizards';
+import { NewClientWizardData } from '@/lib/actions/wizards';
 
 const AUTHORITIES = [
   { code: 'GRA', name: 'Guyana Revenue Authority', color: 'bg-green-100 text-green-800' },

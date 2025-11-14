@@ -7,10 +7,10 @@
  */
 
 import { Worker, Job } from 'bullmq';
-import { redis } from '@/src/lib/redis';
-import { QUEUE_NAMES } from '@/src/lib/queues';
-import { logger } from '@/src/lib/logger';
-import { prisma } from '@/src/lib/prisma';
+import { redis } from '@/lib/redis';
+import { QUEUE_NAMES } from '@/lib/queues';
+import { logger } from '@/lib/logger';
+import { prisma } from '@/lib/prisma';
 
 interface EmailJobData {
   recipientEmail: string;

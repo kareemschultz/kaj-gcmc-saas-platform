@@ -6,7 +6,7 @@
  */
 
 import { scheduler } from './scheduler';
-import { logger } from '@/src/lib/logger';
+import { logger } from '@/lib/logger';
 
 // Handle uncaught errors
 process.on('uncaughtException', (error: Error) => {

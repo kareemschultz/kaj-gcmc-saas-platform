@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getDocumentTypes } from '@/src/lib/actions/document-types';
+import { getDocumentTypes } from '@/lib/actions/document-types';
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 

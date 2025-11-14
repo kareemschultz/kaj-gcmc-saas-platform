@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { ServiceRequestWizardData } from '@/src/lib/actions/wizards';
+import { ServiceRequestWizardData } from '@/lib/actions/wizards';
 import { Plus, Trash2, MoveUp, MoveDown } from 'lucide-react';
 
 interface ConfigureWorkflowStepProps {

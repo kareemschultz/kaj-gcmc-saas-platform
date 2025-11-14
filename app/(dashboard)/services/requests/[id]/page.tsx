@@ -1,5 +1,5 @@
-import { getServiceRequest } from '@/src/lib/actions/service-requests';
-import { getServices } from '@/src/lib/actions/services';
+import { getServiceRequest } from '@/lib/actions/service-requests';
+import { getServices } from '@/lib/actions/services';
 import { ServiceRequestForm } from '@/components/service-requests/service-request-form';
 import { ServiceRequestWorkflow } from '@/components/service-requests/service-request-workflow';
 import { ServiceRequestTimeline } from '@/components/service-requests/service-request-timeline';
@@ -7,7 +7,7 @@ import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { prisma } from '@/src/lib/prisma';
+import { prisma } from '@/lib/prisma';
 
 export default async function ServiceRequestDetailPage({
   params,

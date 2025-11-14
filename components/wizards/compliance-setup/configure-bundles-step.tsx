@@ -5,7 +5,7 @@ import { WizardNavigation } from '@/components/wizard/wizard-navigation';
 import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
-import { ComplianceSetupWizardData } from '@/src/lib/actions/wizards';
+import { ComplianceSetupWizardData } from '@/lib/actions/wizards';
 
 interface ConfigureBundlesStepProps {
   bundles: any[];

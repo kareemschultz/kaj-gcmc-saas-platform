@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getServiceRequests } from '@/src/lib/actions/service-requests';
+import { getServiceRequests } from '@/lib/actions/service-requests';
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 

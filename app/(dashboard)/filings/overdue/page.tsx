@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { getOverdueFilings, markFilingAsSubmitted } from '@/src/lib/actions/dashboard';
+import { getOverdueFilings, markFilingAsSubmitted } from '@/lib/actions/dashboard';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';

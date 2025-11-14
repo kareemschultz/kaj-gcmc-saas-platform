@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { toggleRecurringFilingActive } from '@/src/lib/actions/recurring-filings';
+import { toggleRecurringFilingActive } from '@/lib/actions/recurring-filings';
 import { useRouter } from 'next/navigation';
 import { toast } from '@/hooks/use-toast';
 

@@ -2,8 +2,8 @@ import { ServiceRequestForm } from '@/components/service-requests/service-reques
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { getServices } from '@/src/lib/actions/services';
-import { prisma } from '@/src/lib/prisma';
+import { getServices } from '@/lib/actions/services';
+import { prisma } from '@/lib/prisma';
 
 export default async function NewServiceRequestPage() {
   const session = await auth();

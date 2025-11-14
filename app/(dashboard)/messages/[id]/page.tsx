@@ -1,7 +1,7 @@
 import { notFound, redirect } from 'next/navigation';
 import Link from 'next/link';
 import { auth } from '@/auth';
-import { getConversation } from '@/src/lib/actions/conversations';
+import { getConversation } from '@/lib/actions/conversations';
 import { MessageThread } from '@/components/messages/message-thread';
 import { MessageComposer } from '@/components/messages/message-composer';
 import { Badge } from '@/components/ui/badge';

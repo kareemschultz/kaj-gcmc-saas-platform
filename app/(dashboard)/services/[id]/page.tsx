@@ -1,4 +1,4 @@
-import { getService } from '@/src/lib/actions/services';
+import { getService } from '@/lib/actions/services';
 import { ServiceForm } from '@/components/services/service-form';
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';

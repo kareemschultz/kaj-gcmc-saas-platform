@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { getPortalClientTasks } from '@/src/lib/actions/portal';
+import { getPortalClientTasks } from '@/lib/actions/portal';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ListTodo, Calendar } from 'lucide-react';

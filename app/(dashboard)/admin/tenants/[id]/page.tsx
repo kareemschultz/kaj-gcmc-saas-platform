@@ -1,4 +1,4 @@
-import { getTenant } from '@/src/lib/actions/tenants';
+import { getTenant } from '@/lib/actions/tenants';
 import { TenantForm } from '@/components/tenants/tenant-form';
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';

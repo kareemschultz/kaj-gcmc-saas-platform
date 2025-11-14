@@ -4,11 +4,11 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { WizardProvider, useWizard } from '@/components/wizard/wizard-context';
 import { WizardLayout } from '@/components/wizard/wizard-layout';
-import { WizardConfig } from '@/src/types/wizard';
+import { WizardConfig } from '@/types/wizard';
 import {
   ServiceRequestWizardData,
   completeServiceRequestWizard,
-} from '@/src/lib/actions/wizards';
+} from '@/lib/actions/wizards';
 import { SelectClientStep } from './service-request/select-client-step';
 import { SelectServiceStep } from './service-request/select-service-step';
 import { ConfigureWorkflowStep } from './service-request/configure-workflow-step';

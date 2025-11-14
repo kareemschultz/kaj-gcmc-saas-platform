@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Calendar, FileText, ArrowRight, AlertTriangle } from 'lucide-react';
-import { UpcomingDeadline } from '@/src/lib/actions/dashboard';
+import { UpcomingDeadline } from '@/lib/actions/dashboard';
 import { format } from 'date-fns';
 
 interface UpcomingDeadlinesCardProps {

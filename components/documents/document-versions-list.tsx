@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { FileText, Download, Trash2, Eye, AlertCircle } from 'lucide-react';
-import { getDownloadUrl, deleteDocumentVersion } from '@/src/lib/actions/document-upload';
+import { getDownloadUrl, deleteDocumentVersion } from '@/lib/actions/document-upload';
 import { toast } from 'sonner';
 import { formatDistanceToNow } from 'date-fns';
 import {

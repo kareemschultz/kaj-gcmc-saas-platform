@@ -5,7 +5,7 @@ import { WizardNavigation } from '@/components/wizard/wizard-navigation';
 import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { ComplianceSetupWizardData } from '@/src/lib/actions/wizards';
+import { ComplianceSetupWizardData } from '@/lib/actions/wizards';
 import { CheckCircle2, AlertCircle } from 'lucide-react';
 
 export function CreateTasksStep() {

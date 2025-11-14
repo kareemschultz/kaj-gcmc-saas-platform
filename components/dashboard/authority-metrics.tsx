@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Building2, TrendingUp, AlertCircle, FileText } from 'lucide-react';
-import { AuthorityMetrics } from '@/src/lib/actions/dashboard';
+import { AuthorityMetrics } from '@/lib/actions/dashboard';
 
 interface AuthorityMetricsCardProps {
   metrics: AuthorityMetrics;

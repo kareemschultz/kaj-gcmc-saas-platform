@@ -1,4 +1,4 @@
-import { getComplianceRuleSet } from '@/src/lib/actions/compliance-rules';
+import { getComplianceRuleSet } from '@/lib/actions/compliance-rules';
 import { RuleSetForm } from '@/components/compliance/rule-set-form';
 import { RuleForm } from '@/components/compliance/rule-form';
 import { auth } from '@/auth';

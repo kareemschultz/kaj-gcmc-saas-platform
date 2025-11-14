@@ -6,11 +6,11 @@
  */
 
 import { Worker, Job } from 'bullmq';
-import { redis } from '@/src/lib/redis';
-import { QUEUE_NAMES, JOB_NAMES } from '@/src/lib/queues';
-import { logger } from '@/src/lib/logger';
-import { prisma } from '@/src/lib/prisma';
-import { refreshTenantCompliance } from '@/src/lib/compliance-engine';
+import { redis } from '@/lib/redis';
+import { QUEUE_NAMES, JOB_NAMES } from '@/lib/queues';
+import { logger } from '@/lib/logger';
+import { prisma } from '@/lib/prisma';
+import { refreshTenantCompliance } from '@/lib/compliance-engine';
 
 interface ComplianceRefreshJobData {
   tenantId?: number; // If provided, only refresh this tenant

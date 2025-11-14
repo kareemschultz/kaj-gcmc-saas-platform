@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { getPortalClientProfile } from '@/src/lib/actions/portal';
+import { getPortalClientProfile } from '@/lib/actions/portal';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { User, Building2, Mail, Phone, MapPin } from 'lucide-react';

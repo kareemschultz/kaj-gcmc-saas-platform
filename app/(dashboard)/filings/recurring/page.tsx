@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { getRecurringFilings, toggleRecurringFilingActive } from '@/src/lib/actions/recurring-filings';
-import { getFilingTypes, getClientsForFilingSelect } from '@/src/lib/actions/filings';
+import { getRecurringFilings, toggleRecurringFilingActive } from '@/lib/actions/recurring-filings';
+import { getFilingTypes, getClientsForFilingSelect } from '@/lib/actions/filings';
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import { format } from 'date-fns';

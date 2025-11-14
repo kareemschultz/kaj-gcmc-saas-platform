@@ -1,4 +1,4 @@
-import { getFilingType } from '@/src/lib/actions/filing-types';
+import { getFilingType } from '@/lib/actions/filing-types';
 import { FilingTypeForm } from '@/components/filing-types/filing-type-form';
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';

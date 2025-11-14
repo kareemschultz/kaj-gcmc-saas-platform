@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { deleteRecurringFiling } from '@/src/lib/actions/recurring-filings';
+import { deleteRecurringFiling } from '@/lib/actions/recurring-filings';
 import { toast } from '@/hooks/use-toast';
 import { Trash2 } from 'lucide-react';
 

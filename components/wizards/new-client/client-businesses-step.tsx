@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { NewClientWizardData } from '@/src/lib/actions/wizards';
+import { NewClientWizardData } from '@/lib/actions/wizards';
 import { Plus, Trash2 } from 'lucide-react';
 
 export function ClientBusinessesStep() {

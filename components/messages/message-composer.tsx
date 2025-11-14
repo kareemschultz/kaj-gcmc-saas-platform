@@ -3,7 +3,7 @@
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { createMessage } from '@/src/lib/actions/conversations';
+import { createMessage } from '@/lib/actions/conversations';
 import { Send } from 'lucide-react';
 
 interface MessageComposerProps {

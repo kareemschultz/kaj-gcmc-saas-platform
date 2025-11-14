@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
-import { getClients } from '@/src/lib/actions/clients';
-import { getServicesForWizard } from '@/src/lib/actions/wizards';
+import { getClients } from '@/lib/actions/clients';
+import { getServicesForWizard } from '@/lib/actions/wizards';
 import { ServiceRequestWizard } from '@/components/wizards/service-request-wizard';
 
 export const metadata: Metadata = {

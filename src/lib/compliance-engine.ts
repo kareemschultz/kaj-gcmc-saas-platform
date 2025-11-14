@@ -8,8 +8,8 @@
  * - Overdue filings
  */
 
-import { prisma } from '@/src/lib/prisma';
-import { logger } from '@/src/lib/logger';
+import { prisma } from '@/lib/prisma';
+import { logger } from '@/lib/logger';
 
 interface ComplianceBreakdown {
   documentsScore: number;
@@ -381,4 +381,58 @@ export async function getComplianceSummary(tenantId: number) {
   };
 
   return summary;
+}
+
+/**
+ * Recalculate compliance score for a client and persist to database
+ * This is used by wizards and other automated processes
+ */
+export async function recalculateClientCompliance(
+  clientId: number,
+  tenantId: number
+): Promise<void> {
+  try {
+    logger.info('Recalculating compliance for client', { clientId, tenantId });
+
+    const result = await calculateClientCompliance(tenantId, clientId);
+
+    await prisma.complianceScore.upsert({
+      where: {
+        tenantId_clientId: { tenantId, clientId },
+      },
+      update: {
+        scoreValue: result.scoreValue,
+        level: result.level,
+        missingCount: result.breakdown.missingDocuments,
+        expiringCount: result.breakdown.expiringDocuments + result.breakdown.expiredDocuments,
+        overdueFilingsCount: result.breakdown.overdueFilings,
+        lastCalculatedAt: new Date(),
+        breakdown: result.breakdown as any,
+      },
+      create: {
+        tenantId,
+        clientId,
+        scoreValue: result.scoreValue,
+        level: result.level,
+        missingCount: result.breakdown.missingDocuments,
+        expiringCount: result.breakdown.expiringDocuments + result.breakdown.expiredDocuments,
+        overdueFilingsCount: result.breakdown.overdueFilings,
+        lastCalculatedAt: new Date(),
+        breakdown: result.breakdown as any,
+      },
+    });
+
+    logger.info('Compliance recalculation completed', {
+      clientId,
+      tenantId,
+      scoreValue: result.scoreValue,
+      level: result.level,
+    });
+  } catch (error) {
+    logger.error('Failed to recalculate client compliance', error as Error, {
+      clientId,
+      tenantId,
+    });
+    throw error;
+  }
 }

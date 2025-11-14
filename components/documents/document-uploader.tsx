@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
 import { Upload, X, FileText, Image as ImageIcon, AlertCircle } from 'lucide-react';
-import { getUploadUrl, confirmUpload } from '@/src/lib/actions/document-upload';
+import { getUploadUrl, confirmUpload } from '@/lib/actions/document-upload';
 import { toast } from 'sonner';
 
 // Accepted file types

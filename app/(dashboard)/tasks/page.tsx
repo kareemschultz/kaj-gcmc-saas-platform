@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { getTasks } from '@/src/lib/actions/tasks';
-import { getUsers } from '@/src/lib/actions/users';
+import { getTasks } from '@/lib/actions/tasks';
+import { getUsers } from '@/lib/actions/users';
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import { TaskKanban } from '@/components/tasks/task-kanban';

@@ -1,7 +1,7 @@
 // Create new document page
 
 import { DocumentForm } from '@/components/documents/document-form';
-import { getDocumentTypes, getClientsForSelect } from '@/src/lib/actions/documents';
+import { getDocumentTypes, getClientsForSelect } from '@/lib/actions/documents';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';

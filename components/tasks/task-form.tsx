@@ -9,9 +9,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { createTask, updateTask, taskSchema, type TaskFormData } from '@/src/lib/actions/tasks';
-import { getUsers } from '@/src/lib/actions/users';
-import { getClients } from '@/src/lib/actions/clients';
+import { createTask, updateTask, taskSchema, type TaskFormData } from '@/lib/actions/tasks';
+import { getUsers } from '@/lib/actions/users';
+import { getClients } from '@/lib/actions/clients';
 import { toast } from '@/hooks/use-toast';
 import type { Task, User, Client } from '@prisma/client';
 

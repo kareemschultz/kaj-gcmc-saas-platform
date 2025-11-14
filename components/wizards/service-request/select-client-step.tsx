@@ -6,7 +6,7 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { ServiceRequestWizardData } from '@/src/lib/actions/wizards';
+import { ServiceRequestWizardData } from '@/lib/actions/wizards';
 import { useState } from 'react';
 import { Search } from 'lucide-react';
 

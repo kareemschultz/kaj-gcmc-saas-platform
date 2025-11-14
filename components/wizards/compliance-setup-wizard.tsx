@@ -4,11 +4,11 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { WizardProvider, useWizard } from '@/components/wizard/wizard-context';
 import { WizardLayout } from '@/components/wizard/wizard-layout';
-import { WizardConfig } from '@/src/types/wizard';
+import { WizardConfig } from '@/types/wizard';
 import {
   ComplianceSetupWizardData,
   completeComplianceSetupWizard,
-} from '@/src/lib/actions/wizards';
+} from '@/lib/actions/wizards';
 import { SelectAuthoritiesStep } from './compliance-setup/select-authorities-step';
 import { SelectBundlesStep } from './compliance-setup/select-bundles-step';
 import { ConfigureBundlesStep } from './compliance-setup/configure-bundles-step';

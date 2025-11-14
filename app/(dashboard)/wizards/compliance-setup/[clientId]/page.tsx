@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getClientById } from '@/src/lib/actions/clients';
-import { getBundlesForAuthorities } from '@/src/lib/actions/wizards';
+import { getClientById } from '@/lib/actions/clients';
+import { getBundlesForAuthorities } from '@/lib/actions/wizards';
 import { ComplianceSetupWizard } from '@/components/wizards/compliance-setup-wizard';
 
 export const metadata: Metadata = {
