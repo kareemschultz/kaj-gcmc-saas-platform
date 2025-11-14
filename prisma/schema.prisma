@@ -20,6 +20,7 @@ model Tenant {
 
   tenantUsers      TenantUser[]
   clients          Client[]
+  clientBusinesses ClientBusiness[]
   documentTypes    DocumentType[]
   filingTypes      FilingType[]
   services         Service[]
@@ -178,7 +179,7 @@ model Document {
   status           String           // valid, expired, pending_review, rejected
   authority        String?
   tags             String[]
-  latestVersionId  Int?
+  latestVersionId  Int?             @unique
   createdAt        DateTime         @default(now())
   updatedAt        DateTime         @updatedAt
 

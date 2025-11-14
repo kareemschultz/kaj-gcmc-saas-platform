@@ -1,13 +1,26 @@
 import Link from 'next/link';
+import { getDocuments } from '@/src/lib/actions/documents';
+import { auth } from '@/auth';
+import { redirect } from 'next/navigation';
+import { format } from 'date-fns';
 
-export default function DocumentsPage() {
-  const mockDocuments = [
-    { id: 1, name: 'Tax Certificate 2024', client: 'ABC Corporation', type: 'Tax Certificate', authority: 'GRA', status: 'Active', issueDate: '2024-01-15', expiryDate: '2025-01-15' },
-    { id: 2, name: 'Business License', client: 'XYZ Limited', type: 'Business License', authority: 'DCRA', status: 'Active', issueDate: '2023-06-01', expiryDate: '2024-06-01' },
-    { id: 3, name: 'NIS Certificate', client: 'ABC Corporation', type: 'NIS Certificate', authority: 'NIS', status: 'Expiring Soon', issueDate: '2023-03-10', expiryDate: '2024-03-10' },
-    { id: 4, name: 'Work Permit', client: 'John Williams', type: 'Work Permit', authority: 'Immigration', status: 'Expired', issueDate: '2022-08-20', expiryDate: '2023-08-20' },
-    { id: 5, name: 'Articles of Incorporation', client: 'DEF Partnership', type: 'Certificate of Incorporation', authority: 'DCRA', status: 'Active', issueDate: '2020-11-05', expiryDate: null },
-  ];
+export default async function DocumentsPage({
+  searchParams,
+}: {
+  searchParams: { page?: string; search?: string; status?: string; authority?: string };
+}) {
+  const session = await auth();
+  if (!session) {
+    redirect('/auth/login');
+  }
+
+  const page = parseInt(searchParams.page || '1');
+  const { documents, total, totalPages } = await getDocuments({
+    page,
+    pageSize: 10,
+    search: searchParams.search,
+    status: searchParams.status,
+  });
 
   return (
     <div className="space-y-6">
@@ -86,51 +99,62 @@ export default function DocumentsPage() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {mockDocuments.map((doc) => (
-                <tr key={doc.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{doc.name}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                    {doc.client}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
-                      {doc.type}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                      doc.authority === 'GRA' ? 'bg-yellow-100 text-yellow-800' :
-                      doc.authority === 'NIS' ? 'bg-green-100 text-green-800' :
-                      doc.authority === 'DCRA' ? 'bg-purple-100 text-purple-800' :
-                      'bg-blue-100 text-blue-800'
-                    }`}>
-                      {doc.authority}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                      doc.status === 'Active' ? 'bg-green-100 text-green-800' :
-                      doc.status === 'Expiring Soon' ? 'bg-orange-100 text-orange-800' :
-                      'bg-red-100 text-red-800'
-                    }`}>
-                      {doc.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                    {doc.issueDate}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                    {doc.expiryDate || 'N/A'}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    <Link href={`/documents/${doc.id}`} className="text-teal-600 hover:text-teal-900 font-medium">
-                      View
-                    </Link>
+              {documents.length === 0 ? (
+                <tr>
+                  <td colSpan={8} className="px-6 py-12 text-center text-sm text-gray-500">
+                    No documents found. <Link href="/documents/new" className="text-teal-600 hover:text-teal-900">Upload your first document</Link>
                   </td>
                 </tr>
-              ))}
+              ) : (
+                documents.map((doc) => (
+                  <tr key={doc.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm font-medium text-gray-900">{doc.title}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                      {doc.client.name}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
+                        {doc.documentType.name}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {doc.authority && (
+                        <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                          doc.authority === 'GRA' ? 'bg-yellow-100 text-yellow-800' :
+                          doc.authority === 'NIS' ? 'bg-green-100 text-green-800' :
+                          doc.authority === 'DCRA' ? 'bg-purple-100 text-purple-800' :
+                          'bg-blue-100 text-blue-800'
+                        }`}>
+                          {doc.authority}
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`px-2 py-1 text-xs font-medium rounded-full capitalize ${
+                        doc.status === 'valid' ? 'bg-green-100 text-green-800' :
+                        doc.status === 'expired' ? 'bg-red-100 text-red-800' :
+                        doc.status === 'pending_review' ? 'bg-orange-100 text-orange-800' :
+                        'bg-gray-100 text-gray-800'
+                      }`}>
+                        {doc.status.replace('_', ' ')}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                      {doc.latestVersion?.issueDate ? format(new Date(doc.latestVersion.issueDate), 'yyyy-MM-dd') : '-'}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                      {doc.latestVersion?.expiryDate ? format(new Date(doc.latestVersion.expiryDate), 'yyyy-MM-dd') : 'N/A'}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                      <Link href={`/documents/${doc.id}`} className="text-teal-600 hover:text-teal-900 font-medium">
+                        View
+                      </Link>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
@@ -138,22 +162,34 @@ export default function DocumentsPage() {
         {/* Pagination */}
         <div className="bg-white px-4 py-3 border-t flex items-center justify-between">
           <div className="text-sm text-gray-700">
-            Showing <span className="font-medium">1</span> to <span className="font-medium">5</span> of{' '}
-            <span className="font-medium">156</span> results
+            Showing <span className="font-medium">{((page - 1) * 10) + 1}</span> to{' '}
+            <span className="font-medium">{Math.min(page * 10, total)}</span> of{' '}
+            <span className="font-medium">{total}</span> results
           </div>
           <div className="flex gap-2">
-            <button className="px-3 py-1 text-sm border rounded-md bg-white text-gray-700 hover:bg-gray-50">
+            <Link
+              href={`/documents?page=${page - 1}${searchParams.search ? `&search=${searchParams.search}` : ''}`}
+              className={`px-3 py-1 text-sm border rounded-md ${page === 1 ? 'opacity-50 pointer-events-none' : 'hover:bg-gray-50'} bg-white text-gray-700`}
+            >
               Previous
-            </button>
-            <button className="px-3 py-1 text-sm border rounded-md bg-teal-600 text-white">
-              1
-            </button>
-            <button className="px-3 py-1 text-sm border rounded-md bg-white text-gray-700 hover:bg-gray-50">
-              2
-            </button>
-            <button className="px-3 py-1 text-sm border rounded-md bg-white text-gray-700 hover:bg-gray-50">
+            </Link>
+            {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p) => (
+              <Link
+                key={p}
+                href={`/documents?page=${p}${searchParams.search ? `&search=${searchParams.search}` : ''}`}
+                className={`px-3 py-1 text-sm border rounded-md ${
+                  p === page ? 'bg-teal-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                {p}
+              </Link>
+            ))}
+            <Link
+              href={`/documents?page=${page + 1}${searchParams.search ? `&search=${searchParams.search}` : ''}`}
+              className={`px-3 py-1 text-sm border rounded-md ${page === totalPages ? 'opacity-50 pointer-events-none' : 'hover:bg-gray-50'} bg-white text-gray-700`}
+            >
               Next
-            </button>
+            </Link>
           </div>
         </div>
       </div>

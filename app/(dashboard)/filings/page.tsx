@@ -1,13 +1,26 @@
 import Link from 'next/link';
+import { getFilings } from '@/src/lib/actions/filings';
+import { auth } from '@/auth';
+import { redirect } from 'next/navigation';
+import { format } from 'date-fns';
 
-export default function FilingsPage() {
-  const mockFilings = [
-    { id: 1, name: 'VAT Return Q1 2024', client: 'ABC Corporation', type: 'VAT Return', authority: 'GRA', status: 'Submitted', dueDate: '2024-04-15', submittedDate: '2024-04-10', amount: 125000 },
-    { id: 2, name: 'Corporate Tax 2023', client: 'XYZ Limited', type: 'Corporate Tax', authority: 'GRA', status: 'In Progress', dueDate: '2024-03-31', submittedDate: null, amount: 450000 },
-    { id: 3, name: 'NIS Contributions Feb 2024', client: 'ABC Corporation', type: 'NIS Contributions', authority: 'NIS', status: 'Overdue', dueDate: '2024-03-10', submittedDate: null, amount: 28500 },
-    { id: 4, name: 'Annual Return 2023', client: 'DEF Partnership', type: 'Annual Return', authority: 'DCRA', status: 'Draft', dueDate: '2024-05-30', submittedDate: null, amount: 0 },
-    { id: 5, name: 'Work Permit Renewal', client: 'John Williams', type: 'Work Permit', authority: 'Immigration', status: 'Submitted', dueDate: '2024-03-15', submittedDate: '2024-03-12', amount: 15000 },
-  ];
+export default async function FilingsPage({
+  searchParams,
+}: {
+  searchParams: { page?: string; search?: string; status?: string; authority?: string };
+}) {
+  const session = await auth();
+  if (!session) {
+    redirect('/auth/login');
+  }
+
+  const page = parseInt(searchParams.page || '1');
+  const { filings, total, totalPages } = await getFilings({
+    page,
+    pageSize: 10,
+    search: searchParams.search,
+    status: searchParams.status,
+  });
 
   return (
     <div className="space-y-6">
@@ -87,52 +100,62 @@ export default function FilingsPage() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {mockFilings.map((filing) => (
-                <tr key={filing.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{filing.name}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                    {filing.client}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="px-2 py-1 text-xs font-medium rounded-full bg-purple-100 text-purple-800">
-                      {filing.type}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                      filing.authority === 'GRA' ? 'bg-yellow-100 text-yellow-800' :
-                      filing.authority === 'NIS' ? 'bg-green-100 text-green-800' :
-                      filing.authority === 'DCRA' ? 'bg-purple-100 text-purple-800' :
-                      'bg-blue-100 text-blue-800'
-                    }`}>
-                      {filing.authority}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                      filing.status === 'Submitted' ? 'bg-green-100 text-green-800' :
-                      filing.status === 'In Progress' ? 'bg-blue-100 text-blue-800' :
-                      filing.status === 'Overdue' ? 'bg-red-100 text-red-800' :
-                      'bg-gray-100 text-gray-800'
-                    }`}>
-                      {filing.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                    {filing.dueDate}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
-                    {filing.amount > 0 ? `$${filing.amount.toLocaleString()}` : '-'}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    <Link href={`/filings/${filing.id}`} className="text-teal-600 hover:text-teal-900 font-medium">
-                      View
-                    </Link>
+              {filings.length === 0 ? (
+                <tr>
+                  <td colSpan={8} className="px-6 py-12 text-center text-sm text-gray-500">
+                    No filings found. <Link href="/filings/new" className="text-teal-600 hover:text-teal-900">Create your first filing</Link>
                   </td>
                 </tr>
-              ))}
+              ) : (
+                filings.map((filing) => (
+                  <tr key={filing.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm font-medium text-gray-900">
+                        {filing.filingType.name} - {filing.periodLabel || filing.client.name}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                      {filing.client.name}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className="px-2 py-1 text-xs font-medium rounded-full bg-purple-100 text-purple-800">
+                        {filing.filingType.name}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                        filing.filingType.authority === 'GRA' ? 'bg-yellow-100 text-yellow-800' :
+                        filing.filingType.authority === 'NIS' ? 'bg-green-100 text-green-800' :
+                        filing.filingType.authority === 'DCRA' ? 'bg-purple-100 text-purple-800' :
+                        'bg-blue-100 text-blue-800'
+                      }`}>
+                        {filing.filingType.authority}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`px-2 py-1 text-xs font-medium rounded-full capitalize ${
+                        filing.status === 'submitted' || filing.status === 'approved' ? 'bg-green-100 text-green-800' :
+                        filing.status === 'prepared' ? 'bg-blue-100 text-blue-800' :
+                        filing.status === 'overdue' ? 'bg-red-100 text-red-800' :
+                        'bg-gray-100 text-gray-800'
+                      }`}>
+                        {filing.status.replace('_', ' ')}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                      {filing.periodEnd ? format(new Date(filing.periodEnd), 'yyyy-MM-dd') : '-'}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
+                      {filing.total ? `$${filing.total.toLocaleString()}` : '-'}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                      <Link href={`/filings/${filing.id}`} className="text-teal-600 hover:text-teal-900 font-medium">
+                        View
+                      </Link>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
@@ -140,22 +163,34 @@ export default function FilingsPage() {
         {/* Pagination */}
         <div className="bg-white px-4 py-3 border-t flex items-center justify-between">
           <div className="text-sm text-gray-700">
-            Showing <span className="font-medium">1</span> to <span className="font-medium">5</span> of{' '}
-            <span className="font-medium">89</span> results
+            Showing <span className="font-medium">{((page - 1) * 10) + 1}</span> to{' '}
+            <span className="font-medium">{Math.min(page * 10, total)}</span> of{' '}
+            <span className="font-medium">{total}</span> results
           </div>
           <div className="flex gap-2">
-            <button className="px-3 py-1 text-sm border rounded-md bg-white text-gray-700 hover:bg-gray-50">
+            <Link
+              href={`/filings?page=${page - 1}${searchParams.search ? `&search=${searchParams.search}` : ''}`}
+              className={`px-3 py-1 text-sm border rounded-md ${page === 1 ? 'opacity-50 pointer-events-none' : 'hover:bg-gray-50'} bg-white text-gray-700`}
+            >
               Previous
-            </button>
-            <button className="px-3 py-1 text-sm border rounded-md bg-teal-600 text-white">
-              1
-            </button>
-            <button className="px-3 py-1 text-sm border rounded-md bg-white text-gray-700 hover:bg-gray-50">
-              2
-            </button>
-            <button className="px-3 py-1 text-sm border rounded-md bg-white text-gray-700 hover:bg-gray-50">
+            </Link>
+            {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p) => (
+              <Link
+                key={p}
+                href={`/filings?page=${p}${searchParams.search ? `&search=${searchParams.search}` : ''}`}
+                className={`px-3 py-1 text-sm border rounded-md ${
+                  p === page ? 'bg-teal-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                {p}
+              </Link>
+            ))}
+            <Link
+              href={`/filings?page=${page + 1}${searchParams.search ? `&search=${searchParams.search}` : ''}`}
+              className={`px-3 py-1 text-sm border rounded-md ${page === totalPages ? 'opacity-50 pointer-events-none' : 'hover:bg-gray-50'} bg-white text-gray-700`}
+            >
               Next
-            </button>
+            </Link>
           </div>
         </div>
       </div>
