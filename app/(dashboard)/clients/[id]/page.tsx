@@ -2,6 +2,7 @@
 
 import { getClient } from '@/lib/actions/clients';
 import { ClientForm } from '@/components/clients/client-form';
+import { ClientBusinessList } from '@/components/client-businesses/client-business-list';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
@@ -15,7 +16,7 @@ interface ClientDetailPageProps {
 
 export default async function ClientDetailPage({ params }: ClientDetailPageProps) {
   const clientId = parseInt(params.id);
-  
+
   if (isNaN(clientId)) {
     notFound();
   }
@@ -38,14 +39,26 @@ export default async function ClientDetailPage({ params }: ClientDetailPageProps
         <div>
           <h1 className="text-3xl font-bold">{client.name}</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Edit client details
+            Manage client details and businesses
           </p>
         </div>
       </div>
 
-      <div className="mx-auto w-full max-w-2xl">
-        <div className="rounded-lg border bg-card p-6">
-          <ClientForm client={client} />
+      <div className="mx-auto w-full max-w-4xl space-y-8">
+        {/* Client Details Section */}
+        <div>
+          <h2 className="text-xl font-semibold mb-4">Client Information</h2>
+          <div className="rounded-lg border bg-card p-6">
+            <ClientForm client={client} />
+          </div>
+        </div>
+
+        {/* Client Businesses Section */}
+        <div>
+          <ClientBusinessList
+            clientId={client.id}
+            businesses={client.businesses || []}
+          />
         </div>
       </div>
     </div>
