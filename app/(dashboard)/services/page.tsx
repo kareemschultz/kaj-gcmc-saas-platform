@@ -107,7 +107,7 @@ export default async function ServicesPage({
                   </td>
                 </tr>
               ) : (
-                services.map((service) => (
+                services.map((service: any) => (
                   <tr key={service.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
                       <div className="text-sm font-medium text-gray-900">{service.name}</div>
@@ -170,7 +170,7 @@ export default async function ServicesPage({
               >
                 Previous
               </Link>
-              {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p) => (
+              {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p: any) => (
                 <Link
                   key={p}
                   href={`/services?page=${p}${params.search ? `&search=${params.search}` : ''}${params.category ? `&category=${params.category}` : ''}${params.active ? `&active=${params.active}` : ''}`}

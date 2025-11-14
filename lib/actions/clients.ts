@@ -40,7 +40,7 @@ export async function getClients(params?: {
     throw new ApiError('Unauthorized', 401);
   }
 
-  const userContext = await getUserContext();
+  const userContext = getUserContext(session);
   assertCanView(userContext, 'clients');
 
   const {
@@ -106,7 +106,7 @@ export async function getClient(id: number) {
     throw new ApiError('Unauthorized', 401);
   }
 
-  const userContext = await getUserContext();
+  const userContext = getUserContext(session);
   assertCanView(userContext, 'clients');
 
   const client = await prisma.client.findFirst({
@@ -140,7 +140,7 @@ export async function createClient(data: ClientFormData) {
     throw new ApiError('Unauthorized', 401);
   }
 
-  const userContext = await getUserContext();
+  const userContext = getUserContext(session);
   assertCanCreate(userContext, 'clients');
 
   const validated = clientSchema.parse(data);
@@ -179,7 +179,7 @@ export async function updateClient(id: number, data: ClientFormData) {
     throw new ApiError('Unauthorized', 401);
   }
 
-  const userContext = await getUserContext();
+  const userContext = getUserContext(session);
   assertCanEdit(userContext, 'clients');
 
   const validated = clientSchema.parse(data);
@@ -228,7 +228,7 @@ export async function deleteClient(id: number) {
     throw new ApiError('Unauthorized', 401);
   }
 
-  const userContext = await getUserContext();
+  const userContext = getUserContext(session);
   assertCanDelete(userContext, 'clients');
 
   // Verify client belongs to tenant

@@ -99,7 +99,7 @@ export default async function ComplianceRulesPage({
                   </td>
                 </tr>
               ) : (
-                ruleSets.map((ruleSet) => {
+                ruleSets.map((ruleSet: any) => {
                   const appliesTo = ruleSet.appliesTo as { clientTypes?: string[]; sectors?: string[] } | null;
                   const clientTypes = appliesTo?.clientTypes || [];
                   const sectors = appliesTo?.sectors || [];
@@ -170,7 +170,7 @@ export default async function ComplianceRulesPage({
               >
                 Previous
               </Link>
-              {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p) => (
+              {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p: any) => (
                 <Link
                   key={p}
                   href={`/compliance/rules?page=${p}${params.search ? `&search=${params.search}` : ''}${params.active ? `&active=${params.active}` : ''}`}

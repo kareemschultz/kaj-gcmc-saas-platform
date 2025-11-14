@@ -183,7 +183,7 @@ export default async function ServiceRequestDetailPage({
             <p className="text-sm text-gray-500">No tasks yet</p>
           ) : (
             <div className="space-y-3">
-              {serviceRequest.tasks.map((task) => (
+              {serviceRequest.tasks.map((task: any) => (
                 <div key={task.id} className="flex items-start justify-between p-3 bg-gray-50 rounded-lg">
                   <div className="flex-1">
                     <h4 className="text-sm font-medium text-gray-900">{task.title}</h4>
@@ -218,7 +218,7 @@ export default async function ServiceRequestDetailPage({
             <p className="text-sm text-gray-500">No conversations yet</p>
           ) : (
             <div className="space-y-3">
-              {serviceRequest.conversations.map((conversation) => (
+              {serviceRequest.conversations.map((conversation: any) => (
                 <div key={conversation.id} className="flex items-start justify-between p-3 bg-gray-50 rounded-lg">
                   <div className="flex-1">
                     <h4 className="text-sm font-medium text-gray-900">{conversation.subject}</h4>

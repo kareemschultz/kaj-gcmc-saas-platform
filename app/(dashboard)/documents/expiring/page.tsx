@@ -129,7 +129,7 @@ export default async function ExpiringDocumentsPage({ searchParams }: PageProps)
                     All Authorities
                   </Link>
                 </Button>
-                {['GRA', 'NIS', 'DCRA', 'Immigration'].map((auth) => (
+                {['GRA', 'NIS', 'DCRA', 'Immigration'].map((auth: any) => (
                   <Button
                     key={auth}
                     asChild
@@ -158,7 +158,7 @@ export default async function ExpiringDocumentsPage({ searchParams }: PageProps)
         <Card>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold text-red-600">
-              {documents.filter((d) => d.daysUntilExpiry <= 7).length}
+              {documents.filter((d: any) => d.daysUntilExpiry <= 7).length}
             </div>
             <p className="text-xs text-muted-foreground">Next 7 Days</p>
           </CardContent>
@@ -166,7 +166,7 @@ export default async function ExpiringDocumentsPage({ searchParams }: PageProps)
         <Card>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold text-orange-600">
-              {documents.filter((d) => d.daysUntilExpiry > 7 && d.daysUntilExpiry <= 14).length}
+              {documents.filter((d: any) => d.daysUntilExpiry > 7 && d.daysUntilExpiry <= 14).length}
             </div>
             <p className="text-xs text-muted-foreground">8-14 Days</p>
           </CardContent>
@@ -174,7 +174,7 @@ export default async function ExpiringDocumentsPage({ searchParams }: PageProps)
         <Card>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold text-amber-600">
-              {documents.filter((d) => d.daysUntilExpiry > 14).length}
+              {documents.filter((d: any) => d.daysUntilExpiry > 14).length}
             </div>
             <p className="text-xs text-muted-foreground">15+ Days</p>
           </CardContent>
@@ -194,7 +194,7 @@ export default async function ExpiringDocumentsPage({ searchParams }: PageProps)
         <CardContent>
           {documents.length > 0 ? (
             <div className="space-y-3">
-              {documents.map((doc) => (
+              {documents.map((doc: any) => (
                 <div
                   key={doc.id}
                   className="p-4 rounded-lg border hover:border-teal-600 hover:shadow-md transition-all"

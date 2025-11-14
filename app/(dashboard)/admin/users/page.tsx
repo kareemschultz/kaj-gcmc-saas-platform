@@ -65,7 +65,7 @@ export default async function UsersPage({
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
             >
               <option value="">All Roles</option>
-              {roles.map((role) => (
+              {roles.map((role: any) => (
                 <option key={role.id} value={role.id}>
                   {role.name}
                 </option>
@@ -96,7 +96,7 @@ export default async function UsersPage({
                   </td>
                 </tr>
               ) : (
-                users.map((user) => (
+                users.map((user: any) => (
                   <tr key={user.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
                       <div className="flex items-center">
@@ -110,7 +110,7 @@ export default async function UsersPage({
                           ) : (
                             <div className="h-10 w-10 rounded-full bg-teal-100 flex items-center justify-center">
                               <span className="text-teal-700 font-medium text-sm">
-                                {user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}
+                                {user.name.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2)}
                               </span>
                             </div>
                           )}
@@ -158,7 +158,7 @@ export default async function UsersPage({
               >
                 Previous
               </Link>
-              {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p) => (
+              {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p: any) => (
                 <Link
                   key={p}
                   href={`/admin/users?page=${p}${params.search ? `&search=${params.search}` : ''}${params.roleId ? `&roleId=${params.roleId}` : ''}`}

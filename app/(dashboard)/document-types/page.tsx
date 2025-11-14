@@ -93,13 +93,13 @@ export default async function DocumentTypesPage({
                   </td>
                 </tr>
               ) : (
-                documentTypes.map((docType) => (
+                documentTypes.map((docType: any) => (
                   <tr key={docType.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
                       <div className="text-sm font-medium text-gray-900">{docType.name}</div>
                       {docType.tags.length > 0 && (
                         <div className="flex gap-1 mt-1">
-                          {docType.tags.slice(0, 3).map((tag, idx) => (
+                          {docType.tags.slice(0, 3).map((tag: any, idx: number) => (
                             <span key={idx} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
                               {tag}
                             </span>
@@ -147,7 +147,7 @@ export default async function DocumentTypesPage({
               >
                 Previous
               </Link>
-              {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p) => (
+              {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p: any) => (
                 <Link
                   key={p}
                   href={`/document-types?page=${p}${params.search ? `&search=${params.search}` : ''}`}

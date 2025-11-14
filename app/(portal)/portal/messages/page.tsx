@@ -25,7 +25,7 @@ export default async function PortalMessagesPage() {
 
       {/* Conversations List */}
       <div className="space-y-3">
-        {conversations.map((conversation) => {
+        {conversations.map((conversation: any) => {
           const lastMessage = conversation.messages[0];
           const messageCount = conversation._count.messages;
 

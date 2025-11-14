@@ -68,7 +68,7 @@ export default async function EditRuleSetPage({
             </div>
           ) : (
             <div className="space-y-4">
-              {ruleSet.rules.map((rule) => (
+              {ruleSet.rules.map((rule: any) => (
                 <div key={rule.id} className="p-4 border rounded-lg hover:bg-gray-50">
                   <RuleForm ruleSetId={ruleSet.id} rule={rule} />
                 </div>

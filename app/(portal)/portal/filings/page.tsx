@@ -14,7 +14,7 @@ export default async function PortalFilingsPage() {
 
   // Group by authority
   const grouped: Record<string, any[]> = {};
-  filings.forEach((filing) => {
+  filings.forEach((filing: any) => {
     const authority = filing.filingType.authority;
     if (!grouped[authority]) grouped[authority] = [];
     grouped[authority].push(filing);
@@ -37,19 +37,19 @@ export default async function PortalFilingsPage() {
         </Card>
         <Card className="p-4">
           <div className="text-2xl font-bold text-green-600">
-            {filings.filter((f) => f.status === 'approved').length}
+            {filings.filter((f: any) => f.status === 'approved').length}
           </div>
           <div className="text-sm text-muted-foreground">Approved</div>
         </Card>
         <Card className="p-4">
           <div className="text-2xl font-bold text-blue-600">
-            {filings.filter((f) => f.status === 'submitted').length}
+            {filings.filter((f: any) => f.status === 'submitted').length}
           </div>
           <div className="text-sm text-muted-foreground">Submitted</div>
         </Card>
         <Card className="p-4">
           <div className="text-2xl font-bold text-red-600">
-            {filings.filter((f) => f.status === 'overdue').length}
+            {filings.filter((f: any) => f.status === 'overdue').length}
           </div>
           <div className="text-sm text-muted-foreground">Overdue</div>
         </Card>
@@ -60,7 +60,7 @@ export default async function PortalFilingsPage() {
         <div key={authority}>
           <h2 className="text-xl font-semibold mb-4">{authority} Filings</h2>
           <div className="space-y-3">
-            {authorityFilings.map((filing) => {
+            {authorityFilings.map((filing: any) => {
               const dueDate = filing.periodEnd ? new Date(filing.periodEnd) : null;
               const daysUntil = dueDate
                 ? Math.ceil((dueDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24))

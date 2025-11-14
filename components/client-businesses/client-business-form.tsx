@@ -41,7 +41,7 @@ export function ClientBusinessForm({
     formState: { errors },
   } = useForm<ClientBusinessFormData>({
     resolver: zodResolver(clientBusinessSchema),
-    defaultValues: business
+    defaultValues: business as any
       ? {
           ...business,
           incorporationDate: business.incorporationDate

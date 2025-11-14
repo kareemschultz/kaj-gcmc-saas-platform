@@ -32,19 +32,19 @@ export default async function PortalServicesPage() {
         </Card>
         <Card className="p-4">
           <div className="text-2xl font-bold text-blue-600">
-            {serviceRequests.filter((sr) => sr.status === 'in_progress').length}
+            {serviceRequests.filter((sr: any) => sr.status === 'in_progress').length}
           </div>
           <div className="text-sm text-muted-foreground">In Progress</div>
         </Card>
         <Card className="p-4">
           <div className="text-2xl font-bold text-amber-600">
-            {serviceRequests.filter((sr) => sr.status === 'awaiting_client').length}
+            {serviceRequests.filter((sr: any) => sr.status === 'awaiting_client').length}
           </div>
           <div className="text-sm text-muted-foreground">Awaiting You</div>
         </Card>
         <Card className="p-4">
           <div className="text-2xl font-bold text-green-600">
-            {serviceRequests.filter((sr) => sr.status === 'completed').length}
+            {serviceRequests.filter((sr: any) => sr.status === 'completed').length}
           </div>
           <div className="text-sm text-muted-foreground">Completed</div>
         </Card>
@@ -52,8 +52,8 @@ export default async function PortalServicesPage() {
 
       {/* Service Requests List */}
       <div className="grid gap-4">
-        {serviceRequests.map((sr) => {
-          const completedSteps = sr.steps.filter((s) => s.status === 'done').length;
+        {serviceRequests.map((sr: any) => {
+          const completedSteps = sr.steps.filter((s: any) => s.status === 'done').length;
           const totalSteps = sr.steps.length;
           const progress = totalSteps > 0 ? (completedSteps / totalSteps) * 100 : 0;
 

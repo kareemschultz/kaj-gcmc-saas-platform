@@ -74,7 +74,7 @@ export default async function OverdueFilingsPage({ searchParams }: PageProps) {
             >
               <Link href="/filings/overdue">All Authorities</Link>
             </Button>
-            {['GRA', 'NIS', 'DCRA', 'Immigration'].map((auth) => (
+            {['GRA', 'NIS', 'DCRA', 'Immigration'].map((auth: any) => (
               <Button
                 key={auth}
                 asChild
@@ -101,7 +101,7 @@ export default async function OverdueFilingsPage({ searchParams }: PageProps) {
         <Card>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold text-red-600">
-              {filings.filter((f) => f.daysOverdue >= 30).length}
+              {filings.filter((f: any) => f.daysOverdue >= 30).length}
             </div>
             <p className="text-xs text-muted-foreground">30+ Days Overdue</p>
           </CardContent>
@@ -109,7 +109,7 @@ export default async function OverdueFilingsPage({ searchParams }: PageProps) {
         <Card>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold text-orange-600">
-              {filings.filter((f) => f.daysOverdue >= 14 && f.daysOverdue < 30).length}
+              {filings.filter((f: any) => f.daysOverdue >= 14 && f.daysOverdue < 30).length}
             </div>
             <p className="text-xs text-muted-foreground">14-29 Days Overdue</p>
           </CardContent>
@@ -117,7 +117,7 @@ export default async function OverdueFilingsPage({ searchParams }: PageProps) {
         <Card>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold text-amber-600">
-              {filings.filter((f) => f.daysOverdue < 14).length}
+              {filings.filter((f: any) => f.daysOverdue < 14).length}
             </div>
             <p className="text-xs text-muted-foreground">Less than 14 Days</p>
           </CardContent>
@@ -137,7 +137,7 @@ export default async function OverdueFilingsPage({ searchParams }: PageProps) {
         <CardContent>
           {filings.length > 0 ? (
             <div className="space-y-3">
-              {filings.map((filing) => (
+              {filings.map((filing: any) => (
                 <div
                   key={filing.id}
                   className="p-4 rounded-lg border hover:border-teal-600 hover:shadow-md transition-all"

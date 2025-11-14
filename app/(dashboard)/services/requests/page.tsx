@@ -132,7 +132,7 @@ export default async function ServiceRequestsPage({
                   </td>
                 </tr>
               ) : (
-                serviceRequests.map((request) => {
+                serviceRequests.map((request: any) => {
                   // Calculate progress based on status
                   const progressPercent =
                     request.status === 'completed' ? 100 :
@@ -216,7 +216,7 @@ export default async function ServiceRequestsPage({
               >
                 Previous
               </Link>
-              {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p) => (
+              {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p: any) => (
                 <Link
                   key={p}
                   href={`/services/requests?page=${p}${params.search ? `&search=${params.search}` : ''}${params.status ? `&status=${params.status}` : ''}${params.priority ? `&priority=${params.priority}` : ''}`}
