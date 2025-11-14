@@ -115,7 +115,7 @@ export default async function ComplianceOverviewPage({ searchParams }: PageProps
               </Link>
             </Button>
             <div className="border-l mx-2" />
-            {['GRA', 'NIS', 'DCRA', 'Immigration'].map((auth) => (
+            {['GRA', 'NIS', 'DCRA', 'Immigration'].map((auth: any) => (
               <Button
                 key={auth}
                 asChild
@@ -151,7 +151,7 @@ export default async function ComplianceOverviewPage({ searchParams }: PageProps
         <Card>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold text-green-600">
-              {scores.filter((s) => s.level === 'green').length}
+              {scores.filter((s: any) => s.level === 'green').length}
             </div>
             <p className="text-xs text-muted-foreground">Compliant (Green)</p>
           </CardContent>
@@ -159,7 +159,7 @@ export default async function ComplianceOverviewPage({ searchParams }: PageProps
         <Card>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold text-amber-600">
-              {scores.filter((s) => s.level === 'amber').length}
+              {scores.filter((s: any) => s.level === 'amber').length}
             </div>
             <p className="text-xs text-muted-foreground">At Risk (Amber)</p>
           </CardContent>
@@ -167,7 +167,7 @@ export default async function ComplianceOverviewPage({ searchParams }: PageProps
         <Card>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold text-red-600">
-              {scores.filter((s) => s.level === 'red').length}
+              {scores.filter((s: any) => s.level === 'red').length}
             </div>
             <p className="text-xs text-muted-foreground">Non-Compliant (Red)</p>
           </CardContent>
@@ -186,7 +186,7 @@ export default async function ComplianceOverviewPage({ searchParams }: PageProps
         <CardContent>
           {scores.length > 0 ? (
             <div className="space-y-2">
-              {scores.map((score) => {
+              {scores.map((score: any) => {
                 const LevelIcon = levelIcons[score.level as keyof typeof levelIcons] || AlertCircle;
                 return (
                   <Link

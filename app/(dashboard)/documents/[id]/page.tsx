@@ -38,7 +38,7 @@ export default async function DocumentDetailPage({ params }: DocumentDetailPageP
     notFound();
   }
 
-  const latestVersion = document.versions.find((v) => v.isLatest);
+  const latestVersion = document.versions.find((v: any) => v.isLatest);
 
   return (
     <div className="flex flex-col gap-6 p-6">

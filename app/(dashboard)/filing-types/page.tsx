@@ -107,7 +107,7 @@ export default async function FilingTypesPage({
                   </td>
                 </tr>
               ) : (
-                filingTypes.map((filingType) => (
+                filingTypes.map((filingType: any) => (
                   <tr key={filingType.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
                       <div className="text-sm font-medium text-gray-900">{filingType.name}</div>
@@ -160,7 +160,7 @@ export default async function FilingTypesPage({
               >
                 Previous
               </Link>
-              {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p) => (
+              {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p: any) => (
                 <Link
                   key={p}
                   href={`/filing-types?page=${p}${params.search ? `&search=${params.search}` : ''}${params.authority ? `&authority=${params.authority}` : ''}${params.frequency ? `&frequency=${params.frequency}` : ''}`}

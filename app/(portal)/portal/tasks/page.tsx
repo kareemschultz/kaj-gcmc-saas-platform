@@ -29,13 +29,13 @@ export default async function PortalTasksPage() {
         </Card>
         <Card className="p-4">
           <div className="text-2xl font-bold text-blue-600">
-            {tasks.filter((t) => t.status === 'in_progress').length}
+            {tasks.filter((t: any) => t.status === 'in_progress').length}
           </div>
           <div className="text-sm text-muted-foreground">In Progress</div>
         </Card>
         <Card className="p-4">
           <div className="text-2xl font-bold text-green-600">
-            {tasks.filter((t) => t.status === 'completed').length}
+            {tasks.filter((t: any) => t.status === 'completed').length}
           </div>
           <div className="text-sm text-muted-foreground">Completed</div>
         </Card>
@@ -43,7 +43,7 @@ export default async function PortalTasksPage() {
 
       {/* Tasks List */}
       <div className="space-y-3">
-        {tasks.map((task) => {
+        {tasks.map((task: any) => {
           const dueDate = task.dueDate ? new Date(task.dueDate) : null;
           const isOverdue = dueDate && dueDate < new Date();
 

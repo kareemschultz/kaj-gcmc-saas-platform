@@ -109,10 +109,10 @@ export default async function AnalyticsPage() {
           <div>
             <p className="text-sm text-muted-foreground">High Risk Clients</p>
             <p className="text-2xl font-bold text-red-600">
-              {riskCorrelation.filter((c) => c.complianceLevel === 'red').length}
+              {riskCorrelation.filter((c: any) => c.complianceLevel === 'red').length}
             </p>
             <p className="text-xs text-muted-foreground mt-1">
-              {riskCorrelation.filter((c) => c.overdueFilings > 0).length} with overdue filings
+              {riskCorrelation.filter((c: any) => c.overdueFilings > 0).length} with overdue filings
             </p>
           </div>
         </Card>
@@ -141,7 +141,7 @@ export default async function AnalyticsPage() {
       <div>
         <h2 className="text-xl font-semibold mb-4">Authority-Specific Insights</h2>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {authorityAnalysis.map((auth) => (
+          {authorityAnalysis.map((auth: any) => (
             <Card key={auth.authority} className="p-4">
               <div className="flex items-start justify-between mb-3">
                 <h3 className="font-semibold text-lg">{auth.authority}</h3>

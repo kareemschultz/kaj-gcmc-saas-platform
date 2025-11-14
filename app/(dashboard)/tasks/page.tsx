@@ -172,7 +172,7 @@ export default async function TasksPage({
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
                 >
                   <option value="">All Users</option>
-                  {users.map((user) => (
+                  {users.map((user: any) => (
                     <option key={user.id} value={user.id}>
                       {user.name}
                     </option>
@@ -218,7 +218,7 @@ export default async function TasksPage({
                   href={`/tasks?view=${view}${params.search ? `&search=${params.search}` : ''}${params.status ? `&status=${params.status}` : ''}${params.priority ? `&priority=${params.priority}` : ''}`}
                   className="inline-flex items-center gap-1 rounded-full bg-teal-100 px-3 py-1 text-sm text-teal-800"
                 >
-                  User: {users.find(u => u.id === parseInt(params.assignedToId!))?.name}
+                  User: {users.find((u: any) => u.id === parseInt(params.assignedToId!))?.name}
                   <span className="text-teal-600">×</span>
                 </Link>
               )}
@@ -257,7 +257,7 @@ export default async function TasksPage({
                 >
                   Previous
                 </Link>
-                {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p) => (
+                {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p: any) => (
                   <Link
                     key={p}
                     href={`/tasks?view=${view}&page=${p}${params.search ? `&search=${params.search}` : ''}${params.status ? `&status=${params.status}` : ''}${params.priority ? `&priority=${params.priority}` : ''}${params.assignedToId ? `&assignedToId=${params.assignedToId}` : ''}`}

@@ -107,7 +107,7 @@ export default async function DocumentsPage({
                   </td>
                 </tr>
               ) : (
-                documents.map((doc) => (
+                documents.map((doc: any) => (
                   <tr key={doc.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900">{doc.title}</div>
@@ -174,7 +174,7 @@ export default async function DocumentsPage({
             >
               Previous
             </Link>
-            {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p) => (
+            {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p: any) => (
               <Link
                 key={p}
                 href={`/documents?page=${p}${params.search ? `&search=${params.search}` : ''}`}

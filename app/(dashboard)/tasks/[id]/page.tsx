@@ -87,7 +87,6 @@ export default async function TaskDetailPage({
             </p>
           </div>
         </div>
-        {/* @ts-expect-error Async Server Component */}
         <DeleteTaskButton taskId={task.id} />
       </div>
 
@@ -206,8 +205,7 @@ export default async function TaskDetailPage({
       {/* Edit Form */}
       <div className="rounded-lg border bg-white p-6 shadow-sm">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Edit Task</h3>
-        {/* @ts-expect-error Prisma types mismatch with form types */}
-        <TaskForm task={task} />
+        <TaskForm task={task as any} />
       </div>
     </div>
   );

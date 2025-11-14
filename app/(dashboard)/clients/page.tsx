@@ -106,7 +106,7 @@ export default async function ClientsPage({
                   </td>
                 </tr>
               ) : (
-                clients.map((client) => (
+                clients.map((client: any) => (
                   <tr key={client.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900">{client.name}</div>
@@ -162,7 +162,7 @@ export default async function ClientsPage({
             >
               Previous
             </Link>
-            {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p) => (
+            {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p: any) => (
               <Link
                 key={p}
                 href={`/clients?page=${p}${params.search ? `&search=${params.search}` : ''}`}

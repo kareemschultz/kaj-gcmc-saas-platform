@@ -74,7 +74,7 @@ export default async function RecurringFilingsPage({
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
             >
               <option value="">All Clients</option>
-              {clients.map((client) => (
+              {clients.map((client: any) => (
                 <option key={client.id} value={client.id}>
                   {client.name}
                 </option>
@@ -89,7 +89,7 @@ export default async function RecurringFilingsPage({
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
             >
               <option value="">All Filing Types</option>
-              {filingTypes.map((type) => (
+              {filingTypes.map((type: any) => (
                 <option key={type.id} value={type.id}>
                   {type.name}
                 </option>
@@ -154,7 +154,7 @@ export default async function RecurringFilingsPage({
                   </td>
                 </tr>
               ) : (
-                recurringFilings.map((filing) => (
+                recurringFilings.map((filing: any) => (
                   <tr key={filing.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900">{filing.client.name}</div>
@@ -222,7 +222,7 @@ export default async function RecurringFilingsPage({
               >
                 Previous
               </Link>
-              {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p) => (
+              {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p: any) => (
                 <Link
                   key={p}
                   href={`/filings/recurring?page=${p}${params.search ? `&search=${params.search}` : ''}${params.clientId ? `&clientId=${params.clientId}` : ''}${params.filingTypeId ? `&filingTypeId=${params.filingTypeId}` : ''}${params.active ? `&active=${params.active}` : ''}`}

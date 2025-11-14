@@ -68,9 +68,9 @@ export default async function FilingDetailPage({ params }: FilingDetailPageProps
 
         <div className="rounded-lg border bg-card p-6">
           <h2 className="mb-4 text-lg font-semibold">Attached Documents</h2>
-          <FilingDocumentsManager 
+          <FilingDocumentsManager
             filingId={filingId}
-            attachedDocuments={filing.documents.map(fd => fd.document)}
+            attachedDocuments={filing.documents.map((fd: any) => fd.document)}
             availableDocuments={clientDocuments}
           />
         </div>

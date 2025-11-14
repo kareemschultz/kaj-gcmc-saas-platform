@@ -163,7 +163,7 @@ export default async function PortalDashboardPage() {
             </div>
           ) : (
             <div className="space-y-3">
-              {upcomingDeadlines.map((filing) => {
+              {upcomingDeadlines.map((filing: any) => {
                 const daysUntil = filing.periodEnd
                   ? Math.ceil(
                       (new Date(filing.periodEnd).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
@@ -211,7 +211,7 @@ export default async function PortalDashboardPage() {
             </div>
           ) : (
             <div className="space-y-3">
-              {openTasks.map((task) => (
+              {openTasks.map((task: any) => (
                 <div key={task.id} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
                   <div className="flex-1">
                     <div className="font-medium">{task.title}</div>
@@ -245,7 +245,7 @@ export default async function PortalDashboardPage() {
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
-            {activeServiceRequests.map((sr) => (
+            {activeServiceRequests.map((sr: any) => (
               <Card key={sr.id} className="p-4 border-l-4 border-l-purple-600">
                 <div className="flex items-start justify-between mb-2">
                   <div>

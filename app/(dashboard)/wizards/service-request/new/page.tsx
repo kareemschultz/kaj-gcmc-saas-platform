@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ServiceRequestWizardPage() {
-  const [clients, services] = await Promise.all([getClients(), getServicesForWizard()]);
+  const [clientsData, services] = await Promise.all([getClients(), getServicesForWizard()]);
 
-  return <ServiceRequestWizard clients={clients} services={services} />;
+  return <ServiceRequestWizard clients={clientsData.clients} services={services} />;
 }

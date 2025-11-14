@@ -15,7 +15,7 @@ export default async function PortalDocumentsPage() {
 
   // Group by category
   const grouped: Record<string, any[]> = {};
-  documents.forEach((doc) => {
+  documents.forEach((doc: any) => {
     const category = doc.documentType.category || 'Other';
     if (!grouped[category]) grouped[category] = [];
     grouped[category].push(doc);
@@ -38,13 +38,13 @@ export default async function PortalDocumentsPage() {
         </Card>
         <Card className="p-4">
           <div className="text-2xl font-bold text-green-600">
-            {documents.filter((d) => d.status === 'valid').length}
+            {documents.filter((d: any) => d.status === 'valid').length}
           </div>
           <div className="text-sm text-muted-foreground">Valid Documents</div>
         </Card>
         <Card className="p-4">
           <div className="text-2xl font-bold text-amber-600">
-            {documents.filter((d) => {
+            {documents.filter((d: any) => {
               if (!d.latestVersion?.expiryDate) return false;
               const daysUntil = Math.ceil(
                 (new Date(d.latestVersion.expiryDate).getTime() - Date.now()) /
@@ -62,7 +62,7 @@ export default async function PortalDocumentsPage() {
         <div key={category}>
           <h2 className="text-xl font-semibold mb-4">{category}</h2>
           <div className="grid gap-4">
-            {docs.map((doc) => {
+            {docs.map((doc: any) => {
               const expiryDate = doc.latestVersion?.expiryDate
                 ? new Date(doc.latestVersion.expiryDate)
                 : null;

@@ -108,7 +108,7 @@ export default async function FilingsPage({
                   </td>
                 </tr>
               ) : (
-                filings.map((filing) => (
+                filings.map((filing: any) => (
                   <tr key={filing.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900">
@@ -175,7 +175,7 @@ export default async function FilingsPage({
             >
               Previous
             </Link>
-            {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p) => (
+            {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p: any) => (
               <Link
                 key={p}
                 href={`/filings?page=${p}${params.search ? `&search=${params.search}` : ''}`}
