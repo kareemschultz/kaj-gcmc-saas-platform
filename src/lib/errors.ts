@@ -45,3 +45,6 @@ export class TenantMismatchError extends AppError {
     this.name = 'TenantMismatchError';
   }
 }
+
+// Alias for backward compatibility
+export { AppError as ApiError };
