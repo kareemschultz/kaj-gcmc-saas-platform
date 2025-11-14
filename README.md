@@ -6,15 +6,91 @@ KGC Compliance Cloud is a comprehensive compliance management system designed fo
 
 ## Features
 
-- **Multi-tenant architecture** with row-level isolation
-- **Client & business management** with risk profiling
-- **Document management** with version control and MinIO storage
-- **Filing orchestration** for recurring GRA, NIS, DCRA, and Immigration filings
-- **Service request workflows** with customizable templates
-- **Compliance tracking** with deadline management
-- **Task management** for internal staff
-- **Role-based access control** with granular permissions
-- **Audit logging** for all critical actions
+### Core Platform
+- **Multi-tenant SaaS architecture** with complete row-level data isolation
+- **Full CRUD interfaces** for all entities (Clients, Documents, Filings, Services, Users, Tasks, etc.)
+- **Role-based access control (RBAC)** with granular permissions
+- **Comprehensive audit logging** for compliance and security
+- **Admin dashboard** with real-time metrics and compliance overview
+
+### Client & Business Management
+- **Client profiles** with risk levels, sectors, and compliance scores
+- **Client businesses** - manage multiple businesses per client
+- **Compliance scoring** - automated green/amber/red ratings
+- **Client-specific views** with linked documents, filings, and service requests
+
+### Document Management
+- **Version-controlled document storage** with MinIO (S3-compatible)
+- **Presigned URL uploads/downloads** for security and performance
+- **Document types** - 70+ Guyana-specific types (GRA, NIS, DCRA, Immigration, Deeds, GO-Invest)
+- **Expiry tracking** with automated notifications
+- **Document preview** for PDFs and images
+- **Drag-and-drop uploads** with progress tracking
+
+### Filing & Compliance
+- **Filing types** for all major Guyana authorities
+- **Recurring filings** with automated scheduling
+- **Overdue tracking** with urgency indicators
+- **Filing reminders** - automated notifications 3, 7, 14 days before due date
+- **Status workflows** - draft → prepared → submitted → approved
+- **Linked documents** - attach supporting documents to filings
+
+### Service Requests & Workflows
+- **Service catalog** with pricing and estimated timelines
+- **Service request workflows** with multi-step processes
+- **Step-based tracking** with dependencies
+- **Status timeline** showing request history
+- **Linked conversations** and tasks
+- **Progress indicators** for client visibility
+
+### Requirement Bundles (Guyana-Specific)
+- **19 pre-configured bundles** for common compliance scenarios
+- **Authority-specific bundles**:
+  - GRA: Individual Tax, PAYE, VAT, Corporation Tax, Tender Compliance
+  - NIS: Employer Registration, Contributions, Certificates
+  - DCRA: Business Registration, Incorporation, Annual Compliance
+  - Immigration: Work Permits, Residence Permits
+  - Deeds: Property Transfer, Mortgage Registration
+  - GO-Invest: Investment Registration
+- **Bundle progress tracking** - visual indicators of completion
+- **Requirement validation** - automatic checks for missing/expiring documents
+
+### Task Management
+- **Kanban board view** with drag-drop support
+- **Table view** with advanced filtering
+- **Task assignment** to users
+- **Priority levels** (low, medium, high, urgent)
+- **Due date tracking** with overdue indicators
+- **Linked entities** - connect tasks to clients, service requests, or filings
+
+### Compliance Dashboard
+- **Compliance summary** - green/amber/red distribution
+- **Authority-specific metrics** - GRA, NIS, DCRA, Immigration compliance rates
+- **Upcoming deadlines** - filings due in next 7 days, documents expiring in 30 days
+- **Recent activity feed** - audit log highlights
+- **Quick actions** - view overdue filings, expiring documents, at-risk clients
+
+### Messaging & Collaboration
+- **Conversations** - chat-style messaging
+- **Thread view** with message history
+- **Unread indicators** and message counts
+- **Link to clients** and service requests
+- **Real-time updates** via server actions
+
+### Background Jobs & Automation
+- **Compliance refresh** - nightly recalculation of all client scores
+- **Expiry notifications** - daily checks for documents expiring in 7/14/30 days
+- **Filing reminders** - daily checks for filings due in 3/7/14 days
+- **Email dispatcher** - automated email notifications (MVP stub, production-ready)
+- **Job monitoring** - queue statistics and health checks
+
+### Admin Features
+- **Tenant management** - create and configure tenants
+- **Tenant branding** - custom logos and colors per tenant
+- **User management** - create users, assign roles, manage access
+- **Password management** - secure password reset flow
+- **Compliance rules** - create custom rule sets
+- **System configuration** - defaults for currency, timezone, date format
 
 ## Tech Stack
 
@@ -202,23 +278,49 @@ SMTP_PASSWORD="your-gmail-app-password"
 
 See `docs/ENVIRONMENT_VARIABLES.md` for detailed descriptions.
 
-## Development Roadmap
+## Development Status
 
-- ✅ **Phase 0**: Foundation - Database schema, auth, project structure
-- ✅ **Phase 1**: Core CRUD - Clients, documents, filings
-- 🚧 **Phase 2**: Workflows - Service requests, recurring engine, tasks
-- 📅 **Phase 3**: Client Portal - Client login, messaging
-- 📅 **Phase 4**: AI/Automation - OCR pipeline, compliance scoring
+### ✅ Completed (Production-Ready MVP)
+
+- ✅ **Foundation** - Database schema, auth, multi-tenant architecture
+- ✅ **Core CRUD** - All entities with full create/read/update/delete
+- ✅ **Document Management** - MinIO integration, version control, presigned URLs
+- ✅ **Workflows** - Service requests, recurring filings, task management
+- ✅ **Compliance Engine** - Automated scoring, bundle tracking, expiry detection
+- ✅ **Background Jobs** - BullMQ workers for compliance, notifications, reminders
+- ✅ **Admin Dashboard** - Metrics, compliance overview, quick actions
+- ✅ **Guyana Bundles** - 70+ document types, 19 pre-configured requirement bundles
+- ✅ **Docker Deployment** - Complete docker-compose setup with all services
+
+### 📅 Future Enhancements
+
+- 📅 **Client Portal** - Self-service portal for client document uploads
+- 📅 **OCR Pipeline** - Automated document text extraction
+- 📅 **AI Summaries** - Smart document summaries and compliance insights
+- 📅 **Advanced Reporting** - Custom reports and data exports
+- 📅 **Mobile App** - iOS/Android companion apps
+- 📅 **API Gateway** - Public API for third-party integrations
+- 📅 **WhatsApp Integration** - Notifications via WhatsApp Business API
 
 ## Documentation
 
-- [Docker Setup Guide](docs/DOCKER_SETUP.md)
-- [Developer Setup](docs/DEVELOPER_SETUP.md)
-- [Architecture Overview](docs/ARCHITECTURE.md)
-- [System Specification](docs/SYSTEM_SPEC.md)
-- [Authentication Flow](docs/AUTHENTICATION_FLOW.md)
-- [Storage & Uploads](docs/STORAGE_AND_UPLOADS.md)
-- [Environment Variables](docs/ENVIRONMENT_VARIABLES.md)
+### Deployment & Setup
+- [**Deployment Guide**](DEPLOYMENT.md) - **START HERE** for production deployment
+- [Workers Documentation](WORKERS_README.md) - Background jobs setup and monitoring
+- [MinIO Setup](MINIO_SETUP.md) - Document storage configuration
+- [MinIO Quick Start](MINIO_QUICK_START.md) - 5-minute MinIO guide
+
+### Implementation Guides
+- [Requirement Bundles Implementation](docs/REQUIREMENT_BUNDLES_IMPLEMENTATION.md) - Guyana bundles system
+- [Migration Guide](MIGRATION_GUIDE_BUNDLES.md) - Database migration steps
+- [Implementation Complete](IMPLEMENTATION_COMPLETE.md) - Feature summary
+
+### Architecture & Development
+- [System Specification](docs/SYSTEM_SPEC.md) - Complete system design
+- [Architecture Overview](docs/ARCHITECTURE.md) - Technical architecture
+- [Developer Setup](docs/DEVELOPER_SETUP.md) - Local development guide
+- [Authentication Flow](docs/AUTHENTICATION_FLOW.md) - Auth implementation
+- [Storage & Uploads](docs/STORAGE_AND_UPLOADS.md) - File handling
 
 ## Multi-Tenant Architecture
 
