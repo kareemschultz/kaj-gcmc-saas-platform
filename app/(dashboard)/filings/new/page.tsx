@@ -1,7 +1,7 @@
 // Create new filing page
 
 import { FilingForm } from '@/components/filings/filing-form';
-import { getFilingTypes, getClientsForFilingSelect } from '@/lib/actions/filings';
+import { getFilingTypes, getClientsForFilingSelect } from '@/src/lib/actions/filings';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';

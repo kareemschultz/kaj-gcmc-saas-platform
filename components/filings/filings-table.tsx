@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal, Eye, Edit, Trash } from 'lucide-react';
-import { deleteFiling } from '@/lib/actions/filings';
+import { deleteFiling } from '@/src/lib/actions/filings';
 import { toast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 

@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Activity, FileText, User, Briefcase, Calendar, Trash, Edit } from 'lucide-react';
-import { RecentActivity } from '@/lib/actions/dashboard';
+import { RecentActivity } from '@/src/lib/actions/dashboard';
 import { formatDistanceToNow } from 'date-fns';
 
 interface RecentActivityCardProps {

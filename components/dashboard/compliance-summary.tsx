@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, CheckCircle, AlertCircle, XCircle } from 'lucide-react';
-import { ComplianceSummary } from '@/lib/actions/dashboard';
+import { ComplianceSummary } from '@/src/lib/actions/dashboard';
 
 interface ComplianceSummaryCardProps {
   summary: ComplianceSummary;
