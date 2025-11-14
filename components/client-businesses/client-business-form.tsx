@@ -41,10 +41,10 @@ export function ClientBusinessForm({
     formState: { errors },
   } = useForm<ClientBusinessFormData>({
     resolver: zodResolver(clientBusinessSchema),
-    defaultValues: business as any
+    defaultValues: (business as any)
       ? {
-          ...business,
-          incorporationDate: business.incorporationDate
+          ...(business as any),
+          incorporationDate: (business as any).incorporationDate
             ? new Date(business.incorporationDate).toISOString().split('T')[0]
             : undefined,
           registrationType: business.registrationType as any,

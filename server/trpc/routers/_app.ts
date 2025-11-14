@@ -8,6 +8,12 @@
 import { router } from '../trpc';
 import { usersRouter } from './users';
 import { clientsRouter } from './clients';
+import { documentsRouter } from './documents';
+import { filingsRouter } from './filings';
+import { servicesRouter } from './services';
+import { tasksRouter } from './tasks';
+import { rolesRouter } from './roles';
+import { tenantsRouter } from './tenants';
 // ... more routers will be imported as they are created
 
 /**
@@ -17,12 +23,12 @@ import { clientsRouter } from './clients';
 export const appRouter = router({
   users: usersRouter,
   clients: clientsRouter,
-  // documents: documentsRouter,
-  // filings: filingsRouter,
-  // services: servicesRouter,
-  // tasks: tasksRouter,
-  // roles: rolesRouter,
-  // tenants: tenantsRouter,
+  documents: documentsRouter,
+  filings: filingsRouter,
+  services: servicesRouter,
+  tasks: tasksRouter,
+  roles: rolesRouter,
+  tenants: tenantsRouter,
   // serviceRequests: serviceRequestsRouter,
   // complianceRules: complianceRulesRouter,
   // conversations: conversationsRouter,
