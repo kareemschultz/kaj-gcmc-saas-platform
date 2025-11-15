@@ -7,19 +7,20 @@ Technical architecture documentation for KGC Compliance Cloud.
 \`\`\`
 ┌─────────────────────────────────────────────────────────────┐
 │                        Client Browser                        │
-│                    (React 19 / Next.js 15)                   │
+│             (React 19 / Next.js 15 / React Query)            │
 └──────────────────────────┬──────────────────────────────────┘
                            │
-                           │ HTTPS
+                           │ HTTPS / tRPC
                            │
 ┌──────────────────────────▼──────────────────────────────────┐
 │                     Next.js App Server                       │
 │  ┌────────────────────────────────────────────────────────┐ │
 │  │             App Router (Server Components)             │ │
 │  ├────────────────────────────────────────────────────────┤ │
-│  │              Server Actions (Form Handling)            │ │
+│  │           tRPC v11 API Layer (Primary API)             │ │
+│  │          22 Routers | 6,790 lines | Type-safe          │ │
 │  ├────────────────────────────────────────────────────────┤ │
-│  │                 API Routes (REST/JSON)                 │ │
+│  │              Server Actions (Form Handling)            │ │
 │  ├────────────────────────────────────────────────────────┤ │
 │  │              NextAuth v5 (Authentication)              │ │
 │  └────────────────────────────────────────────────────────┘ │
@@ -37,15 +38,17 @@ Technical architecture documentation for KGC Compliance Cloud.
 ### Frontend
 - **React 19**: UI library with server components
 - **Next.js 15**: Full-stack framework with App Router
+- **React Query (TanStack Query)**: Data fetching, caching, and state management
 - **Tailwind CSS**: Utility-first styling
 - **shadcn/ui**: Component library
 - **TypeScript**: Type safety
 
 ### Backend
-- **Next.js API Routes**: RESTful endpoints
+- **tRPC v11**: End-to-end type-safe API layer (Primary API - 22 routers, 6,790 lines)
 - **Server Actions**: Form submissions and mutations
 - **Prisma**: Type-safe ORM
 - **NextAuth v5**: Authentication and sessions
+- **Zod**: Runtime validation for tRPC inputs
 
 ### Data Layer
 - **PostgreSQL**: Primary relational database
@@ -64,26 +67,49 @@ Technical architecture documentation for KGC Compliance Cloud.
 \`\`\`
 src/
 ├── app/                      # Next.js App Router
-│   ├── (dashboard)/         # Protected routes
+│   ├── (dashboard)/         # Protected dashboard routes (45 pages)
 │   │   ├── clients/         # Client management
 │   │   ├── documents/       # Document management
-│   │   └── filings/         # Filing management
+│   │   ├── filings/         # Filing management
+│   │   ├── analytics/       # Analytics dashboard
+│   │   ├── admin/           # Admin tools
+│   │   └── ...              # Other dashboard pages
+│   ├── (portal)/            # Client portal routes (7 pages)
+│   │   ├── dashboard/       # Portal dashboard
+│   │   ├── documents/       # Client document viewer
+│   │   └── ...              # Other portal pages
 │   ├── auth/                # Authentication pages
 │   └── api/                 # API routes
-├── components/              # React components
+│       ├── trpc/            # tRPC HTTP handler
+│       └── health/          # Health check endpoint
+├── server/                   # tRPC backend (22 routers, 6,790 lines)
+│   ├── routers/             # tRPC routers
+│   │   ├── clients.ts       # Client CRUD operations
+│   │   ├── documents.ts     # Document operations
+│   │   ├── filings.ts       # Filing operations
+│   │   ├── analytics.ts     # Analytics queries
+│   │   └── ...              # 18 more routers
+│   ├── context.ts           # tRPC context with auth
+│   ├── trpc.ts              # tRPC initialization
+│   └── index.ts             # Router aggregation
+├── components/              # React components (92 components)
 │   ├── clients/            # Client-specific components
 │   ├── documents/          # Document-specific components
 │   ├── filings/            # Filing-specific components
+│   ├── analytics/          # Analytics charts
 │   ├── layout/             # Layout components
-│   └── ui/                 # Generic UI components
+│   └── ui/                 # Generic UI components (shadcn)
 ├── lib/                     # Utility functions
-│   ├── actions/            # Server actions
+│   ├── actions/            # Server actions (forms)
 │   ├── auth.ts             # Auth utilities
 │   ├── prisma.ts           # Database client
 │   ├── storage.ts          # MinIO client
 │   ├── queue.ts            # BullMQ client
 │   └── validation.ts       # Zod schemas
 ├── types/                   # TypeScript types
+├── hooks/                   # React hooks
+│   ├── use-trpc.ts         # tRPC React Query hooks
+│   └── ...                 # Other custom hooks
 └── config/                  # Configuration
 \`\`\`
 
@@ -95,16 +121,31 @@ src/
 1. Browser requests page
 2. Next.js server receives request
 3. Middleware checks authentication
-4. Server component fetches data from Prisma
+4. Server component fetches data from Prisma (or via tRPC)
 5. React renders HTML on server
 6. HTML sent to browser
 7. React hydrates interactive components
 \`\`\`
 
-#### Client-Side Interaction
+#### Client-Side Interaction (tRPC - Primary Pattern)
 
 \`\`\`
-1. User interacts with form
+1. User interacts with UI (table, form, button)
+2. Client component calls tRPC procedure via React Query
+   Example: const { data } = trpc.clients.getAll.useQuery()
+3. tRPC router receives request
+4. Router validates input with Zod schema
+5. Router queries/mutates database via Prisma
+6. Router creates audit log (for mutations)
+7. tRPC returns typed response
+8. React Query caches result and updates UI
+9. All type-safe: no manual type definitions needed
+\`\`\`
+
+#### Form Submissions (Server Actions - Secondary Pattern)
+
+\`\`\`
+1. User submits form
 2. Client component calls Server Action
 3. Server Action validates input (Zod)
 4. Server Action queries/mutates database (Prisma)
@@ -411,28 +452,51 @@ logger.error('Failed to upload document', error, { documentId });
 ## Technology Decisions
 
 ### Why Next.js?
-- Full-stack framework
-- Server components reduce client JS
-- Built-in API routes
+- Full-stack framework with server and client components
+- Server components reduce client JS bundle
+- Built-in routing with App Router
 - Great DX with hot reloading
+- Vercel deployment optimization
+
+### Why tRPC v11?
+- **End-to-end type safety** - Client and server share exact types automatically
+- **No code generation** - Types inferred directly from TypeScript
+- **React Query integration** - Built-in caching, refetching, optimistic updates
+- **Developer experience** - Autocomplete for all API calls, compile-time errors
+- **Performance** - Batching requests, deduplication, parallel queries
+- **Reduced boilerplate** - No need to manually define API contracts
+- **22 routers with 6,790 lines** demonstrating scalability
+- Perfect fit for multi-tenant SaaS with complex data requirements
 
 ### Why Prisma?
-- Type-safe database access
+- Type-safe database access with generated client
 - Excellent TypeScript integration
-- Automatic migrations
-- Visual schema management
+- Automatic migrations with version control
+- Visual schema management via Prisma Studio
+- Multi-tenant row-level security patterns
+- Connection pooling and performance optimization
 
 ### Why MinIO?
-- S3-compatible API
-- Self-hosted option
-- Docker-friendly
-- Cost-effective
+- S3-compatible API (drop-in replacement for AWS S3)
+- Self-hosted option for data sovereignty
+- Docker-friendly with official images
+- Cost-effective for document-heavy workloads
+- Presigned URL support for secure uploads/downloads
 
 ### Why PostgreSQL?
-- Robust relational database
-- JSON support for flexible data
-- Excellent Prisma support
-- Mature ecosystem
+- Robust relational database with ACID guarantees
+- JSON/JSONB support for flexible metadata
+- Excellent Prisma support and ecosystem
+- Mature tooling and monitoring
+- Horizontal scaling with read replicas
+
+### Why React Query (TanStack Query)?
+- Automatic caching with smart invalidation
+- Background refetching and stale-while-revalidate
+- Optimistic updates for better UX
+- Built-in loading and error states
+- Perfect integration with tRPC
+- Reduces client-side state management complexity
 
 ## Future Enhancements
 
