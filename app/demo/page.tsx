@@ -45,7 +45,7 @@ export default function DemoPage() {
 
         {/* Stats Grid */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
-          {stats.map((stat) => {
+          {stats.map((stat: any) => {
             const Icon = stat.icon;
             return (
               <Card key={stat.name} className="p-6">

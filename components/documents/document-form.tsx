@@ -31,7 +31,7 @@ export function DocumentForm({ document, documentTypes, clients }: DocumentFormP
     watch,
     formState: { errors },
   } = useForm<DocumentFormData>({
-    resolver: zodResolver(documentSchema),
+    resolver: zodResolver(documentSchema) as any,
     defaultValues: document || {
       status: 'pending_review',
       tags: [],

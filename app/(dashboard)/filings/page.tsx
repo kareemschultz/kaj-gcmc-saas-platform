@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getFilings } from '@/src/lib/actions/filings';
+import { getFilings } from '@/lib/actions/filings';
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import { format } from 'date-fns';
@@ -7,19 +7,20 @@ import { format } from 'date-fns';
 export default async function FilingsPage({
   searchParams,
 }: {
-  searchParams: { page?: string; search?: string; status?: string; authority?: string };
+  searchParams: Promise<{ page?: string; search?: string; status?: string; authority?: string }>;
 }) {
   const session = await auth();
   if (!session) {
     redirect('/auth/login');
   }
 
-  const page = parseInt(searchParams.page || '1');
-  const { filings, total, totalPages } = await getFilings({
+  const params = await searchParams;
+  const page = parseInt(params.page || '1');
+  const { filings, pagination: { total, totalPages } } = await getFilings({
     page,
     pageSize: 10,
-    search: searchParams.search,
-    status: searchParams.status,
+    search: params.search,
+    status: params.status,
   });
 
   return (
@@ -107,7 +108,7 @@ export default async function FilingsPage({
                   </td>
                 </tr>
               ) : (
-                filings.map((filing) => (
+                filings.map((filing: any) => (
                   <tr key={filing.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900">
@@ -169,15 +170,15 @@ export default async function FilingsPage({
           </div>
           <div className="flex gap-2">
             <Link
-              href={`/filings?page=${page - 1}${searchParams.search ? `&search=${searchParams.search}` : ''}`}
+              href={`/filings?page=${page - 1}${params.search ? `&search=${params.search}` : ''}`}
               className={`px-3 py-1 text-sm border rounded-md ${page === 1 ? 'opacity-50 pointer-events-none' : 'hover:bg-gray-50'} bg-white text-gray-700`}
             >
               Previous
             </Link>
-            {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p) => (
+            {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p: any) => (
               <Link
                 key={p}
-                href={`/filings?page=${p}${searchParams.search ? `&search=${searchParams.search}` : ''}`}
+                href={`/filings?page=${p}${params.search ? `&search=${params.search}` : ''}`}
                 className={`px-3 py-1 text-sm border rounded-md ${
                   p === page ? 'bg-teal-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
                 }`}
@@ -186,7 +187,7 @@ export default async function FilingsPage({
               </Link>
             ))}
             <Link
-              href={`/filings?page=${page + 1}${searchParams.search ? `&search=${searchParams.search}` : ''}`}
+              href={`/filings?page=${page + 1}${params.search ? `&search=${params.search}` : ''}`}
               className={`px-3 py-1 text-sm border rounded-md ${page === totalPages ? 'opacity-50 pointer-events-none' : 'hover:bg-gray-50'} bg-white text-gray-700`}
             >
               Next

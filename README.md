@@ -378,6 +378,7 @@ See `docs/ENVIRONMENT_VARIABLES.md` for detailed descriptions.
 - [**Pre-Deployment Checklist**](PRE_DEPLOYMENT_CHECKLIST.md) - Detailed pre-launch checklist
 - [**Current State**](CURRENT_STATE.md) - Platform capabilities and implementation status
 - [**Production Readiness**](docs/PRODUCTION_READINESS.md) - Security and quality status
+- [Docker Setup](docs/DOCKER_SETUP.md) - Docker configuration details
 - [Environment Variables](docs/ENVIRONMENT_VARIABLES.md) - Complete environment variable reference
 
 ### 🆕 New Features Documentation

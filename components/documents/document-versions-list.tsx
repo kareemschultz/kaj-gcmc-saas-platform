@@ -1,16 +1,24 @@
 'use client';
 
-// Document versions list with upload functionality
+// Document versions list with download, delete, and preview actions
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Upload, FileText, Download } from 'lucide-react';
-import { getUploadUrl, createDocumentVersion } from '@/lib/actions/documents';
-import { toast } from '@/hooks/use-toast';
+import { FileText, Download, Trash2, Eye, AlertCircle } from 'lucide-react';
+import { getDownloadUrl, deleteDocumentVersion } from '@/lib/actions/document-upload';
+import { toast } from 'sonner';
 import { formatDistanceToNow } from 'date-fns';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 interface DocumentVersion {
   id: number;
@@ -21,6 +29,7 @@ interface DocumentVersion {
   expiryDate: Date | null;
   uploadedAt: Date;
   isLatest: boolean;
+  uploadedById: number | null;
 }
 
 interface DocumentVersionsListProps {
@@ -30,74 +39,8 @@ interface DocumentVersionsListProps {
 
 export function DocumentVersionsList({ documentId, versions }: DocumentVersionsListProps) {
   const router = useRouter();
-  const [isUploading, setIsUploading] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [issueDate, setIssueDate] = useState('');
-  const [expiryDate, setExpiryDate] = useState('');
-
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setSelectedFile(e.target.files[0]);
-    }
-  };
-
-  const handleUpload = async () => {
-    if (!selectedFile) {
-      toast({
-        title: 'No file selected',
-        description: 'Please select a file to upload.',
-        variant: 'destructive',
-      });
-      return;
-    }
-
-    setIsUploading(true);
-    try {
-      // Get presigned upload URL
-      const { uploadUrl, storagePath } = await getUploadUrl(selectedFile.name);
-
-      // Upload file to MinIO
-      const uploadResponse = await fetch(uploadUrl, {
-        method: 'PUT',
-        body: selectedFile,
-        headers: {
-          'Content-Type': selectedFile.type,
-        },
-      });
-
-      if (!uploadResponse.ok) {
-        throw new Error('Failed to upload file');
-      }
-
-      // Create document version record
-      await createDocumentVersion({
-        documentId,
-        fileUrl: storagePath,
-        fileSize: selectedFile.size,
-        mimeType: selectedFile.type,
-        issueDate: issueDate || undefined,
-        expiryDate: expiryDate || undefined,
-      });
-
-      toast({
-        title: 'File uploaded',
-        description: 'Document version has been uploaded successfully.',
-      });
-
-      setSelectedFile(null);
-      setIssueDate('');
-      setExpiryDate('');
-      router.refresh();
-    } catch (error) {
-      toast({
-        title: 'Upload failed',
-        description: error instanceof Error ? error.message : 'Failed to upload file.',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsUploading(false);
-    }
-  };
+  const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [downloadingId, setDownloadingId] = useState<number | null>(null);
 
   const formatFileSize = (bytes: number | null) => {
     if (!bytes) return 'Unknown';
@@ -106,99 +49,208 @@ export function DocumentVersionsList({ documentId, versions }: DocumentVersionsL
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   };
 
+  const getFileIcon = (mimeType: string | null) => {
+    if (!mimeType) return <FileText className="h-5 w-5 text-muted-foreground" />;
+
+    if (mimeType.startsWith('image/')) {
+      return <FileText className="h-5 w-5 text-blue-500" />;
+    }
+    if (mimeType === 'application/pdf') {
+      return <FileText className="h-5 w-5 text-red-500" />;
+    }
+    if (mimeType.includes('spreadsheet') || mimeType.includes('excel')) {
+      return <FileText className="h-5 w-5 text-green-500" />;
+    }
+    if (mimeType.includes('word') || mimeType.includes('document')) {
+      return <FileText className="h-5 w-5 text-blue-600" />;
+    }
+
+    return <FileText className="h-5 w-5 text-muted-foreground" />;
+  };
+
+  const handleDownload = async (versionId: number, fileName: string) => {
+    setDownloadingId(versionId);
+
+    try {
+      const { downloadUrl, fileName: actualFileName } = await getDownloadUrl(versionId);
+
+      // Trigger download
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = actualFileName || fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      toast.success('Download started', {
+        description: 'Your file download has started.',
+      });
+    } catch (error) {
+      console.error('Download error:', error);
+      toast.error('Download failed', {
+        description: error instanceof Error ? error.message : 'Failed to download file',
+      });
+    } finally {
+      setDownloadingId(null);
+    }
+  };
+
+  const handleDelete = async (versionId: number) => {
+    try {
+      await deleteDocumentVersion(versionId);
+
+      toast.success('Version deleted', {
+        description: 'Document version has been deleted successfully.',
+      });
+
+      router.refresh();
+    } catch (error) {
+      console.error('Delete error:', error);
+      toast.error('Delete failed', {
+        description: error instanceof Error ? error.message : 'Failed to delete version',
+      });
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  const handlePreview = async (versionId: number) => {
+    try {
+      const { downloadUrl } = await getDownloadUrl(versionId);
+
+      // Open in new tab for preview
+      window.open(downloadUrl, '_blank');
+    } catch (error) {
+      console.error('Preview error:', error);
+      toast.error('Preview failed', {
+        description: error instanceof Error ? error.message : 'Failed to preview file',
+      });
+    }
+  };
+
+  const canPreview = (mimeType: string | null): boolean => {
+    if (!mimeType) return false;
+    return (
+      mimeType === 'application/pdf' ||
+      mimeType.startsWith('image/')
+    );
+  };
+
+  if (versions.length === 0) {
+    return (
+      <div className="rounded-lg border border-dashed p-8 text-center">
+        <FileText className="mx-auto h-12 w-12 text-muted-foreground" />
+        <h3 className="mt-4 text-sm font-medium">No versions uploaded</h3>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Upload a document version to get started.
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-6">
-      {/* Upload New Version */}
-      <div className="space-y-4 rounded-lg border bg-muted/50 p-4">
-        <h3 className="font-medium">Upload New Version</h3>
-        
-        <div>
-          <Label htmlFor="file">Select File</Label>
-          <Input
-            id="file"
-            type="file"
-            onChange={handleFileSelect}
-            disabled={isUploading}
-          />
-          {selectedFile && (
-            <p className="mt-1 text-sm text-muted-foreground">
-              Selected: {selectedFile.name} ({formatFileSize(selectedFile.size)})
-            </p>
-          )}
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div>
-            <Label htmlFor="issueDate">Issue Date</Label>
-            <Input
-              id="issueDate"
-              type="date"
-              value={issueDate}
-              onChange={(e) => setIssueDate(e.target.value)}
-              disabled={isUploading}
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="expiryDate">Expiry Date</Label>
-            <Input
-              id="expiryDate"
-              type="date"
-              value={expiryDate}
-              onChange={(e) => setExpiryDate(e.target.value)}
-              disabled={isUploading}
-            />
-          </div>
-        </div>
-
-        <Button onClick={handleUpload} disabled={!selectedFile || isUploading}>
-          <Upload className="mr-2 h-4 w-4" />
-          {isUploading ? 'Uploading...' : 'Upload Version'}
-        </Button>
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <h3 className="font-medium">Document Versions ({versions.length})</h3>
       </div>
 
-      {/* Versions List */}
-      <div className="space-y-3">
-        <h3 className="font-medium">Previous Versions ({versions.length})</h3>
-        
-        {versions.length === 0 ? (
-          <p className="text-sm text-muted-foreground">No versions uploaded yet.</p>
-        ) : (
-          <div className="space-y-2">
-            {versions.map((version) => (
-              <div
-                key={version.id}
-                className="flex items-center justify-between rounded-lg border p-3"
-              >
-                <div className="flex items-center gap-3">
-                  <FileText className="h-5 w-5 text-muted-foreground" />
-                  <div>
-                    <div className="text-sm font-medium">
-                      Version {version.id}
-                      {version.isLatest && (
-                        <span className="ml-2 text-xs text-primary">(Latest)</span>
-                      )}
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      Uploaded {formatDistanceToNow(new Date(version.uploadedAt), { addSuffix: true })}
-                      {' • '}
-                      {formatFileSize(version.fileSize)}
-                    </div>
-                    {version.expiryDate && (
-                      <div className="text-xs text-muted-foreground">
-                        Expires {formatDistanceToNow(new Date(version.expiryDate), { addSuffix: true })}
-                      </div>
-                    )}
+      <div className="space-y-2">
+        {versions.map((version) => (
+          <div
+            key={version.id}
+            className="flex items-center justify-between rounded-lg border p-3 hover:bg-muted/50"
+          >
+            <div className="flex items-center gap-3 flex-1 min-w-0">
+              {getFileIcon(version.mimeType)}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <div className="text-sm font-medium truncate">
+                    Version {version.id}
                   </div>
+                  {version.isLatest && (
+                    <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                      Latest
+                    </span>
+                  )}
                 </div>
-                <Button variant="ghost" size="sm">
-                  <Download className="h-4 w-4" />
-                </Button>
+                <div className="text-xs text-muted-foreground">
+                  Uploaded {formatDistanceToNow(new Date(version.uploadedAt), { addSuffix: true })}
+                  {' • '}
+                  {formatFileSize(version.fileSize)}
+                </div>
+                {version.issueDate && (
+                  <div className="text-xs text-muted-foreground">
+                    Issued: {new Date(version.issueDate).toLocaleDateString()}
+                  </div>
+                )}
+                {version.expiryDate && (
+                  <div className="text-xs text-muted-foreground">
+                    Expires: {formatDistanceToNow(new Date(version.expiryDate), { addSuffix: true })}
+                  </div>
+                )}
               </div>
-            ))}
+            </div>
+
+            <div className="flex items-center gap-1">
+              {/* Preview Button */}
+              {canPreview(version.mimeType) && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handlePreview(version.id)}
+                  title="Preview"
+                >
+                  <Eye className="h-4 w-4" />
+                </Button>
+              )}
+
+              {/* Download Button */}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => handleDownload(version.id, `version-${version.id}`)}
+                disabled={downloadingId === version.id}
+                title="Download"
+              >
+                <Download className="h-4 w-4" />
+              </Button>
+
+              {/* Delete Button */}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setDeletingId(version.id)}
+                title="Delete"
+                className="text-destructive hover:text-destructive"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
-        )}
+        ))}
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={deletingId !== null} onOpenChange={() => setDeletingId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Document Version?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. The file will be permanently deleted from
+              storage and the version record will be removed.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => deletingId && handleDelete(deletingId)}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

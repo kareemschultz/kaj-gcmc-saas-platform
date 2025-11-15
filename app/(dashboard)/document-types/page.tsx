@@ -1,24 +1,25 @@
 import Link from 'next/link';
-import { getDocumentTypes } from '@/src/lib/actions/document-types';
+import { getDocumentTypes } from '@/lib/actions/document-types';
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 
 export default async function DocumentTypesPage({
   searchParams,
 }: {
-  searchParams: { page?: string; search?: string; category?: string };
+  searchParams: Promise<{ page?: string; search?: string; category?: string }>;
 }) {
   const session = await auth();
   if (!session) {
     redirect('/auth/login');
   }
 
-  const page = parseInt(searchParams.page || '1');
+  const params = await searchParams;
+  const page = parseInt(params.page || '1');
   const { documentTypes, total, totalPages } = await getDocumentTypes({
     page,
     pageSize: 20,
-    search: searchParams.search,
-    category: searchParams.category,
+    search: params.search,
+    category: params.category,
   });
 
   return (
@@ -47,14 +48,14 @@ export default async function DocumentTypesPage({
             <input
               type="text"
               placeholder="Search document types..."
-              defaultValue={searchParams.search}
+              defaultValue={params.search}
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
             <select
-              defaultValue={searchParams.category}
+              defaultValue={params.category}
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
             >
               <option value="">All Categories</option>
@@ -92,13 +93,13 @@ export default async function DocumentTypesPage({
                   </td>
                 </tr>
               ) : (
-                documentTypes.map((docType) => (
+                documentTypes.map((docType: any) => (
                   <tr key={docType.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
                       <div className="text-sm font-medium text-gray-900">{docType.name}</div>
                       {docType.tags.length > 0 && (
                         <div className="flex gap-1 mt-1">
-                          {docType.tags.slice(0, 3).map((tag, idx) => (
+                          {docType.tags.slice(0, 3).map((tag: any, idx: number) => (
                             <span key={idx} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
                               {tag}
                             </span>
@@ -141,15 +142,15 @@ export default async function DocumentTypesPage({
             </div>
             <div className="flex gap-2">
               <Link
-                href={`/document-types?page=${page - 1}${searchParams.search ? `&search=${searchParams.search}` : ''}`}
+                href={`/document-types?page=${page - 1}${params.search ? `&search=${params.search}` : ''}`}
                 className={`px-3 py-1 text-sm border rounded-md ${page === 1 ? 'opacity-50 pointer-events-none' : 'hover:bg-gray-50'} bg-white text-gray-700`}
               >
                 Previous
               </Link>
-              {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p) => (
+              {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p: any) => (
                 <Link
                   key={p}
-                  href={`/document-types?page=${p}${searchParams.search ? `&search=${searchParams.search}` : ''}`}
+                  href={`/document-types?page=${p}${params.search ? `&search=${params.search}` : ''}`}
                   className={`px-3 py-1 text-sm border rounded-md ${
                     p === page ? 'bg-teal-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
                   }`}
@@ -158,7 +159,7 @@ export default async function DocumentTypesPage({
                 </Link>
               ))}
               <Link
-                href={`/document-types?page=${page + 1}${searchParams.search ? `&search=${searchParams.search}` : ''}`}
+                href={`/document-types?page=${page + 1}${params.search ? `&search=${params.search}` : ''}`}
                 className={`px-3 py-1 text-sm border rounded-md ${page === totalPages ? 'opacity-50 pointer-events-none' : 'hover:bg-gray-50'} bg-white text-gray-700`}
               >
                 Next

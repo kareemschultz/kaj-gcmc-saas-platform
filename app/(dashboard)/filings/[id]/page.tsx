@@ -9,13 +9,14 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 interface FilingDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function FilingDetailPage({ params }: FilingDetailPageProps) {
-  const filingId = parseInt(params.id);
+  const { id } = await params;
+  const filingId = parseInt(id);
   
   if (isNaN(filingId)) {
     notFound();
@@ -67,9 +68,9 @@ export default async function FilingDetailPage({ params }: FilingDetailPageProps
 
         <div className="rounded-lg border bg-card p-6">
           <h2 className="mb-4 text-lg font-semibold">Attached Documents</h2>
-          <FilingDocumentsManager 
+          <FilingDocumentsManager
             filingId={filingId}
-            attachedDocuments={filing.documents.map(fd => fd.document)}
+            attachedDocuments={filing.documents.map((fd: any) => fd.document)}
             availableDocuments={clientDocuments}
           />
         </div>

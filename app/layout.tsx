@@ -1,16 +1,18 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from 'next/font/google';
+// Temporarily disabled due to network restrictions in build environment
+// import { Geist, Geist_Mono } from 'next/font/google';
 import "./globals.css";
+import { TRPCProvider } from "@/lib/trpc/react";
 
-const geistSans = Geist({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
+// const geistSans = Geist({
+//   subsets: ["latin"],
+//   variable: "--font-sans",
+// });
 
-const geistMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-});
+// const geistMono = Geist_Mono({
+//   subsets: ["latin"],
+//   variable: "--font-mono",
+// });
 
 export const metadata: Metadata = {
   title: "KGC Compliance Cloud",
@@ -26,8 +28,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="light">
-      <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased bg-white text-gray-900`}>
-        {children}
+      <body className="font-sans antialiased bg-white text-gray-900">
+        <TRPCProvider>{children}</TRPCProvider>
       </body>
     </html>
   );
