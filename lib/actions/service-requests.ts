@@ -9,7 +9,7 @@ import { logger } from '@/lib/logger';
 import { getUserContext, assertPermission } from '@/lib/rbac';
 
 // Validation schemas
-export const serviceRequestSchema = z.object({
+const serviceRequestSchema = z.object({
   clientId: z.number().int().positive('Client is required'),
   clientBusinessId: z.number().int().positive().optional(),
   serviceId: z.number().int().positive('Service is required'),
@@ -19,7 +19,7 @@ export const serviceRequestSchema = z.object({
   metadata: z.object({}).passthrough().optional(),
 });
 
-export const serviceStepSchema = z.object({
+const serviceStepSchema = z.object({
   serviceRequestId: z.number().int().positive(),
   filingId: z.number().int().positive().optional(),
   title: z.string().min(1, 'Title is required'),
@@ -31,8 +31,8 @@ export const serviceStepSchema = z.object({
   dependsOnStepId: z.number().int().optional(),
 });
 
-export type ServiceRequestFormData = z.infer<typeof serviceRequestSchema>;
-export type ServiceStepFormData = z.infer<typeof serviceStepSchema>;
+type ServiceRequestFormData = z.infer<typeof serviceRequestSchema>;
+type ServiceStepFormData = z.infer<typeof serviceStepSchema>;
 
 // Get all service requests for current tenant
 export async function getServiceRequests(params?: {

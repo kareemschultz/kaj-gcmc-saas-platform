@@ -8,7 +8,7 @@ import { ApiError } from '@/lib/errors';
 import { logger } from '@/lib/logger';
 
 // Validation schema
-export const taskSchema = z.object({
+const taskSchema = z.object({
   title: z.string().min(1, 'Title is required').max(255),
   description: z.string().optional(),
   status: z.enum(['open', 'in_progress', 'blocked', 'completed']),
@@ -20,7 +20,7 @@ export const taskSchema = z.object({
   filingId: z.number().int().positive().optional(),
 });
 
-export type TaskFormData = z.infer<typeof taskSchema>;
+type TaskFormData = z.infer<typeof taskSchema>;
 
 // Get all tasks for current tenant
 export async function getTasks(params?: {

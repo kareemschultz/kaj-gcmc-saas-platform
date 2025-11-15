@@ -11,7 +11,7 @@ import { logger } from '@/lib/logger';
 import { generatePresignedUploadUrl } from '@/lib/storage';
 
 // Validation schemas
-export const documentSchema = z.object({
+const documentSchema = z.object({
   clientId: z.number().min(1, 'Client is required'),
   clientBusinessId: z.number().optional().nullable(),
   documentTypeId: z.number().min(1, 'Document type is required'),
@@ -22,7 +22,7 @@ export const documentSchema = z.object({
   tags: z.array(z.string()).default([]),
 });
 
-export const documentVersionSchema = z.object({
+const documentVersionSchema = z.object({
   documentId: z.number(),
   fileUrl: z.string().url('Invalid file URL'),
   fileSize: z.number().optional(),
@@ -32,8 +32,8 @@ export const documentVersionSchema = z.object({
   issuingAuthority: z.string().optional(),
 });
 
-export type DocumentFormData = z.infer<typeof documentSchema>;
-export type DocumentVersionFormData = z.infer<typeof documentVersionSchema>;
+type DocumentFormData = z.infer<typeof documentSchema>;
+type DocumentVersionFormData = z.infer<typeof documentVersionSchema>;
 
 // Get all documents for current tenant
 export async function getDocuments(params?: {

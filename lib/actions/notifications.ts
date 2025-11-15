@@ -9,7 +9,7 @@ import { logger } from '@/lib/logger';
 import { getUserContext, assertAdmin } from '@/lib/rbac';
 
 // Validation schema
-export const notificationSchema = z.object({
+const notificationSchema = z.object({
   recipientUserId: z.number().int().positive('Recipient is required'),
   type: z.enum(['email', 'in_app', 'sms']).default('in_app'),
   channelStatus: z.enum(['pending', 'sent', 'failed']).default('pending'),
@@ -23,7 +23,7 @@ export const notificationSchema = z.object({
   }).passthrough().optional(),
 });
 
-export type NotificationFormData = z.infer<typeof notificationSchema>;
+type NotificationFormData = z.infer<typeof notificationSchema>;
 
 // Get all notifications for current user
 export async function getNotifications(params?: {

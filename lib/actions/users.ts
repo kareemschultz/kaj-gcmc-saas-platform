@@ -18,7 +18,7 @@ import {
 } from '@/lib/schemas/users';
 
 // Re-export types for components
-export type { CreateUserFormData, UpdateUserFormData, ChangePasswordFormData };
+type { CreateUserFormData, UpdateUserFormData, ChangePasswordFormData };
 
 // Get all users for current tenant
 export async function getUsers(params?: {

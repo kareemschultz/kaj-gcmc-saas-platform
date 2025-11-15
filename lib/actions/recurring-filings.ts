@@ -8,7 +8,7 @@ import { ApiError } from '@/lib/errors';
 import { logger } from '@/lib/logger';
 
 // Validation schema
-export const recurringFilingSchema = z.object({
+const recurringFilingSchema = z.object({
   clientId: z.number().int().positive('Client is required'),
   clientBusinessId: z.number().int().positive().optional(),
   filingTypeId: z.number().int().positive('Filing type is required'),
@@ -17,7 +17,7 @@ export const recurringFilingSchema = z.object({
   nextRunAt: z.string().datetime().optional(),
 });
 
-export type RecurringFilingFormData = z.infer<typeof recurringFilingSchema>;
+type RecurringFilingFormData = z.infer<typeof recurringFilingSchema>;
 
 // Get all recurring filings for current tenant
 export async function getRecurringFilings(params?: {

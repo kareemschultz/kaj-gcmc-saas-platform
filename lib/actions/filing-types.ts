@@ -8,7 +8,7 @@ import { ApiError } from '@/lib/errors';
 import { logger } from '@/lib/logger';
 
 // Validation schema
-export const filingTypeSchema = z.object({
+const filingTypeSchema = z.object({
   name: z.string().min(1, 'Name is required').max(255),
   code: z.string().min(1, 'Code is required').max(50),
   authority: z.string().min(1, 'Authority is required'),
@@ -18,7 +18,7 @@ export const filingTypeSchema = z.object({
   description: z.string().optional(),
 });
 
-export type FilingTypeFormData = z.infer<typeof filingTypeSchema>;
+type FilingTypeFormData = z.infer<typeof filingTypeSchema>;
 
 // Get all filing types for current tenant
 export async function getFilingTypes(params?: {

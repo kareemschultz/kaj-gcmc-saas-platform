@@ -8,7 +8,7 @@ import { ApiError } from '@/lib/errors';
 import { logger } from '@/lib/logger';
 
 // Validation schema
-export const serviceSchema = z.object({
+const serviceSchema = z.object({
   name: z.string().min(1, 'Name is required').max(255),
   category: z.string().min(1, 'Category is required'),
   description: z.string().optional(),
@@ -17,7 +17,7 @@ export const serviceSchema = z.object({
   active: z.boolean().default(true),
 });
 
-export type ServiceFormData = z.infer<typeof serviceSchema>;
+type ServiceFormData = z.infer<typeof serviceSchema>;
 
 // Get all services for current tenant
 export async function getServices(params?: {

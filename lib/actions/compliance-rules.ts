@@ -9,7 +9,7 @@ import { logger } from '@/lib/logger';
 import { getUserContext, assertPermission } from '@/lib/rbac';
 
 // Validation schemas
-export const complianceRuleSetSchema = z.object({
+const complianceRuleSetSchema = z.object({
   name: z.string().min(1, 'Name is required').max(255),
   appliesTo: z.object({
     clientTypes: z.array(z.string()).optional(),
@@ -18,7 +18,7 @@ export const complianceRuleSetSchema = z.object({
   active: z.boolean().default(true),
 });
 
-export const complianceRuleSchema = z.object({
+const complianceRuleSchema = z.object({
   ruleSetId: z.number().int().positive(),
   ruleType: z.string().min(1, 'Rule type is required'),
   condition: z.object({}).passthrough().optional(),
@@ -27,8 +27,8 @@ export const complianceRuleSchema = z.object({
   description: z.string().optional(),
 });
 
-export type ComplianceRuleSetFormData = z.infer<typeof complianceRuleSetSchema>;
-export type ComplianceRuleFormData = z.infer<typeof complianceRuleSchema>;
+type ComplianceRuleSetFormData = z.infer<typeof complianceRuleSetSchema>;
+type ComplianceRuleFormData = z.infer<typeof complianceRuleSchema>;
 
 // Get all rule sets for current tenant
 export async function getComplianceRuleSets(params?: {

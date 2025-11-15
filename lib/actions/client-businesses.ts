@@ -10,7 +10,7 @@ import { ApiError } from '@/lib/errors';
 import { logger } from '@/lib/logger';
 
 // Validation schema
-export const clientBusinessSchema = z.object({
+const clientBusinessSchema = z.object({
   clientId: z.number(),
   name: z.string().min(1, 'Business name is required').max(255),
   registrationNumber: z.string().optional(),
@@ -27,7 +27,7 @@ export const clientBusinessSchema = z.object({
   status: z.enum(['Active', 'Inactive', 'Pending', 'Dissolved']).optional(),
 });
 
-export type ClientBusinessFormData = z.infer<typeof clientBusinessSchema>;
+type ClientBusinessFormData = z.infer<typeof clientBusinessSchema>;
 
 // Get all businesses for a specific client
 export async function getClientBusinesses(clientId: number) {

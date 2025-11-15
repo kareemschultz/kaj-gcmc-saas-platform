@@ -11,7 +11,7 @@ import { logger } from '@/lib/logger';
 import { assertCanView, assertCanCreate, assertCanEdit, assertCanDelete, getUserContext } from '@/lib/rbac';
 
 // Validation schemas
-export const clientSchema = z.object({
+const clientSchema = z.object({
   name: z.string().min(1, 'Name is required').max(255),
   type: z.enum(['individual', 'company', 'partnership']),
   email: z.string().email('Invalid email').optional().or(z.literal('')),
@@ -24,7 +24,7 @@ export const clientSchema = z.object({
   notes: z.string().optional(),
 });
 
-export type ClientFormData = z.infer<typeof clientSchema>;
+type ClientFormData = z.infer<typeof clientSchema>;
 
 // Get all clients for current tenant
 export async function getClients(params?: {

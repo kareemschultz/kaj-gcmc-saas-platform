@@ -10,14 +10,14 @@ import { ApiError } from '@/lib/errors';
 import { logger } from '@/lib/logger';
 
 // Validation schemas
-export const requirementBundleSchema = z.object({
+const requirementBundleSchema = z.object({
   name: z.string().min(1, 'Name is required').max(255),
   authority: z.string().min(1, 'Authority is required'),
   category: z.string().min(1, 'Category is required'),
   description: z.string().optional(),
 });
 
-export const requirementBundleItemSchema = z.object({
+const requirementBundleItemSchema = z.object({
   bundleId: z.number().min(1),
   documentTypeId: z.number().optional().nullable(),
   filingTypeId: z.number().optional().nullable(),
@@ -26,8 +26,8 @@ export const requirementBundleItemSchema = z.object({
   order: z.number().default(0),
 });
 
-export type RequirementBundleFormData = z.infer<typeof requirementBundleSchema>;
-export type RequirementBundleItemFormData = z.infer<typeof requirementBundleItemSchema>;
+type RequirementBundleFormData = z.infer<typeof requirementBundleSchema>;
+type RequirementBundleItemFormData = z.infer<typeof requirementBundleItemSchema>;
 
 // Get all requirement bundles for current tenant
 export async function getRequirementBundles(params?: {
