@@ -130,7 +130,7 @@ See [PRODUCTION_READINESS.md](docs/PRODUCTION_READINESS.md) for full details.
 
 ## Quick Start with Docker (Recommended)
 
-The fastest way to get started is using Docker Compose. **For production deployment, see [DEPLOYMENT.md](docs/DEPLOYMENT.md).**
+The fastest way to get started is using Docker Compose. **For production deployment, see [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md).**
 
 ### Prerequisites
 
@@ -183,8 +183,9 @@ docker-compose exec app npx prisma db seed
 6. Open [http://localhost:3000](http://localhost:3000) in your browser
 
 **Default Test Credentials:**
-- KAJ Admin: `kaj-admin@test.com` / `password123`
-- GCMC Admin: `gcmc-admin@test.com` / `password123`
+- KAJ Admin: `admin@kaj.gy` / `admin123`
+- KAJ Compliance Officer: `compliance@kaj.gy` / `user123`
+- GCMC Admin: `admin@gcmc.gy` / `admin123`
 
 **Service URLs:**
 - Application: http://localhost:3000
@@ -373,8 +374,10 @@ See `docs/ENVIRONMENT_VARIABLES.md` for detailed descriptions.
 ## Documentation
 
 ### 🚀 Production Deployment (Start Here!)
-- [**Production Deployment Guide**](docs/DEPLOYMENT.md) - Complete production deployment guide
-- [**Production Readiness Checklist**](docs/PRODUCTION_READINESS.md) - Pre-deployment checklist and status
+- [**Deployment Guide**](DEPLOYMENT_GUIDE.md) - Complete production deployment guide
+- [**Pre-Deployment Checklist**](PRE_DEPLOYMENT_CHECKLIST.md) - Detailed pre-launch checklist
+- [**Current State**](CURRENT_STATE.md) - Platform capabilities and implementation status
+- [**Production Readiness**](docs/PRODUCTION_READINESS.md) - Security and quality status
 - [Docker Setup](docs/DOCKER_SETUP.md) - Docker configuration details
 - [Environment Variables](docs/ENVIRONMENT_VARIABLES.md) - Complete environment variable reference
 
