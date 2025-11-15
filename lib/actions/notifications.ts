@@ -1,29 +1,15 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
+import { revalidatePath } from 'next/cache';
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { ApiError } from '@/lib/errors';
 import { logger } from '@/lib/logger';
 import { getUserContext, assertAdmin } from '@/lib/rbac';
+import { notificationSchema, type NotificationFormData } from '@/lib/schemas/notifications';
 
-// Validation schema
-export const notificationSchema = z.object({
-  recipientUserId: z.number().int().positive('Recipient is required'),
-  type: z.enum(['email', 'in_app', 'sms']).default('in_app'),
-  channelStatus: z.enum(['pending', 'sent', 'failed']).default('pending'),
-  message: z.string().min(1, 'Message is required'),
-  metadata: z.object({
-    title: z.string().optional(),
-    actionUrl: z.string().optional(),
-    entityType: z.string().optional(),
-    entityId: z.number().optional(),
-    priority: z.enum(['low', 'medium', 'high', 'urgent']).optional(),
-  }).passthrough().optional(),
-});
 
-export type NotificationFormData = z.infer<typeof notificationSchema>;
 
 // Get all notifications for current user
 export async function getNotifications(params?: {

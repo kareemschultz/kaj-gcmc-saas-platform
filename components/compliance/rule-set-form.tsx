@@ -6,8 +6,8 @@ import {
   createComplianceRuleSet,
   updateComplianceRuleSet,
   deleteComplianceRuleSet,
-  type ComplianceRuleSetFormData,
 } from '@/lib/actions/compliance-rules';
+import { type ComplianceRuleSetFormData } from '@/lib/schemas/compliance-rules';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

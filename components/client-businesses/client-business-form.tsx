@@ -12,9 +12,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import {
   createClientBusiness,
   updateClientBusiness,
+} from '@/lib/actions/client-businesses';
+import {
   clientBusinessSchema,
   type ClientBusinessFormData,
-} from '@/lib/actions/client-businesses';
+} from '@/lib/schemas/client-businesses';
 import { toast } from '@/hooks/use-toast';
 import type { ClientBusiness } from '@prisma/client';
 

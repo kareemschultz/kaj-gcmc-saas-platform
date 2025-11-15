@@ -6,8 +6,8 @@ import {
   createTenant,
   updateTenant,
   deleteTenant,
-  type TenantFormData,
 } from '@/lib/actions/tenants';
+import { type TenantFormData } from '@/lib/schemas/tenants';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

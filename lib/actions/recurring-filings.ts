@@ -1,23 +1,14 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
+import { revalidatePath } from 'next/cache';
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { ApiError } from '@/lib/errors';
 import { logger } from '@/lib/logger';
+import { recurringFilingSchema, type RecurringFilingFormData } from '@/lib/schemas/recurring-filings';
 
-// Validation schema
-export const recurringFilingSchema = z.object({
-  clientId: z.number().int().positive('Client is required'),
-  clientBusinessId: z.number().int().positive().optional(),
-  filingTypeId: z.number().int().positive('Filing type is required'),
-  schedule: z.string().min(1, 'Schedule is required'),
-  active: z.boolean().default(true),
-  nextRunAt: z.string().datetime().optional(),
-});
 
-export type RecurringFilingFormData = z.infer<typeof recurringFilingSchema>;
 
 // Get all recurring filings for current tenant
 export async function getRecurringFilings(params?: {

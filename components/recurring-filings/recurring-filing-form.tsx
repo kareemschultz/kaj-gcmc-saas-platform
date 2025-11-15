@@ -12,9 +12,11 @@ import { Checkbox } from '@/components/ui/checkbox';
 import {
   createRecurringFiling,
   updateRecurringFiling,
+} from '@/lib/actions/recurring-filings';
+import {
   recurringFilingSchema,
   type RecurringFilingFormData,
-} from '@/lib/actions/recurring-filings';
+} from '@/lib/schemas/recurring-filings';
 import { toast } from '@/hooks/use-toast';
 
 interface RecurringFilingFormProps {

@@ -11,7 +11,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { createClient, updateClient, clientSchema, type ClientFormData } from '@/lib/actions/clients';
+import { createClient, updateClient } from '@/lib/actions/clients';
+import { clientSchema, type ClientFormData } from '@/lib/schemas/clients';
 import { toast } from '@/hooks/use-toast';
 import type { Client } from '@prisma/client';
 

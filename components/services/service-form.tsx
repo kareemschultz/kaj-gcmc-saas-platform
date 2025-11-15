@@ -6,8 +6,8 @@ import {
   createService,
   updateService,
   deleteService,
-  type ServiceFormData,
 } from '@/lib/actions/services';
+import { type ServiceFormData } from '@/lib/schemas/services';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

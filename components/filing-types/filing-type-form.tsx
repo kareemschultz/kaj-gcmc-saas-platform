@@ -6,8 +6,8 @@ import {
   createFilingType,
   updateFilingType,
   deleteFilingType,
-  type FilingTypeFormData,
 } from '@/lib/actions/filing-types';
+import { type FilingTypeFormData } from '@/lib/schemas/filing-types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

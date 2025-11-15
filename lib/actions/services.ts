@@ -1,23 +1,14 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
+import { revalidatePath } from 'next/cache';
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { ApiError } from '@/lib/errors';
 import { logger } from '@/lib/logger';
+import { serviceSchema, type ServiceFormData } from '@/lib/schemas/services';
 
-// Validation schema
-export const serviceSchema = z.object({
-  name: z.string().min(1, 'Name is required').max(255),
-  category: z.string().min(1, 'Category is required'),
-  description: z.string().optional(),
-  basePrice: z.number().nonnegative().optional(),
-  estimatedDays: z.number().int().positive().optional(),
-  active: z.boolean().default(true),
-});
 
-export type ServiceFormData = z.infer<typeof serviceSchema>;
 
 // Get all services for current tenant
 export async function getServices(params?: {

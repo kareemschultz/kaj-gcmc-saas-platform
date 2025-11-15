@@ -6,8 +6,8 @@ import {
   createServiceStep,
   updateServiceStep,
   deleteServiceStep,
-  type ServiceStepFormData,
 } from '@/lib/actions/service-requests';
+import { type ServiceStepFormData } from '@/lib/schemas/service-requests';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
