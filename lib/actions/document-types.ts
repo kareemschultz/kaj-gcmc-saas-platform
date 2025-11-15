@@ -71,7 +71,7 @@ export async function getDocumentTypes(params?: {
       totalPages: Math.ceil(total / pageSize),
     };
   } catch (error) {
-    logger.error('Error fetching document types:', error);
+    logger.error('Error fetching document types:', error as Error);
     throw new ApiError('Failed to fetch document types', 500);
   }
 }
@@ -103,7 +103,7 @@ export async function getDocumentType(id: number) {
     return documentType;
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    logger.error('Error fetching document type:', error);
+    logger.error('Error fetching document type:', error as Error);
     throw new ApiError('Failed to fetch document type', 500);
   }
 }
@@ -143,9 +143,9 @@ export async function createDocumentType(data: DocumentTypeFormData) {
     return documentType;
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new ApiError('Validation failed', 400, error.errors);
+      throw new ApiError('Validation failed', 400);
     }
-    logger.error('Error creating document type:', error);
+    logger.error('Error creating document type:', error as Error);
     throw new ApiError('Failed to create document type', 500);
   }
 }
@@ -197,10 +197,10 @@ export async function updateDocumentType(id: number, data: DocumentTypeFormData)
     return documentType;
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new ApiError('Validation failed', 400, error.errors);
+      throw new ApiError('Validation failed', 400);
     }
     if (error instanceof ApiError) throw error;
-    logger.error('Error updating document type:', error);
+    logger.error('Error updating document type:', error as Error);
     throw new ApiError('Failed to update document type', 500);
   }
 }
@@ -261,7 +261,7 @@ export async function deleteDocumentType(id: number) {
     return { success: true };
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    logger.error('Error deleting document type:', error);
+    logger.error('Error deleting document type:', error as Error);
     throw new ApiError('Failed to delete document type', 500);
   }
 }

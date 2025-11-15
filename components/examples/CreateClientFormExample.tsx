@@ -176,10 +176,10 @@ export function CreateClientFormExample() {
       <div className="flex gap-2">
         <button
           type="submit"
-          disabled={createClient.isLoading}
+          disabled={createClient.isPending}
           className="rounded-md bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700 disabled:opacity-50"
         >
-          {createClient.isLoading ? 'Creating...' : 'Create Client'}
+          {createClient.isPending ? 'Creating...' : 'Create Client'}
         </button>
         <button
           type="button"

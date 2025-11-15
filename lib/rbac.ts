@@ -70,10 +70,10 @@ export function assertPermission(
   customMessage?: string
 ): void {
   if (!hasPermission(user, module, action)) {
-    const message = customMessage || 
+    const message = customMessage ||
       `Permission denied: ${user.role} cannot perform '${action}' on '${module}'`;
-    
-    throw new ForbiddenError(message, 403);
+
+    throw new ForbiddenError(message);
   }
 }
 
@@ -113,7 +113,7 @@ export function assertAdmin(user: UserPermissionContext, customMessage?: string)
   
   if (!isAdmin) {
     const message = customMessage || 'This operation requires administrator privileges';
-    throw new ForbiddenError(message, 403);
+    throw new ForbiddenError(message);
   }
 }
 
@@ -191,7 +191,7 @@ export function assertTenantAccess(
   resourceTenantId: number
 ): void {
   if (userTenantId !== resourceTenantId) {
-    throw new ForbiddenError('Access denied: resource belongs to a different tenant', 403);
+    throw new ForbiddenError('Access denied: resource belongs to a different tenant');
   }
 }
 
@@ -200,7 +200,7 @@ export function assertTenantAccess(
  */
 export function getUserContext(session: any): UserPermissionContext {
   if (!session?.user?.id || !session?.user?.tenantId || !session?.role) {
-    throw new ForbiddenError('Invalid session: missing user context', 401);
+    throw new UnauthorizedError('Invalid session: missing user context');
   }
 
   return {

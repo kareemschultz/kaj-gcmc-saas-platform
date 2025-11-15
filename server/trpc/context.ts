@@ -64,7 +64,7 @@ export async function createContext(
         role: session.role || 'Viewer',
       };
     } catch (error) {
-      logger.error('Failed to parse user context from session', { error, session });
+      logger.error('Failed to parse user context from session', error as Error);
     }
   }
 

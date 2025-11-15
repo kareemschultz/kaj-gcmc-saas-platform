@@ -36,16 +36,10 @@ export const loggingMiddleware = middleware(async ({ ctx, next, path, type }) =>
     const duration = Date.now() - start;
 
     // Log error
-    ctx.logger.error(`[tRPC ${type}] ${path} - Error (${duration}ms)`, {
-      userId: ctx.user?.id,
-      tenantId: ctx.user?.tenantId,
-      duration,
-      error: {
-        message: error.message,
-        code: error.code,
-        stack: error.stack,
-      },
-    });
+    ctx.logger.error(
+      `[tRPC ${type}] ${path} - Error (${duration}ms) - User: ${ctx.user?.id}, Tenant: ${ctx.user?.tenantId}`,
+      error as Error
+    );
 
     throw error;
   }
@@ -77,12 +71,10 @@ export function auditLogMiddleware(
         });
       } catch (error) {
         // Don't fail the request if audit logging fails
-        ctx.logger.error('Failed to create audit log', {
-          error,
-          entityType,
-          action,
-          userId: ctx.user.id,
-        });
+        ctx.logger.error(
+          `Failed to create audit log for ${entityType} ${action} by user ${ctx.user.id}`,
+          error as Error
+        );
       }
     }
 

@@ -123,7 +123,7 @@ export async function getServiceRequests(params?: {
       totalPages: Math.ceil(total / pageSize),
     };
   } catch (error) {
-    logger.error('Error fetching service requests:', error);
+    logger.error('Error fetching service requests:', error as Error);
     throw new ApiError('Failed to fetch service requests', 500);
   }
 }
@@ -190,7 +190,7 @@ export async function getServiceRequest(id: number) {
     return serviceRequest;
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    logger.error('Error fetching service request:', error);
+    logger.error('Error fetching service request:', error as Error);
     throw new ApiError('Failed to fetch service request', 500);
   }
 }
@@ -285,10 +285,10 @@ export async function createServiceRequest(data: ServiceRequestFormData) {
     return serviceRequest;
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new ApiError('Validation failed', 400, error.errors);
+      throw new ApiError('Validation failed', 400);
     }
     if (error instanceof ApiError) throw error;
-    logger.error('Error creating service request:', error);
+    logger.error('Error creating service request:', error as Error);
     throw new ApiError('Failed to create service request', 500);
   }
 }
@@ -338,7 +338,7 @@ export async function updateServiceRequest(id: number, data: Partial<ServiceRequ
     return serviceRequest;
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    logger.error('Error updating service request:', error);
+    logger.error('Error updating service request:', error as Error);
     throw new ApiError('Failed to update service request', 500);
   }
 }
@@ -402,7 +402,7 @@ export async function deleteServiceRequest(id: number) {
     return { success: true };
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    logger.error('Error deleting service request:', error);
+    logger.error('Error deleting service request:', error as Error);
     throw new ApiError('Failed to delete service request', 500);
   }
 }
@@ -442,10 +442,10 @@ export async function createServiceStep(data: ServiceStepFormData) {
     return step;
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new ApiError('Validation failed', 400, error.errors);
+      throw new ApiError('Validation failed', 400);
     }
     if (error instanceof ApiError) throw error;
-    logger.error('Error creating service step:', error);
+    logger.error('Error creating service step:', error as Error);
     throw new ApiError('Failed to create service step', 500);
   }
 }
@@ -462,13 +462,11 @@ export async function updateServiceStep(id: number, data: Partial<ServiceStepFor
     const existing = await prisma.serviceStep.findFirst({
       where: { id },
       include: {
-        serviceRequest: {
-          where: { tenantId: session.user.tenantId },
-        },
+        serviceRequest: true,
       },
     });
 
-    if (!existing || !existing.serviceRequest) {
+    if (!existing || !existing.serviceRequest || existing.serviceRequest.tenantId !== session.user.tenantId) {
       throw new ApiError('Service step not found', 404);
     }
 
@@ -488,7 +486,7 @@ export async function updateServiceStep(id: number, data: Partial<ServiceStepFor
     return step;
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    logger.error('Error updating service step:', error);
+    logger.error('Error updating service step:', error as Error);
     throw new ApiError('Failed to update service step', 500);
   }
 }
@@ -505,13 +503,11 @@ export async function deleteServiceStep(id: number) {
     const existing = await prisma.serviceStep.findFirst({
       where: { id },
       include: {
-        serviceRequest: {
-          where: { tenantId: session.user.tenantId },
-        },
+        serviceRequest: true,
       },
     });
 
-    if (!existing || !existing.serviceRequest) {
+    if (!existing || !existing.serviceRequest || existing.serviceRequest.tenantId !== session.user.tenantId) {
       throw new ApiError('Service step not found', 404);
     }
 
@@ -525,7 +521,7 @@ export async function deleteServiceStep(id: number) {
     return { success: true };
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    logger.error('Error deleting service step:', error);
+    logger.error('Error deleting service step:', error as Error);
     throw new ApiError('Failed to delete service step', 500);
   }
 }

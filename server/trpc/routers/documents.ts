@@ -140,7 +140,7 @@ export const documentsRouter = router({
           clientBusiness: true,
           documentType: true,
           versions: {
-            orderBy: { createdAt: 'desc' },
+            orderBy: { uploadedAt: 'desc' },
           },
           latestVersion: true,
         },
@@ -336,7 +336,7 @@ export const documentsRouter = router({
 
       const versions = await ctx.prisma.documentVersion.findMany({
         where: { documentId },
-        orderBy: { createdAt: 'desc' },
+        orderBy: { uploadedAt: 'desc' },
       });
 
       return versions;

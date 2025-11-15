@@ -86,7 +86,7 @@ export function ComplianceSetupWizard({ client, bundles }: ComplianceSetupWizard
   return (
     <WizardProvider
       config={wizardConfig}
-      initialData={initialData}
+      initialData={initialData as any}
       onComplete={handleComplete}
     >
       <WizardContent client={client} bundles={bundles} isSubmitting={isSubmitting} />

@@ -19,7 +19,7 @@ export async function getRoles() {
 
     return roles;
   } catch (error) {
-    logger.error('Error fetching roles:', error);
+    logger.error('Error fetching roles:', error as Error);
     throw new ApiError('Failed to fetch roles', 500);
   }
 }

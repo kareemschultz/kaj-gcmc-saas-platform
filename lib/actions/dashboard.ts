@@ -224,7 +224,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
       daysUntil: Math.ceil(
         (filing.periodEnd!.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
       ),
-      authority: filing.filingType.authority,
+      authority: filing.filingType.authority || undefined,
       status: filing.status,
     }))
     .filter((d) => d.daysUntil <= 30);
@@ -241,7 +241,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
       daysUntil: Math.ceil(
         (doc.latestVersion!.expiryDate!.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
       ),
-      authority: doc.documentType.authority,
+      authority: doc.documentType.authority || undefined,
     }))
     .filter((d) => d.daysUntil <= 30 && d.daysUntil >= 0)
     .sort((a, b) => a.daysUntil - b.daysUntil)

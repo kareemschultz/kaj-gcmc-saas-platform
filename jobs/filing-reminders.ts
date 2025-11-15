@@ -237,6 +237,7 @@ async function processFilingReminders(
             // Add specific assignees for this filing
             const assignees = filingAssignees.get(filingInfo.filingId) || [];
             for (const assignee of assignees) {
+              if (!assignee) continue;
               recipients.set(assignee.id, assignee);
             }
 

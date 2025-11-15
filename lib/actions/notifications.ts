@@ -77,7 +77,7 @@ export async function getNotifications(params?: {
       totalPages: Math.ceil(total / pageSize),
     };
   } catch (error) {
-    logger.error('Error fetching notifications:', error);
+    logger.error('Error fetching notifications:', error as Error);
     throw new ApiError('Failed to fetch notifications', 500);
   }
 }
@@ -140,7 +140,7 @@ export async function getTenantNotifications(params?: {
       totalPages: Math.ceil(total / pageSize),
     };
   } catch (error) {
-    logger.error('Error fetching tenant notifications:', error);
+    logger.error('Error fetching tenant notifications:', error as Error);
     throw new ApiError('Failed to fetch tenant notifications', 500);
   }
 }
@@ -187,10 +187,10 @@ export async function createNotification(data: NotificationFormData) {
     return notification;
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new ApiError('Validation failed', 400, error.errors);
+      throw new ApiError('Validation failed', 400);
     }
     if (error instanceof ApiError) throw error;
-    logger.error('Error creating notification:', error);
+    logger.error('Error creating notification:', error as Error);
     throw new ApiError('Failed to create notification', 500);
   }
 }
@@ -229,7 +229,7 @@ export async function markNotificationAsRead(id: number) {
     return updated;
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    logger.error('Error marking notification as read:', error);
+    logger.error('Error marking notification as read:', error as Error);
     throw new ApiError('Failed to mark notification as read', 500);
   }
 }
@@ -274,7 +274,7 @@ export async function markAllNotificationsAsRead() {
 
     return { success: true, count: unreadNotifications.length };
   } catch (error) {
-    logger.error('Error marking all notifications as read:', error);
+    logger.error('Error marking all notifications as read:', error as Error);
     throw new ApiError('Failed to mark all notifications as read', 500);
   }
 }
@@ -308,7 +308,7 @@ export async function deleteNotification(id: number) {
     return { success: true };
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    logger.error('Error deleting notification:', error);
+    logger.error('Error deleting notification:', error as Error);
     throw new ApiError('Failed to delete notification', 500);
   }
 }
@@ -333,7 +333,7 @@ export async function getUnreadNotificationCount() {
 
     return count;
   } catch (error) {
-    logger.error('Error fetching unread notification count:', error);
+    logger.error('Error fetching unread notification count:', error as Error);
     throw new ApiError('Failed to fetch unread notification count', 500);
   }
 }
@@ -379,7 +379,7 @@ export async function sendNotification(
 
     return notification;
   } catch (error) {
-    logger.error('Error sending notification:', error);
+    logger.error('Error sending notification:', error as Error);
     throw new ApiError('Failed to send notification', 500);
   }
 }

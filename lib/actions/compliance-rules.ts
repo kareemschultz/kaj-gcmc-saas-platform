@@ -81,7 +81,7 @@ export async function getComplianceRuleSets(params?: {
       totalPages: Math.ceil(total / pageSize),
     };
   } catch (error) {
-    logger.error('Error fetching compliance rule sets:', error);
+    logger.error('Error fetching compliance rule sets:', error as Error);
     throw new ApiError('Failed to fetch compliance rule sets', 500);
   }
 }
@@ -113,7 +113,7 @@ export async function getComplianceRuleSet(id: number) {
     return ruleSet;
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    logger.error('Error fetching compliance rule set:', error);
+    logger.error('Error fetching compliance rule set:', error as Error);
     throw new ApiError('Failed to fetch compliance rule set', 500);
   }
 }
@@ -153,9 +153,9 @@ export async function createComplianceRuleSet(data: ComplianceRuleSetFormData) {
     return ruleSet;
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new ApiError('Validation failed', 400, error.errors);
+      throw new ApiError('Validation failed', 400);
     }
-    logger.error('Error creating compliance rule set:', error);
+    logger.error('Error creating compliance rule set:', error as Error);
     throw new ApiError('Failed to create compliance rule set', 500);
   }
 }
@@ -205,10 +205,10 @@ export async function updateComplianceRuleSet(id: number, data: ComplianceRuleSe
     return ruleSet;
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new ApiError('Validation failed', 400, error.errors);
+      throw new ApiError('Validation failed', 400);
     }
     if (error instanceof ApiError) throw error;
-    logger.error('Error updating compliance rule set:', error);
+    logger.error('Error updating compliance rule set:', error as Error);
     throw new ApiError('Failed to update compliance rule set', 500);
   }
 }
@@ -260,7 +260,7 @@ export async function deleteComplianceRuleSet(id: number) {
     return { success: true };
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    logger.error('Error deleting compliance rule set:', error);
+    logger.error('Error deleting compliance rule set:', error as Error);
     throw new ApiError('Failed to delete compliance rule set', 500);
   }
 }
@@ -310,9 +310,9 @@ export async function createComplianceRule(data: ComplianceRuleFormData) {
     return rule;
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new ApiError('Validation failed', 400, error.errors);
+      throw new ApiError('Validation failed', 400);
     }
-    logger.error('Error creating compliance rule:', error);
+    logger.error('Error creating compliance rule:', error as Error);
     throw new ApiError('Failed to create compliance rule', 500);
   }
 }
@@ -329,13 +329,11 @@ export async function updateComplianceRule(id: number, data: Partial<ComplianceR
     const existing = await prisma.complianceRule.findFirst({
       where: { id },
       include: {
-        ruleSet: {
-          where: { tenantId: session.user.tenantId },
-        },
+        ruleSet: true,
       },
     });
 
-    if (!existing || !existing.ruleSet) {
+    if (!existing || !existing.ruleSet || existing.ruleSet.tenantId !== session.user.tenantId) {
       throw new ApiError('Compliance rule not found', 404);
     }
 
@@ -363,7 +361,7 @@ export async function updateComplianceRule(id: number, data: Partial<ComplianceR
     return rule;
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    logger.error('Error updating compliance rule:', error);
+    logger.error('Error updating compliance rule:', error as Error);
     throw new ApiError('Failed to update compliance rule', 500);
   }
 }
@@ -380,13 +378,11 @@ export async function deleteComplianceRule(id: number) {
     const existing = await prisma.complianceRule.findFirst({
       where: { id },
       include: {
-        ruleSet: {
-          where: { tenantId: session.user.tenantId },
-        },
+        ruleSet: true,
       },
     });
 
-    if (!existing || !existing.ruleSet) {
+    if (!existing || !existing.ruleSet || existing.ruleSet.tenantId !== session.user.tenantId) {
       throw new ApiError('Compliance rule not found', 404);
     }
 
@@ -413,7 +409,7 @@ export async function deleteComplianceRule(id: number) {
     return { success: true };
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    logger.error('Error deleting compliance rule:', error);
+    logger.error('Error deleting compliance rule:', error as Error);
     throw new ApiError('Failed to delete compliance rule', 500);
   }
 }

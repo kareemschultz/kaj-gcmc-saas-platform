@@ -55,7 +55,7 @@ export function createContextMock(options?: {
       }
     : null;
 
-  const session: Session | null = options?.session !== undefined
+  const session = (options?.session !== undefined
     ? options.session
     : user
     ? {
@@ -73,7 +73,7 @@ export function createContextMock(options?: {
         role: user.role,
         expires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
       }
-    : null;
+    : null) as Session | null;
 
   return {
     session,

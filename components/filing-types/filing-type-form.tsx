@@ -53,7 +53,7 @@ export function FilingTypeForm({ filingType }: FilingTypeFormProps) {
     name: filingType?.name || '',
     code: filingType?.code || '',
     authority: filingType?.authority || '',
-    frequency: filingType?.frequency || '',
+    frequency: (filingType?.frequency as any) || 'monthly',
     defaultDueDay: filingType?.defaultDueDay || undefined,
     defaultDueMonth: filingType?.defaultDueMonth || undefined,
     description: filingType?.description || undefined,
@@ -164,7 +164,7 @@ export function FilingTypeForm({ filingType }: FilingTypeFormProps) {
           <Label htmlFor="frequency">Frequency *</Label>
           <Select
             value={formData.frequency}
-            onValueChange={(value) => setFormData({ ...formData, frequency: value })}
+            onValueChange={(value) => setFormData({ ...formData, frequency: value as any })}
             disabled={isPending}
           >
             <SelectTrigger>

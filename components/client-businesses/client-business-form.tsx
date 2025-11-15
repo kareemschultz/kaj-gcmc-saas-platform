@@ -45,10 +45,10 @@ export function ClientBusinessForm({
       ? {
           ...(business as any),
           incorporationDate: (business as any).incorporationDate
-            ? new Date(business.incorporationDate).toISOString().split('T')[0]
+            ? new Date((business as any).incorporationDate).toISOString().split('T')[0]
             : undefined,
-          registrationType: business.registrationType as any,
-          status: business.status as any,
+          registrationType: (business as any).registrationType,
+          status: (business as any).status,
         }
       : {
           clientId,

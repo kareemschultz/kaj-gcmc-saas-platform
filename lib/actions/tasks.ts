@@ -119,7 +119,7 @@ export async function getTasks(params?: {
       totalPages: Math.ceil(total / pageSize),
     };
   } catch (error) {
-    logger.error('Error fetching tasks:', error);
+    logger.error('Error fetching tasks:', error as Error);
     throw new ApiError('Failed to fetch tasks', 500);
   }
 }
@@ -167,7 +167,7 @@ export async function getTask(id: number) {
     return task;
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    logger.error('Error fetching task:', error);
+    logger.error('Error fetching task:', error as Error);
     throw new ApiError('Failed to fetch task', 500);
   }
 }
@@ -225,9 +225,9 @@ export async function createTask(data: TaskFormData) {
     return task;
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new ApiError('Validation failed', 400, error.errors);
+      throw new ApiError('Validation failed', 400);
     }
-    logger.error('Error creating task:', error);
+    logger.error('Error creating task:', error as Error);
     throw new ApiError('Failed to create task', 500);
   }
 }
@@ -299,10 +299,10 @@ export async function updateTask(id: number, data: TaskFormData) {
     return task;
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new ApiError('Validation failed', 400, error.errors);
+      throw new ApiError('Validation failed', 400);
     }
     if (error instanceof ApiError) throw error;
-    logger.error('Error updating task:', error);
+    logger.error('Error updating task:', error as Error);
     throw new ApiError('Failed to update task', 500);
   }
 }
@@ -350,7 +350,7 @@ export async function deleteTask(id: number) {
     return { success: true };
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    logger.error('Error deleting task:', error);
+    logger.error('Error deleting task:', error as Error);
     throw new ApiError('Failed to delete task', 500);
   }
 }
@@ -388,7 +388,7 @@ export async function getMyTasks() {
 
     return tasks;
   } catch (error) {
-    logger.error('Error fetching my tasks:', error);
+    logger.error('Error fetching my tasks:', error as Error);
     throw new ApiError('Failed to fetch tasks', 500);
   }
 }
